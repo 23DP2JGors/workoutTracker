@@ -1,4 +1,5 @@
 <template>
+  <!-- Main app layout using Vuetify components -->
   <v-app>
     <!-- Side navigation menu -->
     <v-navigation-drawer v-model="drawer" temporary>
@@ -27,8 +28,10 @@
       ></v-btn>
     </v-app-bar>
 
+    <!-- Main content area -->
     <v-main>
       <v-container>
+        <!-- Welcome message card -->
         <v-card 
           title="Welcome Back!" 
           subtitle="Ready for a new session?"
@@ -51,7 +54,9 @@
   </v-app>
 </template>
 
+<!-- Script setup for the main app component -->
 <script setup>
+// Import Vue and Vuetify functions
 import { ref } from 'vue'
 import { useTheme } from 'vuetify'
 

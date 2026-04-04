@@ -10,7 +10,8 @@ return new class extends Migration
 {
     Schema::table('users', function (Blueprint $table) {
         $table->string('username')->unique()->nullable();
-    });
+        $table->string('name')->nullable()->change();
+        });
 }
 
 public function down(): void

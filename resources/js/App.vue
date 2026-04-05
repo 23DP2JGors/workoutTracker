@@ -16,10 +16,11 @@
 
     <!-- Top Application Bar - unchanged -->
     <v-app-bar elevation="2">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer" color="default"></v-app-bar-nav-icon>
       <v-app-bar-title>Workout Tracker</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn 
+      color="default"
         :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
         @click="toggleTheme"
       ></v-btn>

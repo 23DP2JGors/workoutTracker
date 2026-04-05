@@ -1,4 +1,7 @@
 /* Custom Global Styles */
+* {
+    font-family: 'Inter', sans-serif;
+}
 
 html {
     /* Smooth scrolling for better user experience */

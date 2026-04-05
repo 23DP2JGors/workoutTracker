@@ -25,36 +25,35 @@ const vuetify = createVuetify({
     VTextField: {
         variant: 'outlined',
         density: 'compact',
+    },
+    VBtn: {
+        color: 'primary'
     }
 },
     theme: {
-        defaultTheme: 'dark', // Set dark mode as default for that "sporty" look
+        defaultTheme: 'dark',
         themes: {
             dark: {
                 dark: true,
                 colors: {
-                    primary: '#B5E853',    //  Lime for accents
-                    background: '#121212', // Deep Dark Grey for background
-                    surface: '#1E1E1E',    // Slightly lighter grey for cards
+                    primary: '#B5E853',
+                    background: '#121212',
+                    surface: '#1E1E1E',
                     secondary: '#03DAC6',
                     error: '#CF6679',
-                    textColor: '#E0E0E0',
+                    'on-background': '#E0E0E0',
+                    'on-surface': '#E0E0E0',
                 },
-                variables: {
-                    'high-emphasis-opacity': 0.87,
-                }
             },
             light: {
                 dark: false,
                 colors: {
-                    primary: '#4CAF50',    // Calmer green for light mode
+                    primary: '#4CAF50',
                     background: '#F5F5F5',
                     surface: '#FFFFFF',
-                    textColor: '#212121',
+                    'on-background': '#212121',
+                    'on-surface': '#212121',
                 },
-                variables: {
-                    'high-emphasis-opacity': 0.87,
-                }
             },
         },
     },

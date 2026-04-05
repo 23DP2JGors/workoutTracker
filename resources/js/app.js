@@ -21,13 +21,19 @@ const vuetify = createVuetify({
         aliases,
         sets: { mdi },
     },
+    defaults: {
+    VTextField: {
+        variant: 'outlined',
+        density: 'compact',
+    }
+},
     theme: {
         defaultTheme: 'dark', // Set dark mode as default for that "sporty" look
         themes: {
             dark: {
                 dark: true,
                 colors: {
-                    primary: '#CCFF00',    // Neon Lime for accents
+                    primary: '#B5E853',    //  Lime for accents
                     background: '#121212', // Deep Dark Grey for background
                     surface: '#1E1E1E',    // Slightly lighter grey for cards
                     secondary: '#03DAC6',

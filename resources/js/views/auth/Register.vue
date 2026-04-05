@@ -4,20 +4,21 @@
         <v-col cols="12" sm="8" md="6" lg="4">
             <v-sheet color="surface">
                 <p class="text-center text-uppercase ">welcome to workout tracker!</p>
-                <v-form fast-fail @submit.prevent="handleRegister">
-                <v-text-field
+                <v-form fast-fail @submit.prevent="handleRegister" class="px-6 pt-6">
+                <v-text-field class="mb-4"
                     v-model="form.username"
                     :rules="[rules.required]"
                     label="Username"
                 ></v-text-field>
 
-                <v-text-field
+                <v-text-field class="mb-4"
                     v-model="form.email"
                     :rules="[rules.required, rules.email]"
                     label="E-mail"
+                    placeholder="email@example.com"
                 ></v-text-field>
 
-                <v-text-field
+                <v-text-field class="mb-4"
                     :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                     :type="visible ? 'text' : 'password'"   
                     v-model="form.password"

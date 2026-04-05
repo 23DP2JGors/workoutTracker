@@ -32,7 +32,11 @@ const vuetify = createVuetify({
                     surface: '#1E1E1E',    // Slightly lighter grey for cards
                     secondary: '#03DAC6',
                     error: '#CF6679',
+                    textColor: '#E0E0E0',
                 },
+                variables: {
+                    'high-emphasis-opacity': 0.87,
+                }
             },
             light: {
                 dark: false,
@@ -40,7 +44,11 @@ const vuetify = createVuetify({
                     primary: '#4CAF50',    // Calmer green for light mode
                     background: '#F5F5F5',
                     surface: '#FFFFFF',
+                    textColor: '#212121',
                 },
+                variables: {
+                    'high-emphasis-opacity': 0.87,
+                }
             },
         },
     },

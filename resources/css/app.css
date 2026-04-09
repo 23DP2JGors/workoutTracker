@@ -18,3 +18,10 @@ body {
 p {
     margin: 0;
 }
+
+.title-h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}

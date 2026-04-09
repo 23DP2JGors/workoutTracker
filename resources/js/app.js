@@ -29,6 +29,7 @@ const vuetify = createVuetify({
     VBtn: {
         color: 'primary'
     }
+    
 },
     theme: {
         defaultTheme: 'dark',

@@ -3,22 +3,23 @@
     <v-row justify="center">
         <v-col cols="12" sm="10" md="8" lg="5">
             <v-sheet color="surface" rounded="lg">
-                <p class="title-h1 px-6 pt-6 text-center">welcome to workout tracker!</p>
+                <p class="title-h1 px-6 pt-5 text-center">welcome to workout tracker!</p>
+                <p class="text-center font-weight-thin text-grey-lighten-1">Create your account</p>
                 <v-form fast-fail @submit.prevent="handleRegister" class="pa-6">
-                <v-text-field class="mb-4"
+                <v-text-field class="mb-3"
                     v-model="form.username"
                     :rules="[rules.required]"
                     label="Username"
                 ></v-text-field>
 
-                <v-text-field class="mb-4"
+                <v-text-field class="mb-3"
                     v-model="form.email"
                     :rules="[rules.required, rules.email]"
                     label="E-mail"
                     placeholder="email@example.com"
                 ></v-text-field>
 
-                <v-text-field class="mb-4"
+                <v-text-field class="mb-3"
                     :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                     :type="visible ? 'text' : 'password'"   
                     v-model="form.password"

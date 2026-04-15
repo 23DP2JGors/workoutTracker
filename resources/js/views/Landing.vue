@@ -29,9 +29,66 @@
             </v-row>
         </v-container>
     </div>
+
+       <div class="features-section py-16">
+    <v-container>
+        <v-row justify="center">
+            <v-col 
+                v-for="(feature, index) in features" 
+                :key="index" 
+                cols="12" 
+                sm="6" 
+                md="3"
+            >
+                <v-card 
+                class="h-100" 
+                variant="outlined"
+                base-color="primary" 
+                rounded="xl"
+                >
+                    <v-card-item>
+                        <v-icon :icon="feature.icon" color="primary" class="mb-2" size="large"></v-icon>
+                        <v-card-title>{{ feature.title }}</v-card-title>
+                    </v-card-item>
+                    <v-card-text>{{ feature.text }}</v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
+</div>
+
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
+
+const features = ref([  
+  {
+    title: 'Workout Logging',
+    text: 'Record every workout, track sets, weights, and reps in real-time.',
+    icon: 'mdi-dumbbell'
+  },
+  {
+    title: 'Body Measurements',
+    text: 'Monitor your progress. Track body metrics and weight to see your transformation.',
+    icon: 'mdi-scale-bathroom'
+  },
+  {
+    title: 'Analytics & Charts',
+    text: 'Visual statistics of your growth — from bicep volume to strength gains.',
+    icon: 'mdi-chart-line'
+  },
+  {
+    title: 'Macro Calculator',
+    text: 'Calculate your ideal calories and macronutrients based on your goals.',
+    icon: 'mdi-calculator'
+  },
+  {
+    title: 'Starter Programs',
+    text: 'Don’t know where to start? We’ve prepared a base for your first step.',
+    icon: 'mdi-rocket-launch'
+  }
+])
 
 </script>
 

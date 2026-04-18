@@ -14,13 +14,13 @@
 
               <div class="d-flex justify-center mt-10 pl-16">
                 <router-link to="/register" class="mr-5">
-                  <v-btn>
+                  <v-btn :class="{ 'btn-highlight': highlight }">
                     Sign up
                   </v-btn>
                 </router-link>
 
                 <router-link to="/login">
-                  <v-btn>
+                  <v-btn :class="{ 'btn-highlight': highlight }">
                     Sign in
                   </v-btn>
                 </router-link>
@@ -83,6 +83,16 @@
               </v-card>
             </v-col>
           </v-row>
+          <div class="text-center mt-6">
+            <v-btn 
+                variant="outlined"
+                size="large"
+                class="get-started-btn"
+                @click="scrollToTop"
+                    >
+                Get Started
+            </v-btn>
+          </div>
         </v-container>
       </div>
     </div>
@@ -93,12 +103,42 @@
 import { ref, onMounted } from 'vue'
 
 const showPage = ref(false)
+const highlight = ref(false)
 
 onMounted(() => {
-  setTimeout(() => {
-    showPage.value = true
-  }, 200)
+    // Show page with fade-in animation after 200ms delay
+    setTimeout(() => {
+        showPage.value = true
+
+        // Wait 100ms for cards to render in DOM before observing
+        setTimeout(() => {
+            // Create observer that watches when elements enter viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // When card becomes visible — add class to trigger CSS animation
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible')
+                    } else {
+                        // Card left viewport — hide it again
+                        entry.target.classList.remove('visible')
+                    }
+                })
+            }, { threshold: 0.15 }) // fire when 15% of element is visible
+
+            // Start observing every feature card on the page
+            document.querySelectorAll('.feature-card').forEach(card => {
+                observer.observe(card)
+            })
+        }, 600)
+
+    }, 300)
 })
+
+const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    highlight.value = true
+    setTimeout(() => highlight.value = false, 2000)
+}
 
 const features = ref([
   {
@@ -153,10 +193,18 @@ const features = ref([
   background-position: center;
 }
 
+/* Initial state — cards are invisible and shifted down */
 .feature-card {
-  /* Manual override for theme-consistent background */
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.6s ease;
+}
+
+/* Visible state — triggered by IntersectionObserver adding this class */
+.feature-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /*
@@ -175,28 +223,57 @@ const features = ref([
 
 /* Annimation */
 
+/* Hover effect — card lifts up and border highlights with primary color */
 .feature-card:hover {
   transform: translateY(-8px);
   border-color: rgba(var(--v-theme-primary), 0.4);
 }
 
+/* Subtle scale effect on all buttons when hovered */
 .v-btn:hover {
   transform: scale(1.05);
 }
 
+/* Page fade-in animation — controls entry transition duration and delay */
 .page-fade-enter-active {
   transition: all 0.6s ease;
   transition-delay: 0.1s;
 }
 
+/* Starting state of page fade — invisible and slightly below position */
 .page-fade-enter-from {
   opacity: 0;
   transform: translateY(20px);
 }
 
+/* End state of page fade — fully visible at correct position */
 .page-fade-enter-to {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Pulse animation applied to Sign in/Sign up buttons after scrolling back to top */
+.btn-highlight {
+    animation: pulse 0.5s ease 3;
+}
+
+/* Pulse keyframes — button scales up and back to normal */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Get Started button — glowing border effect using primary color */
+.get-started-btn {
+    border-width: 2px;
+    box-shadow: 0 0 15px rgba(181, 232, 83, 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+/* Stronger glow on hover for Get Started button */
+.get-started-btn:hover {
+    box-shadow: 0 0 25px rgba(181, 232, 83, 0.6);
 }
 
 </style>

@@ -4,7 +4,7 @@
         <v-col cols="12" sm="10" md="8" lg="5">
             <v-sheet color="surface" rounded="lg">
                 <p class="title-h1 px-6 pt-5 text-center">welcome to workout tracker!</p>
-                <p class="text-center font-weight-thin text-grey-lighten-1">Create your account</p>
+                <p class="text-center font-weight-thin" color="subheading">Create your account</p>
                 <v-form fast-fail @submit.prevent="handleRegister" class="pa-6">
                 <v-text-field class="mb-3"
                     v-model="form.username"

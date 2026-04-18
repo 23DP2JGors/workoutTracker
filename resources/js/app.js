@@ -39,6 +39,7 @@ const vuetify = createVuetify({
                 colors: {
                     primary: '#B5E853',
                     background: '#121212',
+                    subheading: '#64748B',
                     surface: '#1E1E1E',
                     secondary: '#03DAC6',
                     error: '#CF6679',
@@ -50,6 +51,7 @@ const vuetify = createVuetify({
                 dark: false,
                 colors: {
                     primary: '#4CAF50',
+                    subheading: '#94A3B8',
                     background: '#F5F5F5',
                     surface: '#FFFFFF',
                     'on-background': '#212121',

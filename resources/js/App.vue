@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Side navigation menu -->
-    <v-navigation-drawer v-if="route.meta.layout !== 'none'" v-model="drawer" temporary>
+    <v-navigation-drawer v-if="route.meta.layout !== 'none' && route.meta.layout !== 'auth'" v-model="drawer" temporary>
       <v-list-item title="Workout Menu" subtitle="Manage your fitness"></v-list-item>
       <v-divider></v-divider>
       <v-list nav>
@@ -15,7 +15,7 @@
     </v-navigation-drawer>
 
     <!-- Top Application Bar - unchanged -->
-    <v-app-bar v-if="route.meta.layout !== 'none'" elevation="2">
+    <v-app-bar v-if="route.meta.layout !== 'none' && route.meta.layout !== 'auth'" elevation="2">
       <v-app-bar-nav-icon @click="drawer = !drawer" color="default"></v-app-bar-nav-icon>
       <v-app-bar-title>Workout Tracker</v-app-bar-title>
       <v-spacer></v-spacer>
@@ -24,6 +24,17 @@
         :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
         @click="toggleTheme"
       ></v-btn>
+    </v-app-bar>
+
+    <!-- Top for auth pages -->
+    <v-app-bar v-if="route.meta.layout === 'auth'" elevation="0" color="transparent">
+        <v-app-bar-title class="text-title-large font-weight-bold">Workout Tracker</v-app-bar-title>
+        <v-spacer></v-spacer>
+        <v-btn 
+            color="default"
+            :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
+            @click="toggleTheme"
+        ></v-btn>
     </v-app-bar>
 
     <!-- Main content: now ONLY router-view, no hardcoded card -->

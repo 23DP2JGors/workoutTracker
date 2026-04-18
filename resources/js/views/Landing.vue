@@ -169,7 +169,7 @@ const features = ref([
 ])
 </script>
 
-<style>
+<style scoped>
 
 .logo {
   position: absolute;

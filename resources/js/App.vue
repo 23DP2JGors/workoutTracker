@@ -6,6 +6,13 @@
       <v-app-bar-title>Workout Tracker</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn 
+        prepend-icon="mdi-logout"
+        variant="text"
+        @click="handleLogout"
+    >
+        Logout
+    </v-btn>
+      <v-btn 
       color="default"
         :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
         @click="toggleTheme"

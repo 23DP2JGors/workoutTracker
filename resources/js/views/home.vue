@@ -18,6 +18,13 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <v-btn 
+        prepend-icon="mdi-logout"
+        variant="text"
+        @click="handleLogout"
+    >
+        Logout
+    </v-btn>
   </v-container>
 </template>
 

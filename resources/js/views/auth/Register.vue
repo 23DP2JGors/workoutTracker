@@ -110,7 +110,7 @@ const handleRegister = async () => {
     console.log('User registered:', response.data);
 
     // 3. On success, navigate to application home/dashboard
-    await router.push('/');
+    await router.push('/home');
   } catch (error) {
     // 4. Basic error reporting: log backend validation errors and show user notification
     console.error('Registration failed:', error.response?.data?.errors ?? error);

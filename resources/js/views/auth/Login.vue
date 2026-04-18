@@ -29,6 +29,7 @@
                     density="compact"
                     rounded="lg"
                     class="mb-3"
+                    :class="{ shake: shake }"
                 >
                     Invalid email or password. Please try again.
                 </v-alert>
@@ -64,7 +65,7 @@ const form = ref({
 
 // Reactive state for password visibility toggle
 const visible = ref(false);
-
+const shake = ref(false)
 const errorMessage = ref(null);
 
 const handleLogin = async () => {
@@ -80,10 +81,27 @@ const handleLogin = async () => {
     console.log('User registered:', response.data);
 
     // 3. On success, navigate to application home/dashboard
-    await router.push('/');
+    await router.push('/home');
   } catch (error) {
     errorMessage.value = error.response?.data?.message || 'Login failed. Try again.';
-    alert(message);
+    // Trigger shake animation
+    shake.value = true
+    setTimeout(() => shake.value = false, 500)
 }
 }
 </script>
+
+<style scoped>
+/* Shake animation when login fails repeatedly */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+</style>

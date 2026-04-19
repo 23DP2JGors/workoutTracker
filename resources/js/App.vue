@@ -3,7 +3,14 @@
 
     <!-- Top Application Bar - unchanged -->
     <v-app-bar v-if="route.meta.layout !== 'none' && route.meta.layout !== 'auth'" elevation="2">
-      <v-app-bar-title>Workout Tracker</v-app-bar-title>
+        <v-btn 
+            v-if="route.name !== 'Home'"
+            color="default"
+            icon="mdi-arrow-left"
+            @click="router.back()"
+            >
+        </v-btn>
+        <v-app-bar-title>Workout Tracker</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn 
         prepend-icon="mdi-logout"

@@ -4,6 +4,7 @@ import Home from '../views/home.vue'
 import Register from '../views/auth/Register.vue'
 import Login from '../views/auth/Login.vue'
 import Landing from '../views/Landing.vue'
+import Workouts from '../views/Workouts.vue'
 
 
 const routes = [
@@ -29,6 +30,11 @@ const routes = [
         name:'Landing',
         component: Landing,
         meta: { layout: 'none' }
+    },
+    { 
+        path: '/workouts',
+        name: 'Workouts',
+        component: Workouts 
     },
 ]
 

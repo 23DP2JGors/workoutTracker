@@ -3,7 +3,7 @@
         <v-row class="justify-space-around">
             <v-col cols="12" md="6">
 
-                <v-dialog transition="dialog-bottom-transition" :width="$vuetify.display.smAndDown ? '100%' : '500'">
+                <v-dialog transition="dialog-bottom-transition" :width="$vuetify.display.smAndDown ? '100%' : '700'">
                     <template v-slot:activator="{ props: activatorProps }">
                         <v-btn v-bind="activatorProps" text="New workout" block></v-btn>
                     </template>
@@ -34,10 +34,23 @@
 
                                 <!-- Step 2: Add exercises -->
                                 <div v-if="step === 2">
-                                    <p class="text-body-1 text-medium-emphasis mb-4">
-                                        Add exercises to your workout
-                                    </p>
-                                    <!-- Exercises will go here -->
+                                    <v-autocomplete
+                                        v-model="selectedExercise"
+                                        :items="groupedExercises"
+                                        label="Search exercise"
+                                        variant="outlined"
+                                    >
+                                        <template v-slot:subheader="{ props }">
+                                            <v-divider class="mb-1"></v-divider>
+                                            <v-list-subheader class="font-weight-bold text-primary text-uppercase">
+                                                {{ props.title }}
+                                            </v-list-subheader>
+                                        </template>
+
+                                        <template v-slot:item="{ props, item }">
+                                            <v-list-item v-bind="props" class="pl-8"></v-list-item>
+                                        </template>
+                                    </v-autocomplete>
                                 </div>
 
                             </v-card-text>
@@ -76,33 +89,55 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 
 const workouts = ref([])
 const step = ref(1)
 const exercises = ref([])
+const selectedExercise = ref(null)
 
 // Form data for new workout
 const form = ref({
     name: '',
     date: new Date().toISOString().split('T')[0], // today's date by default
-})
-
-onMounted(async () => {
-    // Load workouts 
-    const response = await axios.get('/api/workouts')
-    workouts.value = response.data
-    
-    // Load exercises for selection
-    const exercisesResponse = await axios.get('/api/exercises')
-    exercises.value = exercisesResponse.data
-})
+})  
 
 const saveWorkout = async () => {
     // Will implement after adding exercises
     console.log('saving workout', form.value)
 }
+
+const groupedExercises = computed(() => {
+    const groups = {}
+    
+    exercises.value.forEach(exercise => {
+        if (!groups[exercise.muscle_group]) {
+            groups[exercise.muscle_group] = []
+        }
+        groups[exercise.muscle_group].push(exercise)
+    })
+    
+    const result = []
+    Object.keys(groups).sort().forEach(group => {
+        result.push({ type: 'subheader', title: group })
+        groups[group].forEach(exercise => {
+            result.push({ title: exercise.name, value: exercise.id })
+        })
+    })
+    
+    return result
+})
+
+onMounted(async () => {
+    const response = await axios.get('/api/workouts')
+    workouts.value = response.data
+    
+    // Load exercises for selection in modal
+    const exercisesResponse = await axios.get('/api/exercises')
+    exercises.value = exercisesResponse.data
+})
+
 </script>
 
 <style scoped>

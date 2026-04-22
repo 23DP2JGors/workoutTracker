@@ -51,6 +51,82 @@
                                             <v-list-item v-bind="props" class="pl-8"></v-list-item>
                                         </template>
                                     </v-autocomplete>
+
+                                    <!-- Added exercises list -->
+                                    <div v-for="(exercise, exIndex) in workoutExercises" :key="exIndex" class="mb-4 mt-4">
+                                        
+                                        <!-- Exercise name -->
+                                        <div class="mb-4">
+                                            <p class="text-title-medium font-weight-bold text-primary">{{ exercise.name }}</p>
+                                        </div>  
+                                        
+                                        <!-- Sets table header -->
+                                        <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2">
+                                            <v-col cols="2">set</v-col>
+                                            <v-col cols="4">kg</v-col>
+                                            <v-col cols="4">reps</v-col>
+                                            <v-col cols="2"></v-col>
+                                        </v-row>
+
+                                        <!-- Sets -->
+                                        <v-row v-for="(set, setIndex) in exercise.sets" :key="setIndex" class="mb-1 px-2 mt-1 mb-5"  align="center">
+                                            <v-col cols="2">{{ setIndex + 1 }}</v-col>
+                                            <v-col cols="4">
+                                                <v-text-field
+                                                    v-model="set.weight"
+                                                    variant="outlined"
+                                                    density="compact"
+                                                    hide-details
+                                                    type="number"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="4">
+                                                <v-text-field
+                                                    v-model="set.reps"
+                                                    variant="outlined"
+                                                    density="compact"
+                                                    hide-details
+                                                    type="number"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col cols="2">
+                                                <v-btn icon="mdi-close" density="compact" variant="text" @click="exercise.sets.splice(setIndex, 1)"></v-btn>
+                                            </v-col>
+                                        </v-row>
+
+                                        <!-- Add set and delete button -->
+                                        <v-row>
+                                            <v-col>
+                                            <v-btn 
+                                                class="text-body-medium"
+                                                variant="text" 
+                                                color="primary" 
+                                                @click="exercise.sets.push({ weight: '', reps: '' })" 
+                                                >
+                                                + Add Set
+                                            </v-btn>
+                                            </v-col>
+
+                                            <v-spacer></v-spacer>
+
+                                            <v-col class="d-flex justify-end pr-5">
+                                            <v-btn 
+                                                icon="mdi-delete" 
+                                                variant="text" 
+                                                density="compact"
+                                                color="error"
+                                                @click="workoutExercises.splice(exIndex, 1)"
+                                            ></v-btn>
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-divider class="mt-3"></v-divider>
+                                    </div>
+
+                                    <!-- Add exercise button -->
+                                    <v-btn variant="text" color="primary" class="mt-2" @click="addExercise" :disabled="!selectedExercise">
+                                        + Add Exercise
+                                    </v-btn>
                                 </div>
 
                             </v-card-text>
@@ -104,6 +180,9 @@ const exercises = ref([])
 // ID of the exercise selected in the autocomplete
 const selectedExercise = ref(null)
 
+// List of exercises added to current workout
+const workoutExercises = ref([])
+
 // Form data for creating a new workout
 const form = ref({
     name: '',
@@ -114,6 +193,24 @@ const form = ref({
 const saveWorkout = async () => {
     // Will implement after adding exercises
     console.log('saving workout', form.value)
+}
+
+// Add exercise button
+const addExercise = () => {
+    if (!selectedExercise.value) return
+    
+    // Find exercise object by id
+    const exercise = exercises.value.find(e => e.id === selectedExercise.value)
+    
+    workoutExercises.value.push({
+        id: crypto.randomUUID(),
+        exercise_id: exercise.id,
+        name: exercise.name,
+        sets: [{ weight: '', reps: '' }] // start with one empty set
+    })
+    
+    // Reset selection
+    selectedExercise.value = null
 }
 
 // Transform flat exercises array into grouped array with subheaders

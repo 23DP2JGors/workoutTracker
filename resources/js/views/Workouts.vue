@@ -92,52 +92,66 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 
+// List of all workouts for the current user
 const workouts = ref([])
+
+// Controls which step of the modal is shown (1 = name/date, 2 = exercises)
 const step = ref(1)
+
+// Full list of exercises loaded from the database
 const exercises = ref([])
+
+// ID of the exercise selected in the autocomplete
 const selectedExercise = ref(null)
 
-// Form data for new workout
+// Form data for creating a new workout
 const form = ref({
     name: '',
-    date: new Date().toISOString().split('T')[0], // today's date by default
-})  
+    date: new Date().toISOString().split('T')[0], // default to today's date
+})
 
+// Save workout to the database
 const saveWorkout = async () => {
     // Will implement after adding exercises
     console.log('saving workout', form.value)
 }
 
+// Transform flat exercises array into grouped array with subheaders
+// This is recalculated automatically whenever exercises changes
 const groupedExercises = computed(() => {
     const groups = {}
-    
+
+    // Group exercises by muscle_group field
     exercises.value.forEach(exercise => {
         if (!groups[exercise.muscle_group]) {
             groups[exercise.muscle_group] = []
         }
         groups[exercise.muscle_group].push(exercise)
     })
-    
+
+    // Build flat array with subheader objects between groups
     const result = []
     Object.keys(groups).sort().forEach(group => {
+        // Add subheader for each muscle group
         result.push({ type: 'subheader', title: group })
+        // Add exercises under that group
         groups[group].forEach(exercise => {
             result.push({ title: exercise.name, value: exercise.id })
         })
     })
-    
+
     return result
 })
 
+// Load workouts and exercises when the page opens
 onMounted(async () => {
     const response = await axios.get('/api/workouts')
     workouts.value = response.data
-    
-    // Load exercises for selection in modal
+
+    // Load exercises for selection in the modal
     const exercisesResponse = await axios.get('/api/exercises')
     exercises.value = exercisesResponse.data
 })
-
 </script>
 
 <style scoped>

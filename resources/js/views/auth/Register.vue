@@ -8,6 +8,8 @@
                 <v-form fast-fail @submit.prevent="handleRegister" class="pa-6">
                 <v-text-field class="mb-3"
                     v-model="form.username"
+                    type="text"
+                    maxlength="50"
                     :rules="[rules.required]"
                     label="Username"
                 ></v-text-field>

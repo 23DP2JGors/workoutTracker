@@ -20,8 +20,11 @@
                                         v-model="form.name"
                                         label="Workout name"
                                         variant="outlined"
+                                        type="text"
+                                        maxlength="50"
                                         class="mb-4"
                                         placeholder="e.g. Push Day"
+                                        
                                     ></v-text-field>
 
                                     <v-text-field
@@ -76,8 +79,13 @@
                                                     v-model="set.weight"
                                                     variant="outlined"
                                                     density="compact"
-                                                    hide-details
+                                                    hide-details="auto"
                                                     type="number"
+                                                    step="0.5"
+                                                    placeholder="0.00"
+                                                    @blur="set.weight = fixWeight(set.weight)"
+                                                    @input="set.weight = set.weight.toString().slice(0, 6)"
+                                                    :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
                                                 ></v-text-field>
                                             </v-col>
                                             <v-col cols="4">
@@ -85,8 +93,11 @@
                                                     v-model="set.reps"
                                                     variant="outlined"
                                                     density="compact"
-                                                    hide-details
+                                                    hide-details="auto"
                                                     type="number"
+                                                    
+                                                    @input="set.reps = set.reps.toString().slice(0, 3)"
+                                                    :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
                                                 ></v-text-field>
                                             </v-col>
                                             <v-col cols="2">
@@ -167,6 +178,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
+import { rules } from '@/utils/rules.js';
 
 // List of all workouts for the current user
 const workouts = ref([])
@@ -188,6 +200,13 @@ const form = ref({
     name: '',
     date: new Date().toISOString().split('T')[0], // default to today's date
 })
+
+const fixWeight = (val) => {
+    if (!val) return val;
+    // to int and round 2 digits, 
+    // after parseFloat gets rid of 0
+    return parseFloat(Number(val).toFixed(2));
+}
 
 // Save workout to the database
 const saveWorkout = async () => {

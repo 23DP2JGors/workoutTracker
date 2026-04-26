@@ -19,7 +19,11 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => [
+    env('FRONTEND_URL', 'https://workouttracker.test'),
+    'https://workouttracker.test',
+],
+'supports_credentials' => true, // THIS MUST BE TRUE
 
     'allowed_origins_patterns' => [],
 

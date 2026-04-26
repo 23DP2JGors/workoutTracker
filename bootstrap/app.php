@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
         'register',
         'login',
+        'logout',
     ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

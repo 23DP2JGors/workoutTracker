@@ -19,4 +19,10 @@ export default defineConfig({
         }),
         vuetify({ autoImport: true }), // Automatically imports Vuetify components
     ],
+    server: {
+        host: 'workouttracker.test',
+        hmr: {
+            host: 'workouttracker.test',
+        },
+    },
 });

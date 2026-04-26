@@ -5,7 +5,7 @@
             <v-sheet color="surface" rounded="lg">
                 <p class="title-h1 px-6 pt-5 text-center">welcome to workout tracker!</p>
                 <p class="text-center font-weight-thin" color="subheading">Create your account</p>
-                <v-form fast-fail @submit.prevent="handleRegister" class="pa-6">
+                <v-form ref="formRef" fast-fail class="pa-6">
                 <v-text-field class="mb-3"
                     v-model="form.username"
                     :rules="[rules.required]"
@@ -49,8 +49,18 @@
                         </div>
                     </template>
                 </v-checkbox>
-            
-                <v-btn class="mt-2" type="submit" block>Submit</v-btn>
+            <v-alert 
+                    v-if="errorMessage" 
+                    type="error"
+                    variant="tonal"
+                    density="compact"
+                    rounded="lg"
+                    class="mb-3"
+                    :class="{ shake: shake }"
+                >
+                    Something went wrong. Please try again.
+                </v-alert>
+                <v-btn class="mt-2" type="submit" @click="handleRegister" block>Submit</v-btn>
 
                 <div class="text-center mt-4">
                     Already have an account?
@@ -73,6 +83,9 @@ import { rules } from '@/utils/rules.js';
 
 // Initialize router for navigation
 const router = useRouter();
+const shake = ref(false);
+const errorMessage = ref('');
+const formRef = ref(null)
 
 // Reactive data for the registration form; .value is sent to the API as payload
 const form = ref({
@@ -91,6 +104,7 @@ const confirmPassword = v => v === form.value.password || 'Passwords does not ma
 // Reactive state for password visibility toggle
 const visible = ref(false);
 
+
 /**
  * Handle form submission and send data to Laravel Breeze via API.
  * Steps:
@@ -99,22 +113,44 @@ const visible = ref(false);
  *   3) Redirect on success
  */
 const handleRegister = async () => {
-  try {
-    // 1. Ensure frontend has valid CSRF token cookie for the session
-    await axios.get('/sanctum/csrf-cookie');
+    // Validate form before sending
+    const { valid } = await formRef.value.validate()
+    if (!valid) return
 
-    // 2. Send the registration request to Laravel endpoint
-    const response = await axios.post('/register', form.value);
+    try {
+        // 1. Ensure frontend has valid CSRF token cookie for the session
+        await axios.get('/sanctum/csrf-cookie');
 
-    // Debug: show server replies (e.g. user object, tokens)
-    console.log('User registered:', response.data);
+        // 2. Send the registration request to Laravel endpoint
+        const response = await axios.post('/register', form.value);
 
-    // 3. On success, navigate to application home/dashboard
-    await router.push('/home');
-  } catch (error) {
-    // 4. Basic error reporting: log backend validation errors and show user notification
-    console.error('Registration failed:', error.response?.data?.errors ?? error);
-    alert('Registration failed. Please check your input and try again.');
-  }
+        // Debug: show server replies (e.g. user object, tokens)
+        console.log('User registered:', response.data);
+
+        // 3. On success, navigate to application home/dashboard
+        if (response.status === 204 || response.status === 201) {
+        await router.push('/home');
+    }
+    } catch (error) {
+        errorMessage.value = error.response?.data?.message || 'Login failed. Try again.';
+        // Trigger shake animation
+        shake.value = true
+        setTimeout(() => shake.value = false, 500)
+    }
 }
 </script>
+
+<style scoped>
+/* Shake animation when login fails repeatedly */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+</style>

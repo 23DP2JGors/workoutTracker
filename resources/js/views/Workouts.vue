@@ -95,7 +95,6 @@
                                                     density="compact"
                                                     hide-details="auto"
                                                     type="number"
-                                                    
                                                     @input="set.reps = set.reps.toString().slice(0, 3)"
                                                     :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
                                                 ></v-text-field>
@@ -156,6 +155,31 @@
                                 <template v-if="step === 2">
                                     <v-btn variant="text" @click="step = 1">← Back</v-btn>
                                     <v-spacer></v-spacer>
+
+                                    <v-alert 
+                                        v-if="saveError"
+                                        type="error"
+                                        variant="tonal"
+                                        density="compact"
+                                        rounded="lg"
+                                        class="mb-3"
+                                        closable
+                                        @click:close="saveError = null"
+                                    >
+                                        {{ saveError }}
+                                    </v-alert>
+
+                                    <v-alert 
+                                        v-if="saveSuccess"
+                                        type="success"
+                                        variant="tonal"
+                                        density="compact"
+                                        rounded="lg"
+                                        class="mb-3"
+                                    >
+                                        Workout saved successfully!
+                                    </v-alert>
+
                                     <v-btn color="primary" @click="saveWorkout">
                                         Save Workout
                                     </v-btn>
@@ -179,6 +203,10 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { rules } from '@/utils/rules.js';
+
+// workout save state
+const saveError = ref(null)
+const saveSuccess = ref(false)
 
 // List of all workouts for the current user
 const workouts = ref([])
@@ -210,8 +238,67 @@ const fixWeight = (val) => {
 
 // Save workout to the database
 const saveWorkout = async () => {
-    // Will implement after adding exercises
-    console.log('saving workout', form.value)
+    // Check that at least one exercise is added
+    if (workoutExercises.value.length === 0) {
+        saveError.value = 'Add at least one exercise before saving'
+        return
+    }
+
+    // Check that all sets have weight and reps filled
+    for (const exercise of workoutExercises.value) {
+        if (exercise.sets.length === 0) {
+            saveError.value = `Add at least one set for ${exercise.name}`
+            return
+        }
+        for (const set of exercise.sets) {
+            if (!set.weight || !set.reps) {
+                saveError.value = `Fill in all sets for ${exercise.name}`
+                return
+            }
+        }
+    }
+
+    try {
+        // Step 1: Create the workout
+        const workoutResponse = await axios.post('/api/workouts', form.value)
+        const workout = workoutResponse.data
+
+        // Step 2: Add each exercise to the workout
+        for (const [index, exercise] of workoutExercises.value.entries()) {
+            const exerciseResponse = await axios.post(
+                `/api/workouts/${workout.id}/exercises`,
+                { exercise_id: exercise.exercise_id, order: index }
+            )
+            const workoutExercise = exerciseResponse.data
+
+            // Step 3: Add sets for each exercise
+            for (const [setIndex, set] of exercise.sets.entries()) {
+                await axios.post(
+                    `/api/workout-exercises/${workoutExercise.id}/sets`,
+                    { weight: fixWeight(set.weight), reps: set.reps, order: setIndex }
+                )
+            }
+        }
+
+        // Step 4: Reload workouts list and close modal
+        const response = await axios.get('/api/workouts')
+        workouts.value = response.data
+
+        // Reset form
+        workoutExercises.value = []
+        selectedExercise.value = null
+        step.value = 1
+        form.value = {
+            name: '',
+            date: new Date().toISOString().split('T')[0],
+        }
+
+        console.log('Workout saved!')
+
+    } catch (error) {
+        console.error('Failed to save workout:', error)
+        saveError.value = 'Something went wrong. Please try again.'
+    }
 }
 
 // Add exercise button

@@ -5,7 +5,7 @@
             <v-sheet color="surface" rounded="lg">
                 <p class="title-h1 px-6 pt-5 text-center">welcome to workout tracker!</p>
                 <p class="text-center font-weight-thin" color="subheading">Create your account</p>
-                <v-form ref="formRef" fast-fail class="pa-6">
+                <v-form ref="formRef" fast-fail @submit.prevent="handleRegister" class="pa-6">
                 <v-text-field class="mb-3"
                     v-model="form.username"
                     :rules="[rules.required]"
@@ -56,11 +56,11 @@
                     density="compact"
                     rounded="lg"
                     class="mb-3"
-                    :class="{ shake: shake }"
+                    :class="{ 'shake': shake }"
                 >
-                    Something went wrong. Please try again.
+                    Registration failed. Please try again.
                 </v-alert>
-                <v-btn class="mt-2" type="submit" @click="handleRegister" block>Submit</v-btn>
+                <v-btn class="mt-2" type="submit" block>Submit</v-btn>
 
                 <div class="text-center mt-4">
                     Already have an account?
@@ -115,7 +115,12 @@ const visible = ref(false);
 const handleRegister = async () => {
     // Validate form before sending
     const { valid } = await formRef.value.validate()
-    if (!valid) return
+    if (!valid) {
+        errorMessage.value = 'Please correct the errors in the form.';
+        shake.value = true;
+        setTimeout(() => shake.value = false, 500);
+        return;
+    }
 
     try {
         // 1. Ensure frontend has valid CSRF token cookie for the session
@@ -132,7 +137,7 @@ const handleRegister = async () => {
         await router.push('/home');
     }
     } catch (error) {
-        errorMessage.value = error.response?.data?.message || 'Login failed. Try again.';
+        errorMessage.value = error.response?.data?.message || 'Registration failed. Try again.';
         // Trigger shake animation
         shake.value = true
         setTimeout(() => shake.value = false, 500)

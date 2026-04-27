@@ -1,5 +1,49 @@
 <template>
     <v-container>
+        <v-row class="mb-6" dense>
+            <v-col cols="12" sm="4">
+                <v-card variant="flat" class="pa-4">
+                    <v-row align="center" no-gutters>
+                        <v-col cols="auto">
+                            <v-icon size="28" class="text-primary">mdi-calendar-check</v-icon>
+                        </v-col>
+                        <v-col>
+                            <div class="text-caption text-uppercase text-medium-emphasis mb-2">Total Workouts</div>
+                            <div class="text-h4 font-weight-bold">{{ totalWorkouts }}</div>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-col>
+
+            <v-col cols="12" sm="4">
+                <v-card variant="flat" class="pa-4">
+                    <v-row align="center" no-gutters>
+                        <v-col cols="auto">
+                            <v-icon size="28" class="text-primary">mdi-fire</v-icon>
+                        </v-col>
+                        <v-col>
+                            <div class="text-caption text-uppercase text-medium-emphasis mb-2">This Week</div>
+                            <div class="text-h4 font-weight-bold">{{ thisWeekWorkouts }}</div>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-col>
+
+            <v-col cols="12" sm="4">
+                <v-card variant="flat" class="pa-4">
+                    <v-row align="center" no-gutters>
+                        <v-col cols="auto">
+                            <v-icon size="28" class="text-primary">mdi-clock-outline</v-icon>
+                        </v-col>
+                        <v-col>
+                            <div class="text-caption text-uppercase text-medium-emphasis mb-2">Days Since Last</div>
+                            <div class="text-h4 font-weight-bold">{{ daysSinceLastWorkout }}</div>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-col>
+        </v-row>
+
         <v-row class="justify-space-around">
             <v-col cols="12" md="6">
                <v-dialog 
@@ -198,9 +242,33 @@
                     </template>
                 </v-dialog>
 
-                <!-- Workout list -->
-                <div v-for="workout in workouts" :key="workout.id" class="mt-4">
-                    {{ workout.name }} — {{ workout.date }}
+                <div class="mt-6">
+                    <div class="text-subtitle-1 font-weight-medium mb-4">Workout History</div>
+                    <v-row dense>
+                        <v-col cols="12" v-if="!workouts.length">
+                            <v-card variant="outlined" class="pa-4">
+                                <div class="text-body-medium text-medium-emphasis">No workouts yet. Start by creating a new workout.</div>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12" v-for="workout in workouts" :key="workout.id" class="pb-3">
+                            <v-card variant="outlined" class="pa-4">
+                                <v-row align="center">
+                                    <v-col cols="12" sm="7">
+                                        <div class="text-title-medium font-weight-bold">{{ workout.name || 'Workout' }}</div>
+                                        <div class="text-body-small text-medium-emphasis">{{ formatWorkoutDate(workout.date) }}</div>
+                                    </v-col>
+                                    <v-col cols="12" sm="5" class="d-flex flex-column flex-sm-row justify-sm-end gap-2">
+                                        <v-chip variant="tonal" color="primary" size="small" class="mr-2">
+                                            {{ exerciseCount(workout) }} exercises
+                                        </v-chip>
+                                        <v-chip variant="outlined" size="small">
+                                            {{ setCount(workout) }} sets
+                                        </v-chip>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
+                        </v-col>
+                    </v-row>
                 </div>
 
             </v-col>
@@ -208,7 +276,7 @@
         <!-- Success notification -->
         <v-snackbar
             v-model="successSnackbar"
-            color="primary"
+            color="success"
             location="bottom"
             elevation="24"
             :timeout="3000"
@@ -256,6 +324,68 @@ const workoutExercises = ref([]) // List of exercises added to current workout
 const successSnackbar = ref(false); // Controls the visibility of the notification
 const errorSnackbar = ref(false); // Controls the visibility of the error notification
 
+const totalWorkouts = computed(() => workouts.value?.length ?? 0)
+
+const thisWeekWorkouts = computed(() => {
+    const today = new Date()
+    const startOfWeek = new Date(today)
+    const day = startOfWeek.getDay()
+    const diff = (day + 6) % 7
+    startOfWeek.setDate(startOfWeek.getDate() - diff)
+    startOfWeek.setHours(0, 0, 0, 0)
+
+    return (workouts.value ?? []).filter(workout => {
+        if (!workout?.date) return false
+        const workoutDate = new Date(workout.date)
+        if (Number.isNaN(workoutDate.getTime())) return false
+        workoutDate.setHours(0, 0, 0, 0)
+        return workoutDate >= startOfWeek && workoutDate <= today
+    }).length
+})
+
+const lastWorkout = computed(() => {
+    const validDates = (workouts.value ?? [])
+        .map(workout => new Date(workout?.date))
+        .filter(date => !Number.isNaN(date.getTime()))
+        .sort((a, b) => b - a)
+
+    return validDates.length ? validDates[0] : null
+})
+
+const daysSinceLastWorkout = computed(() => {
+    if (!lastWorkout.value) return 'N/A'
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const lastDate = new Date(lastWorkout.value)
+    lastDate.setHours(0, 0, 0, 0)
+
+    const diffDays = Math.round((today - lastDate) / (1000 * 60 * 60 * 24))
+    return Math.max(0, diffDays)
+})
+
+const formatWorkoutDate = (dateString) => {
+    if (!dateString) return 'N/A'
+    const date = new Date(dateString)
+    if (Number.isNaN(date.getTime())) return 'N/A'
+
+    return date.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+    })
+}
+
+const exerciseCount = (workout) => {
+    return workout.workout_exercises?.length || 0;
+}
+
+const setCount = (workout) => {
+    if (!workout.workout_exercises) return 0;
+    return workout.workout_exercises.reduce((total, ex) => {
+        return total + (ex.sets?.length || 0);
+    }, 0);
+}
 
 // Form data for creating a new workout
 const form = ref({

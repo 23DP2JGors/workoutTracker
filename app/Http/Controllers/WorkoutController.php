@@ -7,15 +7,18 @@ use Illuminate\Http\Request;
 
 class WorkoutController extends Controller
 {
-    // Get all workouts for current user
+   // Get all workouts for current user
     public function index()
-    {
-        $workouts = Workout::where('user_id', auth()->id())
-            ->orderBy('date', 'desc')
-            ->get();
+{
+    // We explicitly tell Laravel to include exercises and their sets
+    // using the 'workoutExercises' relationship defined in your Model
+    $workouts = Workout::with(['workoutExercises.sets'])
+        ->where('user_id', auth()->id())
+        ->latest()
+        ->get();
 
-        return response()->json($workouts);
-    }
+    return response()->json($workouts);
+}
 
     // Create new workout
     public function store(Request $request)

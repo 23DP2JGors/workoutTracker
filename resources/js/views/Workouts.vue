@@ -2,8 +2,11 @@
     <v-container>
         <v-row class="justify-space-around">
             <v-col cols="12" md="6">
-
-                <v-dialog transition="dialog-bottom-transition" :width="$vuetify.display.smAndDown ? '100%' : '700'">
+               <v-dialog 
+                    v-model="isDialogOpen" 
+                    transition="dialog-bottom-transition" 
+                    :width="$vuetify.display.smAndDown ? '100%' : '700'"
+                    >                    
                     <template v-slot:activator="{ props: activatorProps }">
                         <v-btn v-bind="activatorProps" text="New workout" block></v-btn>
                     </template>
@@ -37,6 +40,7 @@
 
                                 <!-- Step 2: Add exercises -->
                                 <div v-if="step === 2">
+                                    <v-form ref="formRef">
                                     <v-autocomplete
                                         v-model="selectedExercise"
                                         :items="groupedExercises"
@@ -74,31 +78,31 @@
                                         <!-- Sets -->
                                         <v-row v-for="(set, setIndex) in exercise.sets" :key="setIndex" class="mb-1 px-2 mt-1 mb-5"  align="center">
                                             <v-col cols="2">{{ setIndex + 1 }}</v-col>
-                                            <v-col cols="4">
-                                                <v-text-field
-                                                    v-model="set.weight"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details="auto"
-                                                    type="number"
-                                                    step="0.5"
-                                                    placeholder="0.00"
-                                                    @blur="set.weight = fixWeight(set.weight)"
-                                                    @input="set.weight = set.weight.toString().slice(0, 6)"
-                                                    :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="4">
-                                                <v-text-field
-                                                    v-model="set.reps"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details="auto"
-                                                    type="number"
-                                                    @input="set.reps = set.reps.toString().slice(0, 3)"
-                                                    :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
-                                                ></v-text-field>
-                                            </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
+                                                        v-model="set.weight"
+                                                        variant="outlined"
+                                                        density="compact"
+                                                        hide-details="auto"
+                                                        type="number"
+                                                        step="0.5"
+                                                        placeholder="0.00"
+                                                        @blur="set.weight = fixWeight(set.weight)"
+                                                        @input="set.weight = set.weight.toString().slice(0, 6)"
+                                                        :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
+                                                        v-model="set.reps"
+                                                        variant="outlined"
+                                                        density="compact"
+                                                        hide-details="auto"
+                                                        type="number"
+                                                        @input="set.reps = set.reps.toString().slice(0, 3)"
+                                                        :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
+                                                    ></v-text-field>
+                                                </v-col>
                                             <v-col cols="2">
                                                 <v-btn icon="mdi-close" density="compact" variant="text" @click="exercise.sets.splice(setIndex, 1)"></v-btn>
                                             </v-col>
@@ -137,6 +141,7 @@
                                     <v-btn variant="text" color="primary" class="mt-2" @click="addExercise" :disabled="!selectedExercise">
                                         + Add Exercise
                                     </v-btn>
+                                    </v-form>
                                 </div>
 
                             </v-card-text>
@@ -180,7 +185,11 @@
                                         Workout saved successfully!
                                     </v-alert>
 
-                                    <v-btn color="primary" @click="saveWorkout">
+                                    <v-btn 
+                                        color="primary" 
+                                        :loading="isSaving" 
+                                        @click="saveWorkout"
+                                    >
                                         Save Workout
                                     </v-btn>
                                 </template>
@@ -196,6 +205,35 @@
 
             </v-col>
         </v-row>
+        <!-- Success notification -->
+        <v-snackbar
+            v-model="successSnackbar"
+            color="primary"
+            location="bottom"
+            elevation="24"
+            :timeout="3000"
+        >
+            Workout saved successfully!
+            
+            <template v-slot:actions>
+                <v-btn variant="text" @click="successSnackbar = false">Close</v-btn>
+            </template>
+        </v-snackbar>
+
+        <!-- Error notification -->
+        <v-snackbar
+            v-model="errorSnackbar"
+            color="error"
+            location="bottom"
+            elevation="24"
+            :timeout="5000"
+        >
+            Failed to save workout. Please try again.
+            
+            <template v-slot:actions>
+                <v-btn variant="text" @click="errorSnackbar = false">Close</v-btn>
+            </template>
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -207,21 +245,17 @@ import { rules } from '@/utils/rules.js';
 // workout save state
 const saveError = ref(null)
 const saveSuccess = ref(false)
+const isDialogOpen = ref(false); // Local state to control the modal
+const formRef = ref(null); // Reference to the form
+const isSaving = ref(false); // Loading state for the button
+const workouts = ref([]) // List of all workouts for the current user
+const step = ref(1) // Controls which step of the modal is shown (1 = name/date, 2 = exercises)
+const exercises = ref([]) // Full list of exercises loaded from the database
+const selectedExercise = ref(null) // ID of the exercise selected in the autocomplete
+const workoutExercises = ref([]) // List of exercises added to current workout
+const successSnackbar = ref(false); // Controls the visibility of the notification
+const errorSnackbar = ref(false); // Controls the visibility of the error notification
 
-// List of all workouts for the current user
-const workouts = ref([])
-
-// Controls which step of the modal is shown (1 = name/date, 2 = exercises)
-const step = ref(1)
-
-// Full list of exercises loaded from the database
-const exercises = ref([])
-
-// ID of the exercise selected in the autocomplete
-const selectedExercise = ref(null)
-
-// List of exercises added to current workout
-const workoutExercises = ref([])
 
 // Form data for creating a new workout
 const form = ref({
@@ -238,27 +272,27 @@ const fixWeight = (val) => {
 
 // Save workout to the database
 const saveWorkout = async () => {
-    // Check that at least one exercise is added
-    if (workoutExercises.value.length === 0) {
-        saveError.value = 'Add at least one exercise before saving'
-        return
+    // 1. Reset error state
+    saveError.value = null;
+
+    // 2. Validate all fields (kg, reps, etc.) using Vuetify rules
+    const { valid } = await formRef.value.validate();
+    
+    // If any field is invalid (e.g., -10kg), stop here
+    if (!valid) {
+        saveError.value = 'Please correct the errors in the sets before saving';
+        return;
     }
 
-    // Check that all sets have weight and reps filled
-    for (const exercise of workoutExercises.value) {
-        if (exercise.sets.length === 0) {
-            saveError.value = `Add at least one set for ${exercise.name}`
-            return
-        }
-        for (const set of exercise.sets) {
-            if (!set.weight || !set.reps) {
-                saveError.value = `Fill in all sets for ${exercise.name}`
-                return
-            }
-        }
+    // 3. Keep your manual check for exercise existence
+    if (workoutExercises.value.length === 0) {
+        saveError.value = 'Add at least one exercise before saving';
+        return;
     }
 
     try {
+        isSaving.value = true; // Start loading animation
+
         // Step 1: Create the workout
         const workoutResponse = await axios.post('/api/workouts', form.value)
         const workout = workoutResponse.data
@@ -279,27 +313,31 @@ const saveWorkout = async () => {
                 )
             }
         }
+        
+        // Step 4: Finalize
+        const response = await axios.get('/api/workouts');
+        workouts.value = response.data;
 
-        // Step 4: Reload workouts list and close modal
-        const response = await axios.get('/api/workouts')
-        workouts.value = response.data
-
-        // Reset form
-        workoutExercises.value = []
-        selectedExercise.value = null
-        step.value = 1
+        // Reset form and UI
+        workoutExercises.value = [];
+        selectedExercise.value = null;
+        step.value = 1;
         form.value = {
             name: '',
             date: new Date().toISOString().split('T')[0],
-        }
+        };
 
-        console.log('Workout saved!')
+        // CLOSE DIALOG ON SUCCESS
+        isDialogOpen.value = false;
+        successSnackbar.value = true;
 
     } catch (error) {
-        console.error('Failed to save workout:', error)
-        saveError.value = 'Something went wrong. Please try again.'
+        errorSnackbar.value = true;
+        saveError.value = 'Something went wrong. Please try again.';
+    } finally {
+        isSaving.value = false; // Stop loading animation regardless of success/fail
     }
-}
+};
 
 // Add exercise button
 const addExercise = () => {

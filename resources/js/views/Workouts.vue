@@ -52,12 +52,12 @@
                     :width="$vuetify.display.smAndDown ? '100%' : '700'"
                     >                    
                     <template v-slot:activator="{ props: activatorProps }">
-                        <v-btn v-bind="activatorProps" text="New workout" block></v-btn>
+                        <v-btn v-bind="activatorProps" text="New workout" block @click="openNewModal"></v-btn>
                     </template>
 
                     <template v-slot:default="{ isActive }">
                         <v-card>
-                            <v-toolbar :title="step === 1 ? 'New Workout' : form.name"></v-toolbar>
+                            <v-toolbar :title="isEditing ? 'Edit Workout' : (step === 1 ? 'New Workout' : form.name)"></v-toolbar>
 
                             <v-card-text class="pa-6">
 
@@ -305,8 +305,7 @@
         <v-dialog v-model="detailDialog" max-width="600" transition="dialog-bottom-transition">
             <v-card>
                 <v-toolbar :title="selectedWorkout?.name">
-                    <template v-slot:append>
-                        <v-btn color="error" variant="text" @click="deleteWorkout" class="mr-10">
+                    <template v-slot:append>                        <v-btn icon="mdi-pencil" variant="text" @click="openEditModal(selectedWorkout)" class="mr-2"></v-btn>                        <v-btn color="error" variant="text" @click="deleteWorkout" class="mr-10">
                             Delete workout
                         </v-btn>
                     </template>
@@ -345,7 +344,6 @@ import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { rules } from '@/utils/rules.js';
 
-// workout save state
 const saveError = ref(null)
 const saveSuccess = ref(false)
 const isDialogOpen = ref(false) // Local state to control the modal
@@ -361,6 +359,9 @@ const errorSnackbar = ref(false) // Controls the visibility of the error notific
 // workouts history stats
 const detailDialog = ref(false)
 const selectedWorkout = ref(null)
+const isEditing = ref(false) // Flag to indicate if we're editing an existing workout
+const editingWorkoutId = ref(null) // ID of the workout being edited
+const deletedExerciseIds = ref([]) // IDs of exercises removed while editing
 
 const totalWorkouts = computed(() => workouts.value?.length ?? 0)
 
@@ -379,6 +380,40 @@ const deleteWorkout = async () => {
     } catch (error) {
         console.error('Failed to delete workout:', error)
     }
+}
+
+// Open edit modal with existing workout data
+const openEditModal = (workout) => {
+    isEditing.value = true
+    editingWorkoutId.value = workout.id
+    deletedExerciseIds.value = []
+    form.value = {
+        name: workout.name,
+        date: workout.date
+    }
+    workoutExercises.value = workout.workout_exercises.map(we => ({
+        id: we.id,
+        exercise_id: we.exercise.id,
+        name: we.exercise.name,
+        sets: we.sets.map(s => ({ id: s.id, weight: s.weight, reps: s.reps }))
+    }))
+    isDialogOpen.value = true
+    step.value = 1
+}
+
+// Open new workout modal and reset all fields
+const openNewModal = () => {
+    isEditing.value = false
+    editingWorkoutId.value = null
+    deletedExerciseIds.value = []
+    form.value = {
+        name: '',
+        date: new Date().toISOString().split('T')[0],
+    }
+    workoutExercises.value = []
+    selectedExercise.value = null
+    step.value = 1
+    isDialogOpen.value = true
 }
 
 // Format weight to remove trailing zeros (e.g., 10.00 -> 10, but 10.50 stays 10.5)
@@ -483,24 +518,52 @@ const saveWorkout = async () => {
     try {
         isSaving.value = true; // Start loading animation
 
-        // Step 1: Create the workout
-        const workoutResponse = await axios.post('/api/workouts', form.value)
-        const workout = workoutResponse.data
+        if (isEditing.value) {
+            // 1. Update basic info (name, date)
+            await axios.put(`/api/workouts/${editingWorkoutId.value}`, form.value)
 
-        // Step 2: Add each exercise to the workout
-        for (const [index, exercise] of workoutExercises.value.entries()) {
-            const exerciseResponse = await axios.post(
-                `/api/workouts/${workout.id}/exercises`,
-                { exercise_id: exercise.exercise_id, order: index }
-            )
-            const workoutExercise = exerciseResponse.data
+            // 2. Fetch all existing workout_exercises to delete them first
+            // This ensures a clean slate for the update
+            const currentWorkout = await axios.get(`/api/workouts/${editingWorkoutId.value}`)
+            for (const ex of currentWorkout.data.workout_exercises) {
+                await axios.delete(`/api/workout-exercises/${ex.id}`)
+            }
 
-            // Step 3: Add sets for each exercise
-            for (const [setIndex, set] of exercise.sets.entries()) {
-                await axios.post(
-                    `/api/workout-exercises/${workoutExercise.id}/sets`,
-                    { weight: fixWeight(set.weight), reps: set.reps, order: setIndex }
+            // 3. Now just save EVERYTHING currently in the list as if it's new
+            for (const [index, exercise] of workoutExercises.value.entries()) {
+                const exerciseResponse = await axios.post(
+                    `/api/workouts/${editingWorkoutId.value}/exercises`,
+                    { exercise_id: exercise.exercise_id, order: index }
                 )
+                const workoutExercise = exerciseResponse.data
+
+                for (const [setIndex, set] of exercise.sets.entries()) {
+                    await axios.post(
+                        `/api/workout-exercises/${workoutExercise.id}/sets`,
+                        { weight: fixWeight(set.weight), reps: set.reps, order: setIndex }
+                    )
+                }
+            }
+        } else {
+            // Create new workout
+            const workoutResponse = await axios.post('/api/workouts', form.value)
+            const workout = workoutResponse.data
+
+            // Step 2: Add each exercise to the workout
+            for (const [index, exercise] of workoutExercises.value.entries()) {
+                const exerciseResponse = await axios.post(
+                    `/api/workouts/${workout.id}/exercises`,
+                    { exercise_id: exercise.exercise_id, order: index }
+                )
+                const workoutExercise = exerciseResponse.data
+
+                // Step 3: Add sets for each exercise
+                for (const [setIndex, set] of exercise.sets.entries()) {
+                    await axios.post(
+                        `/api/workout-exercises/${workoutExercise.id}/sets`,
+                        { weight: fixWeight(set.weight), reps: set.reps, order: setIndex }
+                    )
+                }
             }
         }
         
@@ -511,14 +574,18 @@ const saveWorkout = async () => {
         // Reset form and UI
         workoutExercises.value = [];
         selectedExercise.value = null;
+        deletedExerciseIds.value = [];
         step.value = 1;
         form.value = {
             name: '',
             date: new Date().toISOString().split('T')[0],
         };
+        isEditing.value = false;
+        editingWorkoutId.value = null;
 
         // CLOSE DIALOG ON SUCCESS
         isDialogOpen.value = false;
+        detailDialog.value = false;
         successSnackbar.value = true;
 
     } catch (error) {
@@ -545,6 +612,14 @@ const addExercise = () => {
     
     // Reset selection
     selectedExercise.value = null
+}
+
+const removeExercise = (exIndex) => {
+    const exercise = workoutExercises.value[exIndex]
+    if (exercise?.id && typeof exercise.id === 'number') {
+        deletedExerciseIds.value.push(exercise.id)
+    }
+    workoutExercises.value.splice(exIndex, 1)
 }
 
 // Transform flat exercises array into grouped array with subheaders

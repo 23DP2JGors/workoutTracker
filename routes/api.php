@@ -14,6 +14,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum'])->group(function () {
     // Workout routes
     Route::apiResource('workouts', WorkoutController::class);
+    Route::delete('workout-exercises/{workoutExercise}', [WorkoutExerciseController::class, 'destroy']);
 
     // Workout exercise routes — nested under workout
     Route::get('workouts/{workout}/exercises', [WorkoutExerciseController::class, 'index']);

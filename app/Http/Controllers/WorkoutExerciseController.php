@@ -41,15 +41,16 @@ class WorkoutExerciseController extends Controller
         return response()->json($workoutExercise->load('exercise'), 201);
     }
 
-    // Remove exercise from workout
-    public function destroy(Workout $workout, WorkoutExercise $workoutExercise)
-    {
-        if ($workout->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        $workoutExercise->delete();
-
-        return response()->json(['message' => 'Exercise removed']);
+    public function destroy(WorkoutExercise $workoutExercise)
+{
+    // Check if the user owns the workout this exercise belongs to
+    if ($workoutExercise->workout->user_id !== auth()->id()) {
+        return response()->json(['message' => 'Forbidden'], 403);
     }
+
+    $workoutExercise->delete();
+
+    return response()->json(['message' => 'Exercise removed']);
+}
+
 }

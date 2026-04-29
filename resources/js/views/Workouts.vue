@@ -251,7 +251,7 @@
                             </v-card>
                         </v-col>
                         <v-col cols="12" v-for="workout in workouts" :key="workout.id" class="pb-3">
-                            <v-card variant="outlined" class="pa-4">
+                            <v-card variant="outlined" class="pa-4 workout-card" @click="openWorkout(workout)">
                                 <v-row align="center">
                                     <v-col cols="12" sm="7">
                                         <div class="text-title-medium font-weight-bold">{{ workout.name || 'Workout' }}</div>
@@ -302,6 +302,41 @@
                 <v-btn variant="text" @click="errorSnackbar = false">Close</v-btn>
             </template>
         </v-snackbar>
+        <v-dialog v-model="detailDialog" max-width="600" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar :title="selectedWorkout?.name">
+                    <template v-slot:append>
+                        <v-btn color="error" variant="text" @click="deleteWorkout" class="mr-10">
+                            Delete workout
+                        </v-btn>
+                    </template>
+                </v-toolbar>
+                <v-card-text>
+                    <p class="text-medium-emphasis mb-4">{{ formatWorkoutDate(selectedWorkout?.date) }}</p>
+                    
+                    <div v-for="ex in selectedWorkout?.workout_exercises" :key="ex.id" class="mb-4">
+                        <div class="mb-3">
+                            <p class="font-weight-bold text-primary">{{ ex.exercise?.name }}</p>
+                        </div>
+                        <v-row class="text-caption text-uppercase text-medium-emphasis px-2 no-gutters mb-n5">
+                            <v-col cols="2">set</v-col>
+                            <v-col cols="5">kg</v-col>
+                            <v-col cols="5">reps</v-col>
+                        </v-row>
+                        <v-row v-for="(set, i) in ex.sets" :key="set.id" class="px-2 no-gutters" align="center">
+                            <v-col cols="2" class="mb-n3">{{ i + 1 }}</v-col>
+                            <v-col cols="5" class="mb-n3">{{ formatWeight(set.weight) }}</v-col>
+                            <v-col cols="5" class="mb-n3">{{ set.reps }}</v-col>
+                        </v-row>
+                        <v-divider class="mt-3"></v-divider>
+                    </div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="detailDialog = false">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -313,18 +348,43 @@ import { rules } from '@/utils/rules.js';
 // workout save state
 const saveError = ref(null)
 const saveSuccess = ref(false)
-const isDialogOpen = ref(false); // Local state to control the modal
-const formRef = ref(null); // Reference to the form
-const isSaving = ref(false); // Loading state for the button
+const isDialogOpen = ref(false) // Local state to control the modal
+const formRef = ref(null) // Reference to the form
+const isSaving = ref(false) // Loading state for the button
 const workouts = ref([]) // List of all workouts for the current user
 const step = ref(1) // Controls which step of the modal is shown (1 = name/date, 2 = exercises)
 const exercises = ref([]) // Full list of exercises loaded from the database
 const selectedExercise = ref(null) // ID of the exercise selected in the autocomplete
 const workoutExercises = ref([]) // List of exercises added to current workout
-const successSnackbar = ref(false); // Controls the visibility of the notification
-const errorSnackbar = ref(false); // Controls the visibility of the error notification
+const successSnackbar = ref(false) // Controls the visibility of the notification
+const errorSnackbar = ref(false) // Controls the visibility of the error notification
+// workouts history stats
+const detailDialog = ref(false)
+const selectedWorkout = ref(null)
 
 const totalWorkouts = computed(() => workouts.value?.length ?? 0)
+
+// open workout details dialog
+const openWorkout = (workout) => {
+    selectedWorkout.value = workout
+    detailDialog.value = true
+}
+
+// Delete workout and all related exercises and sets
+const deleteWorkout = async () => {
+    try {
+        await axios.delete(`/api/workouts/${selectedWorkout.value.id}`)
+        workouts.value = workouts.value.filter(w => w.id !== selectedWorkout.value.id)
+        detailDialog.value = false
+    } catch (error) {
+        console.error('Failed to delete workout:', error)
+    }
+}
+
+// Format weight to remove trailing zeros (e.g., 10.00 -> 10, but 10.50 stays 10.5)
+const formatWeight = (weight) => {
+    return Number(weight) % 1 === 0 ? parseInt(weight) : parseFloat(weight)
+}
 
 const thisWeekWorkouts = computed(() => {
     const today = new Date()
@@ -526,5 +586,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.workout-card {
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
 
+.workout-card:hover {
+    box-shadow: 0 4px 20px rgba(181, 232, 83, 0.15);
+    border-color: rgba(181, 232, 83, 0.5);
+}
 </style>

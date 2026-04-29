@@ -12,7 +12,7 @@ class WorkoutController extends Controller
 {
     // We explicitly tell Laravel to include exercises and their sets
     // using the 'workoutExercises' relationship defined in your Model
-    $workouts = Workout::with(['workoutExercises.sets'])
+    $workouts = Workout::with(['workoutExercises.exercise', 'workoutExercises.sets'])
         ->where('user_id', auth()->id())
         ->latest()
         ->get();

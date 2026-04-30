@@ -6,6 +6,7 @@ use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\WorkoutExerciseController;
 use App\Http\Controllers\SetController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\UserProfileController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -29,4 +30,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Exercise routes — global and personal
     Route::get('exercises', [ExerciseController::class, 'index']);
     Route::post('exercises', [ExerciseController::class, 'store']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+    // Get user profile data
+    Route::get('/user-profile', [UserProfileController::class, 'show']);
+    
+    // Create or update user profile
+    Route::post('/user-profile', [UserProfileController::class, 'update']);
+});
 });

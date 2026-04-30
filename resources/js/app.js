@@ -26,6 +26,11 @@ const vuetify = createVuetify({
         variant: 'outlined',
         density: 'compact',
     },
+    VSelect: {
+            variant: 'outlined',
+            density: 'compact',
+            hideDetails: 'auto',
+    },
     VBtn: {
         color: 'primary'
     }

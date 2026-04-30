@@ -30,6 +30,27 @@
 
 <script setup>
 
+// Wait 100ms for cards to render in DOM before observing
+        setTimeout(() => {
+            // Create observer that watches when elements enter viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // When card becomes visible — add class to trigger CSS animation
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible')
+                    } else {
+                        // Card left viewport — hide it again
+                        entry.target.classList.remove('visible')
+                    }
+                })
+            }, { threshold: 0.15 }) // fire when 15% of element is visible
+
+            // Start observing every feature card on the page
+            document.querySelectorAll('.feature-card').forEach(card => {
+                observer.observe(card)
+            })
+        }, 500)
+
 const menuItems = [
     { title: 'Workouts', description: 'Log your training sessions', icon: 'mdi-dumbbell', path: '/workouts' },
     { title: 'Exercises', description: 'Browse 60+ exercises', icon: 'mdi-arm-flex', path: '/exercises' },
@@ -38,3 +59,23 @@ const menuItems = [
     { title: 'Programs', description: 'Follow a structured plan', icon: 'mdi-rocket-launch', path: '/programs' },
 ]
 </script>
+
+<style scoped>
+/* Cards are invisible */
+.feature-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* When IntersectionObserver adding visible class */
+.feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hover effect */
+.feature-card:hover {
+    transform: translateY(-6px);
+}
+</style>

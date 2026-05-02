@@ -1,342 +1,344 @@
 <template>
-    <v-container>
-        <v-row class="mb-6" dense>
-            <v-col cols="12" sm="4">
-                <v-card variant="flat" class="pa-4">
-                    <v-row align="center" no-gutters>
-                        <v-col cols="auto">
-                            <v-icon size="28" class="text-primary">mdi-calendar-check</v-icon>
-                        </v-col>
-                        <v-col>
-                            <div class="text-caption text-uppercase text-medium-emphasis mb-2">Total Workouts</div>
-                            <div class="text-h4 font-weight-bold">{{ totalWorkouts }}</div>
-                        </v-col>
-                    </v-row>
-                </v-card>
+  <v-container>
+    <v-row class="mb-6" dense>
+      <v-col cols="12" sm="4">
+        <v-card variant="flat" class="pa-4">
+          <v-row align="center" no-gutters>
+            <v-col cols="auto">
+              <v-icon size="28" class="text-primary">mdi-calendar-check</v-icon>
             </v-col>
-
-            <v-col cols="12" sm="4">
-                <v-card variant="flat" class="pa-4">
-                    <v-row align="center" no-gutters>
-                        <v-col cols="auto">
-                            <v-icon size="28" class="text-primary">mdi-fire</v-icon>
-                        </v-col>
-                        <v-col>
-                            <div class="text-caption text-uppercase text-medium-emphasis mb-2">This Week</div>
-                            <div class="text-h4 font-weight-bold">{{ thisWeekWorkouts }}</div>
-                        </v-col>
-                    </v-row>
-                </v-card>
+            <v-col>
+              <div class="text-caption text-uppercase text-medium-emphasis mb-2">Total Workouts</div>
+              <div class="text-h4 font-weight-bold">{{ totalWorkouts }}</div>
             </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
 
-            <v-col cols="12" sm="4">
-                <v-card variant="flat" class="pa-4">
-                    <v-row align="center" no-gutters>
-                        <v-col cols="auto">
-                            <v-icon size="28" class="text-primary">mdi-clock-outline</v-icon>
-                        </v-col>
-                        <v-col>
-                            <div class="text-caption text-uppercase text-medium-emphasis mb-2">Days Since Last</div>
-                            <div class="text-h4 font-weight-bold">{{ daysSinceLastWorkout }}</div>
-                        </v-col>
-                    </v-row>
-                </v-card>
+      <v-col cols="12" sm="4">
+        <v-card variant="flat" class="pa-4">
+          <v-row align="center" no-gutters>
+            <v-col cols="auto">
+              <v-icon size="28" class="text-primary">mdi-fire</v-icon>
             </v-col>
-        </v-row>
+            <v-col>
+              <div class="text-caption text-uppercase text-medium-emphasis mb-2">This Week</div>
+              <div class="text-h4 font-weight-bold">{{ thisWeekWorkouts }}</div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
 
-        <v-row class="justify-space-around">
-            <v-col cols="12" md="6">
-               <v-dialog 
-                    v-model="isDialogOpen" 
-                    transition="dialog-bottom-transition" 
-                    :width="$vuetify.display.smAndDown ? '100%' : '700'"
-                    >                    
-                    <template v-slot:activator="{ props: activatorProps }">
-                        <v-btn v-bind="activatorProps" text="New workout" block @click="openNewModal"></v-btn>
-                    </template>
+      <v-col cols="12" sm="4">
+        <v-card variant="flat" class="pa-4">
+          <v-row align="center" no-gutters>
+            <v-col cols="auto">
+              <v-icon size="28" class="text-primary">mdi-clock-outline</v-icon>
+            </v-col>
+            <v-col>
+              <div class="text-caption text-uppercase text-medium-emphasis mb-2">Days Since Last</div>
+              <div class="text-h4 font-weight-bold">{{ daysSinceLastWorkout }}</div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
 
-                    <template v-slot:default="{ isActive }">
-                        <v-card>
-                            <v-toolbar :title="isEditing ? 'Edit Workout' : (step === 1 ? 'New Workout' : form.name)"></v-toolbar>
+    <v-row class="justify-space-around">
+      <v-col cols="12" md="6">
+      <v-dialog 
+          v-model="isDialogOpen" 
+          transition="dialog-bottom-transition" 
+          :width="$vuetify.display.smAndDown ? '100%' : '700'"
+          >                    
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" text="New workout" block @click="openNewModal"></v-btn>
+          </template>
 
-                            <v-card-text class="pa-6">
+          <template v-slot:default="{ isActive }">
+            <v-card>
+              <v-toolbar :title="isEditing ? 'Edit Workout' : (step === 1 ? 'New Workout' : form.name)"></v-toolbar>
 
-                                <!-- Step 1: Workout name and date -->
-                                <div v-if="step === 1">
-                                    <v-text-field
-                                        v-model="form.name"
-                                        label="Workout name"
-                                        variant="outlined"
-                                        type="text"
-                                        maxlength="50"
-                                        class="mb-4"
-                                        placeholder="e.g. Push Day"
-                                        
-                                    ></v-text-field>
+              <v-card-text class="pa-6">
 
-                                    <v-text-field
-                                        v-model="form.date"
-                                        label="Date"
-                                        type="date"
-                                        variant="outlined"
-                                    ></v-text-field>
-                                </div>
+                <!-- Step 1: Workout name and date -->
+                <div v-if="step === 1">
+                  <v-text-field
+                    v-model="form.name"
+                    label="Workout name"
+                    variant="outlined"
+                    type="text"
+                    maxlength="50"
+                    class="mb-4"
+                    placeholder="e.g. Push Day"
+                    
+                  ></v-text-field>
 
-                                <!-- Step 2: Add exercises -->
-                                <div v-if="step === 2">
-                                    <v-form ref="formRef">
-                                    <v-autocomplete
-                                        v-model="selectedExercise"
-                                        :items="groupedExercises"
-                                        label="Search exercise"
-                                        variant="outlined"
-                                    >
-                                        <template v-slot:subheader="{ props }">
-                                            <v-divider class="mb-1"></v-divider>
-                                            <v-list-subheader class="font-weight-bold text-primary text-uppercase">
-                                                {{ props.title }}
-                                            </v-list-subheader>
-                                        </template>
-
-                                        <template v-slot:item="{ props, item }">
-                                            <v-list-item v-bind="props" class="pl-8"></v-list-item>
-                                        </template>
-                                    </v-autocomplete>
-
-                                    <!-- Added exercises list -->
-                                    <div v-for="(exercise, exIndex) in workoutExercises" :key="exIndex" class="mb-4 mt-4">
-                                        
-                                        <!-- Exercise name -->
-                                        <div class="mb-4">
-                                            <p class="text-title-medium font-weight-bold text-primary">{{ exercise.name }}</p>
-                                        </div>  
-                                        
-                                        <!-- Sets table header -->
-                                        <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2">
-                                            <v-col cols="2">set</v-col>
-                                            <v-col cols="4">kg</v-col>
-                                            <v-col cols="4">reps</v-col>
-                                            <v-col cols="2"></v-col>
-                                        </v-row>
-
-                                        <!-- Sets -->
-                                        <v-row v-for="(set, setIndex) in exercise.sets" :key="setIndex" class="mb-1 px-2 mt-1 mb-5"  align="center">
-                                            <v-col cols="2">{{ setIndex + 1 }}</v-col>
-                                                <v-col cols="4">
-                                                    <v-text-field
-                                                        v-model="set.weight"
-                                                        variant="outlined"
-                                                        density="compact"
-                                                        hide-details="auto"
-                                                        type="number"
-                                                        step="0.5"
-                                                        placeholder="0.00"
-                                                        @blur="set.weight = fixWeight(set.weight)"
-                                                        @input="set.weight = set.weight.toString().slice(0, 6)"
-                                                        :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
-                                                    ></v-text-field>
-                                                </v-col>
-                                                <v-col cols="4">
-                                                    <v-text-field
-                                                        v-model="set.reps"
-                                                        variant="outlined"
-                                                        density="compact"
-                                                        hide-details="auto"
-                                                        type="number"
-                                                        @input="set.reps = set.reps.toString().slice(0, 3)"
-                                                        :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
-                                                    ></v-text-field>
-                                                </v-col>
-                                            <v-col cols="2">
-                                                <v-btn icon="mdi-close" density="compact" variant="text" @click="exercise.sets.splice(setIndex, 1)"></v-btn>
-                                            </v-col>
-                                        </v-row>
-
-                                        <!-- Add set and delete button -->
-                                        <v-row>
-                                            <v-col>
-                                            <v-btn 
-                                                class="text-body-medium"
-                                                variant="text" 
-                                                color="primary" 
-                                                @click="exercise.sets.push({ weight: '', reps: '' })" 
-                                                >
-                                                + Add Set
-                                            </v-btn>
-                                            </v-col>
-
-                                            <v-spacer></v-spacer>
-
-                                            <v-col class="d-flex justify-end pr-5">
-                                            <v-btn 
-                                                icon="mdi-delete" 
-                                                variant="text" 
-                                                density="compact"
-                                                color="error"
-                                                @click="workoutExercises.splice(exIndex, 1)"
-                                            ></v-btn>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-divider class="mt-3"></v-divider>
-                                    </div>
-
-                                    <!-- Add exercise button -->
-                                    <v-btn variant="text" color="primary" class="mt-2" @click="addExercise" :disabled="!selectedExercise">
-                                        + Add Exercise
-                                    </v-btn>
-                                    </v-form>
-                                </div>
-
-                            </v-card-text>
-
-                            <v-card-actions class="pa-4">
-                                <!-- Step 1 actions -->
-                                <template v-if="step === 1">
-                                    <v-btn variant="text" @click="isActive.value = false">Cancel</v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="primary" @click="step = 2" :disabled="!form.name || !form.date">
-                                        Next →
-                                    </v-btn>
-                                </template>
-
-                                <!-- Step 2 actions -->
-                                <template v-if="step === 2">
-                                    <v-btn variant="text" @click="step = 1">← Back</v-btn>
-                                    <v-spacer></v-spacer>
-
-                                    <v-alert 
-                                        v-if="saveError"
-                                        type="error"
-                                        variant="tonal"
-                                        density="compact"
-                                        rounded="lg"
-                                        class="mb-3"
-                                        closable
-                                        @click:close="saveError = null"
-                                    >
-                                        {{ saveError }}
-                                    </v-alert>
-
-                                    <v-alert 
-                                        v-if="saveSuccess"
-                                        type="success"
-                                        variant="tonal"
-                                        density="compact"
-                                        rounded="lg"
-                                        class="mb-3"
-                                    >
-                                        Workout saved successfully!
-                                    </v-alert>
-
-                                    <v-btn 
-                                        color="primary" 
-                                        :loading="isSaving" 
-                                        @click="saveWorkout"
-                                    >
-                                        Save Workout
-                                    </v-btn>
-                                </template>
-                            </v-card-actions>
-                        </v-card>
-                    </template>
-                </v-dialog>
-
-                <div class="mt-6">
-                    <div class="text-subtitle-1 font-weight-medium mb-4">Workout History</div>
-                    <v-row dense>
-                        <v-col cols="12" v-if="!workouts.length">
-                            <v-card variant="outlined" class="pa-4">
-                                <div class="text-body-medium text-medium-emphasis">No workouts yet. Start by creating a new workout.</div>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="12" v-for="workout in workouts" :key="workout.id" class="pb-3">
-                            <v-card variant="outlined" class="pa-4 workout-card" @click="openWorkout(workout)">
-                                <v-row align="center">
-                                    <v-col cols="12" sm="7">
-                                        <div class="text-title-medium font-weight-bold">{{ workout.name || 'Workout' }}</div>
-                                        <div class="text-body-small text-medium-emphasis">{{ formatWorkoutDate(workout.date) }}</div>
-                                    </v-col>
-                                    <v-col cols="12" sm="5" class="d-flex flex-column flex-sm-row justify-sm-end gap-2">
-                                        <v-chip variant="tonal" color="primary" size="small" class="mr-2">
-                                            {{ exerciseCount(workout) }} exercises
-                                        </v-chip>
-                                        <v-chip variant="outlined" size="small">
-                                            {{ setCount(workout) }} sets
-                                        </v-chip>
-                                    </v-col>
-                                </v-row>
-                            </v-card>
-                        </v-col>
-                    </v-row>
+                  <v-text-field
+                    v-model="form.date"
+                    label="Date"
+                    type="date"
+                    variant="outlined"
+                  ></v-text-field>
                 </div>
 
-            </v-col>
-        </v-row>
-        <!-- Success notification -->
-        <v-snackbar
-            v-model="successSnackbar"
-            color="success"
-            location="bottom"
-            elevation="24"
-            :timeout="3000"
-        >
-            Workout saved successfully!
-            
-            <template v-slot:actions>
-                <v-btn variant="text" @click="successSnackbar = false">Close</v-btn>
-            </template>
-        </v-snackbar>
-
-        <!-- Error notification -->
-        <v-snackbar
-            v-model="errorSnackbar"
-            color="error"
-            location="bottom"
-            elevation="24"
-            :timeout="5000"
-        >
-            Failed to save workout. Please try again.
-            
-            <template v-slot:actions>
-                <v-btn variant="text" @click="errorSnackbar = false">Close</v-btn>
-            </template>
-        </v-snackbar>
-        <v-dialog v-model="detailDialog" max-width="600" transition="dialog-bottom-transition">
-            <v-card>
-                <v-toolbar :title="selectedWorkout?.name">
-                    <template v-slot:append>                        <v-btn icon="mdi-pencil" variant="text" @click="openEditModal(selectedWorkout)" class="mr-2"></v-btn>                        <v-btn color="error" variant="text" @click="deleteWorkout" class="mr-10">
-                            Delete workout
-                        </v-btn>
+                <!-- Step 2: Add exercises -->
+                <div v-if="step === 2">
+                  <v-form ref="formRef">
+                  <v-autocomplete
+                    v-model="selectedExercise"
+                    :items="groupedExercises"
+                    label="Search exercise"
+                    variant="outlined"
+                  >
+                    <template v-slot:subheader="{ props }">
+                      <v-divider class="mb-1"></v-divider>
+                      <v-list-subheader class="font-weight-bold text-primary text-uppercase">
+                        {{ props.title }}
+                      </v-list-subheader>
                     </template>
-                </v-toolbar>
-                <v-card-text>
-                    <p class="text-medium-emphasis mb-4">{{ formatWorkoutDate(selectedWorkout?.date) }}</p>
+
+                    <template v-slot:item="{ props, item }">
+                      <v-list-item v-bind="props" class="pl-8"></v-list-item>
+                    </template>
+                  </v-autocomplete>
+
+                  <!-- Added exercises list -->
+                  <div v-for="(exercise, exIndex) in workoutExercises" :key="exIndex" class="mb-4 mt-4">
                     
-                    <div v-for="ex in selectedWorkout?.workout_exercises" :key="ex.id" class="mb-4">
-                        <div class="mb-3">
-                            <p class="font-weight-bold text-primary">{{ ex.exercise?.name }}</p>
-                        </div>
-                        <v-row class="text-caption text-uppercase text-medium-emphasis px-2 no-gutters mb-n5">
-                            <v-col cols="2">set</v-col>
-                            <v-col cols="5">kg</v-col>
-                            <v-col cols="5">reps</v-col>
-                        </v-row>
-                        <v-row v-for="(set, i) in ex.sets" :key="set.id" class="px-2 no-gutters" align="center">
-                            <v-col cols="2" class="mb-n3">{{ i + 1 }}</v-col>
-                            <v-col cols="5" class="mb-n3">{{ formatWeight(set.weight) }}</v-col>
-                            <v-col cols="5" class="mb-n3">{{ set.reps }}</v-col>
-                        </v-row>
-                        <v-divider class="mt-3"></v-divider>
-                    </div>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn @click="detailDialog = false">Close</v-btn>
-                </v-card-actions>
+                    <!-- Exercise name -->
+                    <div class="mb-4">
+                      <p class="text-title-medium font-weight-bold text-primary">{{ exercise.name }}</p>
+                    </div>  
+                    
+                    <!-- Sets table header -->
+                    <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2">
+                      <v-col cols="2">set</v-col>
+                      <v-col cols="4">kg</v-col>
+                      <v-col cols="4">reps</v-col>
+                      <v-col cols="2"></v-col>
+                    </v-row>
+
+                    <!-- Sets -->
+                    <v-row v-for="(set, setIndex) in exercise.sets" :key="setIndex" class="mb-1 px-2 mt-1 mb-5"  align="center">
+                      <v-col cols="2">{{ setIndex + 1 }}</v-col>
+                        <v-col cols="4">
+                          <v-text-field
+                            v-model="set.weight"
+                            variant="outlined"
+                            density="compact"
+                            hide-details="auto"
+                            type="number"
+                            step="0.5"
+                            placeholder="0.00"
+                            @blur="set.weight = fixWeight(set.weight)"
+                            @input="set.weight = set.weight.toString().slice(0, 6)"
+                            :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="4">
+                          <v-text-field
+                            v-model="set.reps"
+                            variant="outlined"
+                            density="compact"
+                            hide-details="auto"
+                            type="number"
+                            @input="set.reps = set.reps.toString().slice(0, 3)"
+                            :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
+                          ></v-text-field>
+                        </v-col>
+                      <v-col cols="2">
+                        <v-btn icon="mdi-close" density="compact" variant="text" @click="exercise.sets.splice(setIndex, 1)"></v-btn>
+                      </v-col>
+                    </v-row>
+
+                    <!-- Add set and delete button -->
+                    <v-row>
+                      <v-col>
+                      <v-btn 
+                        class="text-body-medium"
+                        variant="text" 
+                        color="primary" 
+                        @click="exercise.sets.push({ weight: '', reps: '' })" 
+                        >
+                        + Add Set
+                      </v-btn>
+                      </v-col>
+
+                      <v-spacer></v-spacer>
+
+                      <v-col class="d-flex justify-end pr-5">
+                      <v-btn 
+                        icon="mdi-delete" 
+                        variant="text" 
+                        density="compact"
+                        color="error"
+                        @click="workoutExercises.splice(exIndex, 1)"
+                      ></v-btn>
+                      </v-col>
+                    </v-row>
+
+                    <v-divider class="mt-3"></v-divider>
+                  </div>
+
+                  <!-- Add exercise button -->
+                  <v-btn variant="text" color="primary" class="mt-2" @click="addExercise" :disabled="!selectedExercise">
+                    + Add Exercise
+                  </v-btn>
+                  </v-form>
+                </div>
+
+              </v-card-text>
+
+              <v-card-actions class="pa-4">
+                <!-- Step 1 actions -->
+                <template v-if="step === 1">
+                  <v-btn variant="text" @click="isActive.value = false">Cancel</v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" @click="step = 2" :disabled="!form.name || !form.date">
+                    Next →
+                  </v-btn>
+                </template>
+
+                <!-- Step 2 actions -->
+                <template v-if="step === 2">
+                  <v-btn variant="text" @click="step = 1">← Back</v-btn>
+                  <v-spacer></v-spacer>
+
+                  <v-alert 
+                    v-if="saveError"
+                    type="error"
+                    variant="tonal"
+                    density="compact"
+                    rounded="lg"
+                    class="mb-3"
+                    closable
+                    @click:close="saveError = null"
+                  >
+                    {{ saveError }}
+                  </v-alert>
+
+                  <v-alert 
+                    v-if="saveSuccess"
+                    type="success"
+                    variant="tonal"
+                    density="compact"
+                    rounded="lg"
+                    class="mb-3"
+                  >
+                    Workout saved successfully!
+                  </v-alert>
+
+                  <v-btn 
+                    color="primary" 
+                    :loading="isSaving" 
+                    @click="saveWorkout"
+                  >
+                    Save Workout
+                  </v-btn>
+                </template>
+              </v-card-actions>
             </v-card>
+          </template>
         </v-dialog>
-    </v-container>
+
+        <div class="mt-6">
+          <div class="text-subtitle-1 font-weight-medium mb-4">Workout History</div>
+          <v-row dense>
+            <v-col cols="12" v-if="!workouts.length">
+              <v-card variant="outlined" class="pa-4">
+                <div class="text-body-medium text-medium-emphasis">No workouts yet. Start by creating a new workout.</div>
+              </v-card>
+            </v-col>
+            <v-col cols="12" v-for="workout in workouts" :key="workout.id" class="pb-3">
+              <v-card variant="outlined" class="pa-4 workout-card" @click="openWorkout(workout)">
+                <v-row align="center">
+                  <v-col cols="12" sm="7">
+                    <div class="text-title-medium font-weight-bold">{{ workout.name || 'Workout' }}</div>
+                    <div class="text-body-small text-medium-emphasis">{{ formatWorkoutDate(workout.date) }}</div>
+                  </v-col>
+                  <v-col cols="12" sm="5" class="d-flex flex-column flex-sm-row justify-sm-end gap-2">
+                    <v-chip variant="tonal" color="primary" size="small" class="mr-2">
+                      {{ exerciseCount(workout) }} exercises
+                    </v-chip>
+                    <v-chip variant="outlined" size="small">
+                      {{ setCount(workout) }} sets
+                    </v-chip>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+
+      </v-col>
+    </v-row>
+    <!-- Success notification -->
+    <v-snackbar
+      v-model="successSnackbar"
+      color="success"
+      location="bottom"
+      elevation="24"
+      :timeout="3000"
+    >
+      Workout saved successfully!
+      
+      <template v-slot:actions>
+        <v-btn variant="text" @click="successSnackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
+
+    <!-- Error notification -->
+    <v-snackbar
+      v-model="errorSnackbar"
+      color="error"
+      location="bottom"
+      elevation="24"
+      :timeout="5000"
+    >
+      Failed to save workout. Please try again.
+      
+      <template v-slot:actions>
+        <v-btn variant="text" @click="errorSnackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
+    <v-dialog v-model="detailDialog" max-width="600" transition="dialog-bottom-transition">
+      <v-card>
+        <v-toolbar :title="selectedWorkout?.name">
+          <template v-slot:append>
+             <v-btn icon="mdi-pencil" variant="text" @click="openEditModal(selectedWorkout)" class="mr-2"></v-btn>                        
+             <v-btn color="error" variant="text" @click="deleteWorkout" class="mr-10">
+              Delete workout
+            </v-btn>
+          </template>
+        </v-toolbar>
+        <v-card-text>
+          <p class="text-medium-emphasis mb-4">{{ formatWorkoutDate(selectedWorkout?.date) }}</p>
+          
+          <div v-for="ex in selectedWorkout?.workout_exercises" :key="ex.id" class="mb-4">
+            <div class="mb-3">
+              <p class="font-weight-bold text-primary">{{ ex.exercise?.name }}</p>
+            </div>
+            <v-row class="text-caption text-uppercase text-medium-emphasis px-2 no-gutters mb-n5">
+              <v-col cols="2">set</v-col>
+              <v-col cols="5">kg</v-col>
+              <v-col cols="5">reps</v-col>
+            </v-row>
+            <v-row v-for="(set, i) in ex.sets" :key="set.id" class="px-2 no-gutters" align="center">
+              <v-col cols="2" class="mb-n3">{{ i + 1 }}</v-col>
+              <v-col cols="5" class="mb-n3">{{ formatWeight(set.weight) }}</v-col>
+              <v-col cols="5" class="mb-n3">{{ set.reps }}</v-col>
+            </v-row>
+            <v-divider class="mt-3"></v-divider>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="detailDialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script setup>

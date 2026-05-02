@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Exercise; 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class ExerciseSeeder extends Seeder
 {
@@ -12,8 +13,14 @@ class ExerciseSeeder extends Seeder
      */
     public function run(): void
     {
-        // This will delete all existing exercises (including the "Test" one)
+        // 1. Disable foreign key checks to allow truncate
+        Schema::disableForeignKeyConstraints();
+        
+        // 2. Clear the table
         Exercise::truncate();
+        
+        // 3. Re-enable foreign key checks
+        Schema::enableForeignKeyConstraints();
 
         // Define an array of exercises to populate the database
         $exercises = [

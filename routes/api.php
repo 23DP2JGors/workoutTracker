@@ -31,11 +31,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('exercises', [ExerciseController::class, 'index']);
     Route::post('exercises', [ExerciseController::class, 'store']);
 
-    Route::middleware('auth:sanctum')->group(function () {
     // Get user profile data
     Route::get('/user-profile', [UserProfileController::class, 'show']);
     
     // Create or update user profile
     Route::post('/user-profile', [UserProfileController::class, 'update']);
-});
 });

@@ -53,4 +53,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserProfile::class);
     }
+
+    /**
+     * Get all user body measurements history.
+     */
+    public function measurements(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Measurement::class);
+    }
 }

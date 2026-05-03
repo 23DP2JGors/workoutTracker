@@ -3,9 +3,7 @@
     <v-row justify="center">
       <v-col cols="12" md="8">
         <v-card variant="flat" rounded="xl" class="pa-6 border">
-
-          <!-- Header inside card like Macros -->
-          <h1 class="text-h5 font-weight-bold mb-1">Body Measurements</h1>
+          <h1 class="font-weight-bold mb-1">Body Measurements</h1>
           <p class="text-medium-emphasis text-body-2 pb-6">Track your body composition over time</p>
 
           <!-- Selection Grid -->
@@ -218,8 +216,6 @@ const submitMeasurement = async () => {
         await axios.post('/api/measurements', form);
         alert('Measurement saved!');
         
-        // Optional: Reset form and selection after success
-        // selectedParts.value = [];
     } catch (error) {
         if (error.response?.status === 422) {
             errors.value = error.response.data.errors;

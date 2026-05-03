@@ -3,12 +3,12 @@
     <v-row justify="center">
       <v-col cols="12" md="10" lg="8">
         <v-card variant="flat" class="rounded-xl border pa-6">
-          <v-card-title class="text-h5 font-weight-bold px-0">Macros Calculator</v-card-title>
-          <v-card-subtitle class="px-0">Enter your metrics to calculate daily requirements</v-card-subtitle>
+          <h1 class="font-weight-bold mb-1">Macros Calculator</h1>
+           <p class="text-medium-emphasis text-body-2 pb-4">Enter your metrics to calculate daily requirements</p>
 
           <!-- Wrap inputs in v-form to track validation state -->
           <v-form v-model="isFormValid">
-            <v-card-text class="mt-6 px-0">
+            <v-card-text class="px-0">
               <v-row>
                 <v-col cols="12">
                   <div class="text-subtitle-2 mb-2">Gender</div>

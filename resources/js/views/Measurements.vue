@@ -125,28 +125,28 @@
                             <div class="font-weight-bold mb-2">{{ formatDate(m.measured_at) }}</div>
                             <div class="d-flex flex-wrap">
                                 <v-chip v-if="m.weight" size="small" color="primary" variant="tonal" class="mr-2 mb-1">
-                                    ⚖️ {{ m.weight }} kg
+                                    Weight {{ formatNum(m.weight) }} kg
                                 </v-chip>
                                 <v-chip v-if="m.neck" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Neck {{ m.neck }} cm
+                                    Neck {{ formatNum(m.neck) }} cm
                                 </v-chip>
                                 <v-chip v-if="m.chest" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Chest {{ m.chest }} cm
+                                    Chest {{ formatNum(m.chest) }} cm
                                 </v-chip>
                                 <v-chip v-if="m.biceps" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Biceps {{ m.biceps }} cm
+                                    Biceps {{ formatNum(m.biceps) }} cm
                                 </v-chip>
                                 <v-chip v-if="m.forearms" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Forearms {{ m.forearms }} cm
+                                    Forearms {{ formatNum(m.forearms) }} cm
                                 </v-chip>
                                 <v-chip v-if="m.waist" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Waist {{ m.waist }} cm
+                                    Waist {{ formatNum(m.waist) }} cm
                                 </v-chip>
                                 <v-chip v-if="m.hips" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Hips {{ m.hips }} cm
+                                    Hips {{ formatNum(m.hips) }} cm
                                 </v-chip>
                                 <v-chip v-if="m.calves" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Calves {{ m.calves }} cm
+                                    Calves {{ formatNum(m.calves) }} cm
                                 </v-chip>
                             </div>
                             <p v-if="m.notes" class="text-caption text-medium-emphasis mt-2">

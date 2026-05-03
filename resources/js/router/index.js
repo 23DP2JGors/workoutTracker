@@ -6,6 +6,7 @@ import Login from '../views/auth/Login.vue'
 import Landing from '../views/Landing.vue'
 import Workouts from '../views/Workouts.vue'
 import MacrosCalc from '../views/MacrosCalc.vue'
+import Measurements from '../views/Measurements.vue'
 
 
 const routes = [
@@ -41,6 +42,11 @@ const routes = [
         path: '/macros',
         name: 'macros.calc',
         component: MacrosCalc
+    },
+    {
+        path:'/measurements',
+        name: 'Measurements',
+        component: Measurements,
     },
 ]
 

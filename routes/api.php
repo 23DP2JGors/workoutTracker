@@ -7,6 +7,7 @@ use App\Http\Controllers\WorkoutExerciseController;
 use App\Http\Controllers\SetController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\Api\MeasurementController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -16,6 +17,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Workout routes
     Route::apiResource('workouts', WorkoutController::class);
     Route::delete('workout-exercises/{workoutExercise}', [WorkoutExerciseController::class, 'destroy']);
+
+    // Measurement routes
+    Route::get('/measurements', [MeasurementController::class, 'index']);
+    Route::post('/measurements', [MeasurementController::class, 'store']);
+    Route::put('/measurements/{measurement}', [MeasurementController::class, 'update']);
+    Route::delete('/measurements/{measurement}', [MeasurementController::class, 'destroy']);
 
     // Workout exercise routes — nested under workout
     Route::get('workouts/{workout}/exercises', [WorkoutExerciseController::class, 'index']);

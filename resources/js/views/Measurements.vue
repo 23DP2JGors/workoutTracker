@@ -247,6 +247,17 @@
           </div>
       </v-card>
     </v-dialog>
+    <!-- Global Snackbar Notification -->
+    <v-snackbar
+        v-model="snackbar"
+        :color="snackbarColor"
+        rounded="pill"
+        :timeout="2000"
+    >
+        <div class="text-center">
+            {{ snackbarText }}
+        </div>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -332,9 +343,15 @@ watch(historyFilters, (newFilters) => {
     }
 }, { deep: true });
 
-/**
- * Handle clicking on a body part card
- */
+// Helper to show snackbar with custom message and color
+const showMessage = (text, color = 'success') => {
+    snackbarText.value = text;
+    snackbarColor.value = color;
+    snackbar.value = true;
+};
+
+
+// Handle clicking on a body part card
 const togglePart = (key) => {
     const index = selectedParts.value.indexOf(key);
     if (index > -1) {
@@ -403,10 +420,19 @@ const submitMeasurement = async () => {
     try {
         await axios.post('/api/measurements', form);
         await loadMeasurements()
+         showMessage('Measurement recorded successfully!'); // Success UI
+
+        // Reset selection and weight/notes
+        selectedParts.value = [];
+        form.weight = null;
+        form.notes = '';
         
     } catch (error) {
         if (error.response?.status === 422) {
             errors.value = error.response.data.errors;
+            showMessage('Please check the highlighted fields', 'error'); // Validation UI
+        }else{
+            showMessage('An error occurred while saving. Please try again.', 'error'); // General error UI
         }
     } finally {
         loading.value = false;
@@ -448,8 +474,9 @@ const updateMeasurement = async () => {
         await axios.put(`/api/measurements/${editForm.value.id}`, editForm.value)
         await loadMeasurements()
         editDialog.value = false
+        showMessage('Entry updated!');
     } catch (error) {
-        console.error('Failed to update:', error)
+        showMessage('Failed to update entry', 'error');
     }
 }
 
@@ -458,8 +485,9 @@ const deleteMeasurement = async (id) => {
     try {
         await axios.delete(`/api/measurements/${id}`)
         await loadMeasurements()
+        showMessage('Entry deleted', 'warning'); // Use warning color for deletion
     } catch (error) {
-        console.error('Failed to delete:', error)
+        showMessage('Failed to delete entry', 'error');
     }
 }
 

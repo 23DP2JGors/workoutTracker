@@ -101,71 +101,97 @@
 
     <v-row justify="center">
       <v-col cols="12" md="8">
-        <!-- Measurement History -->
+
+        <!-- Measurement History Section -->
         <v-card variant="flat" rounded="xl" class="pa-6 border mt-6">
             <h2 class="font-weight-bold mb-1">History</h2>
-            <p class="text-medium-emphasis text-body-2 pb-4">Your past measurements</p>
+            <p class="text-medium-emphasis text-body-2 pb-4">View and manage your past entries</p>
 
-            <!-- Scrollable list with fixed height -->
-            <div style="max-height: 500px; overflow-y: auto;">
+            <!-- Highlight Filters (Top selection chips) -->
+            <div class="mb-6">
+                <div class="text-caption text-grey mb-2 font-weight-bold text-uppercase">
+                    Filter by body part
+                </div>
+                <v-chip-group
+                    v-model="historyFilters"
+                    column
+                    multiple
+                    selected-class="text-primary"
+                >
+                    <v-chip
+                        v-for="part in bodyParts"
+                        :key="part.key"
+                        :value="part.key"
+                        variant="outlined"
+                        size="small"
+                        rounded="lg"
+                        filter
+                    >
+                        {{ part.label }}
+                    </v-chip>
+                </v-chip-group>
+            </div>
+
+            <!-- Scrollable List of Logs -->
+            <div style="max-height: 600px; overflow-y: auto;" class="pr-2">
                 
-                <v-alert v-if="!measurements.length" type="info" variant="tonal" rounded="lg">
+                <!-- Empty state alert -->
+                <v-alert v-if="!filteredMeasurements.length" type="info" variant="tonal" rounded="lg">
                     No measurements recorded yet.
                 </v-alert>
 
+                <!-- Main Loop for history entries -->
                 <v-card
-                    v-for="m in measurements"
+                    v-for="m in filteredMeasurements"
                     :key="m.id"
                     variant="outlined"
-                    rounded="lg"
-                    class="pa-3 mb-4 measurement-card"
+                    rounded="xl"
+                    class="pa-4 mb-4 border"
                 >
                     <v-row align="center">
+                        <!-- Log Data Column -->
                         <v-col cols="12" sm="8">
-                            <div class="font-weight-bold mb-2">{{ formatDate(m.measured_at) }}</div>
-                            <div class="d-flex flex-wrap">
-                                <v-chip v-if="m.weight" size="small" color="primary" variant="tonal" class="mr-2 mb-1">
-                                    Weight {{ formatNum(m.weight) }} kg
-                                </v-chip>
-                                <v-chip v-if="m.neck" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Neck {{ formatNum(m.neck) }} cm
-                                </v-chip>
-                                <v-chip v-if="m.chest" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Chest {{ formatNum(m.chest) }} cm
-                                </v-chip>
-                                <v-chip v-if="m.biceps" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Biceps {{ formatNum(m.biceps) }} cm
-                                </v-chip>
-                                <v-chip v-if="m.forearms" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Forearms {{ formatNum(m.forearms) }} cm
-                                </v-chip>
-                                <v-chip v-if="m.waist" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Waist {{ formatNum(m.waist) }} cm
-                                </v-chip>
-                                <v-chip v-if="m.hips" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Hips {{ formatNum(m.hips) }} cm
-                                </v-chip>
-                                <v-chip v-if="m.calves" size="small" variant="outlined" class="mr-2 mb-1">
-                                    Calves {{ formatNum(m.calves) }} cm
-                                </v-chip>
+                            <div class="font-weight-bold mb-3 text-primary">
+                                {{ formatDate(m.measured_at) }}
                             </div>
-                            <p v-if="m.notes" class="text-caption text-medium-emphasis mt-2">
-                                {{ m.notes }}
+                            
+                            <div class="d-flex flex-wrap">
+                                <!-- Dynamic rendering of recorded body parts with highlighting -->
+                                <template v-for="part in bodyParts" :key="part.key">
+                                    <v-chip
+                                        v-if="m[part.key] !== null && m[part.key] !== undefined"
+                                        size="small"
+                                        class="mr-2 mb-2 text-caption"
+                                        :color="historyFilters.includes(part.key) ? 'primary' : 'default'"
+                                        :variant="historyFilters.includes(part.key) ? 'flat' : 'outlined'"
+                                        :class="{ 'font-weight-black': historyFilters.includes(part.key) }"
+                                    >
+                                        {{ part.label }} {{ formatNum(m[part.key]) }} {{ part.unit }}
+                                    </v-chip>
+                                </template>
+                            </div>
+
+                            <!-- Display notes if they exist -->
+                            <p v-if="m.notes" class="text-caption text-medium-emphasis mt-2 font-italic">
+                                "{{ m.notes }}"
                             </p>
                         </v-col>
-                        <v-col cols="12" sm="4" class="d-flex justify-end">
-                            <v-btn
-                                icon="mdi-pencil"
-                                variant="text"
-                                size="small"
-                                @click="openEdit(m)"
+
+                        <!-- Action Buttons Column -->
+                        <v-col cols="12" sm="4" class="d-flex justify-end align-center">
+                            <v-btn 
+                                icon="mdi-pencil-outline" 
+                                variant="text" 
+                                size="small" 
+                                color="primary" 
                                 class="mr-2"
+                                @click="openEdit(m)"
                             ></v-btn>
-                            <v-btn
-                                icon="mdi-delete"
-                                variant="text"
-                                size="small"
-                                color="error"
+                            <v-btn 
+                                icon="mdi-delete-outline" 
+                                variant="text" 
+                                size="small" 
+                                color="error" 
                                 @click="deleteMeasurement(m.id)"
                             ></v-btn>
                         </v-col>
@@ -225,7 +251,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
 import { rules } from '@/utils/rules';
 
@@ -245,6 +271,8 @@ const editDialog = ref(false)
 const editForm = ref({})
 const editableFields = ['weight', 'neck', 'chest', 'biceps', 'forearms', 'waist', 'hips', 'calves']
 
+// Variable to store selected filters for history
+const historyFilters = ref([]); 
 
 
 // Define icons and labels for our clickable cards
@@ -272,7 +300,37 @@ const form = reactive({
     notes: ''
 });
 
-// --- Logic Methods ---
+// Computed property to filter measurements based on selected body parts
+const filteredMeasurements = computed(() => {
+    // If no filters selected, show everything
+    if (historyFilters.value.length === 0) return measurements.value;
+
+    return measurements.value.filter(log => {
+        // Check if the log has at least one of the selected body parts filled
+        return historyFilters.value.some(filterKey => {
+            return log[filterKey] !== null && log[filterKey] !== undefined;
+        });
+    });
+});
+
+// Watch for changes in history filters to provide feedback if no data exists for selected parts
+watch(historyFilters, (newFilters) => {
+    if (newFilters.length === 0) return;
+
+    // Get the last selected filter
+    const lastFilter = newFilters[newFilters.length - 1];
+    
+    // Check if any log in history contains this measurement
+    const exists = measurements.value.some(log => log[lastFilter] !== null && log[lastFilter] !== undefined);
+
+    if (!exists) {
+        // Show snackbar if no data found for this body part
+        const part = bodyParts.find(p => p.key === lastFilter);
+        snackbarText.value = `No data found for ${part?.label} in your history yet.`;
+        snackbarColor.value = 'info';
+        snackbar.value = true;
+    }
+}, { deep: true });
 
 /**
  * Handle clicking on a body part card

@@ -17,6 +17,7 @@ class MeasurementController extends Controller
         // Get all measurements for the current user, ordered by date
         return Auth::user()->measurements()
             ->orderBy('measured_at', 'desc')
+            ->orderBy('id', 'desc') 
             ->get();
     }
 
@@ -38,7 +39,7 @@ class MeasurementController extends Controller
             'notes'       => 'nullable|string|max:200',
         ]);
 
-        return Auth::user()->measurements()->create($validated);
+        $measurement = auth()->user()->measurements()->create($validated);
     }
 
     /**

@@ -254,6 +254,7 @@
         :color="snackbarColor"
         rounded="pill"
         :timeout="2000"
+        class="mb-6"
     >
         <div class="text-center">
             {{ snackbarText }}

@@ -245,7 +245,7 @@
               </v-col>
           </v-row>
 
-          <div class="d-flex justify-space-between mt-2">
+          <div class="d-flex justify-space-between mt-6">
               <v-btn variant="text" @click="editDialog = false">Cancel</v-btn>
               <v-btn color="primary" rounded="lg" @click="updateMeasurement">Save</v-btn>
           </div>

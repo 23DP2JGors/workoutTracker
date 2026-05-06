@@ -217,6 +217,7 @@
                       type="date"
                       variant="outlined"
                       rounded="lg"
+                      hide-details="auto"
                   ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" v-for="key in editableFields" :key="key">
@@ -227,6 +228,7 @@
                       type="number"
                       variant="outlined"
                       rounded="lg"
+                      hide-details="auto"
                       @paste.prevent
                       @keydown="blockInvalidChars"
                   ></v-text-field>
@@ -238,6 +240,7 @@
                       variant="outlined"
                       rounded="lg"
                       rows="2"
+                      hide-details="auto"
                   ></v-textarea>
               </v-col>
           </v-row>

@@ -19,12 +19,12 @@
                 class="text-center py-3 body-part-card cursor-pointer"
                 @click="togglePart(item.key)"
               >
-                 <component 
-                    :is="item.icon" 
-                    :size="24" 
-                    :stroke-width="1.5"
-                    :color="selectedParts.includes(item.key) ? 'black' : 'white'"
-                />
+                <v-icon 
+                    size="24" 
+                    :icon="item.icon"
+                    :color="selectedParts.includes(item.key) ? 'black' : 'default'"
+                ></v-icon>
+
                 <div class="text-caption mt-1 font-weight-medium">{{ item.label }}</div>
               </v-card>
             </v-col>
@@ -268,19 +268,6 @@ import { ref, reactive, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
 import { rules } from '@/utils/rules';
 
-// Import icons from lucide-vue-next
-import { 
-  Scale, 
-  Circle, 
-  User, 
-  // Если BicepsFlexed не сработает, используй Armchair или Activity как временную замену
-  BicepsFlexed, 
-  Zap, 
-  Ruler, 
-  MoveHorizontal, // Стандарт для Hips
-  ArrowDownNarrowWide 
-} from 'lucide-vue-next';
-
 const loading = ref(false);
 const formRef = ref(null);
 const errors = ref({});
@@ -302,14 +289,14 @@ const historyFilters = ref([]);
 
 // Define icons and labels for our clickable cards
 const bodyParts = [
-    { key: 'weight', label: 'Weight', icon: Scale, unit: 'kg' },
-    { key: 'neck', label: 'Neck', icon: Circle, unit: 'cm' },
-    { key: 'chest', label: 'Chest', icon: User, unit: 'cm' },
-    { key: 'biceps', label: 'Biceps', icon: BicepsFlexed, unit: 'cm' },
-    { key: 'forearms', label: 'Forearms', icon: Zap, unit: 'cm' },
-    { key: 'waist', label: 'Waist', icon: Ruler, unit: 'cm' },
-    { key: 'hips', label: 'Hips', icon: MoveHorizontal, unit: 'cm' },
-    { key: 'calves', label: 'Calves', icon: ArrowDownNarrowWide, unit: 'cm' },
+    { key: 'weight', label: 'Weight', icon: 'mdi-scale-bathroom', unit: 'kg' },
+    { key: 'neck', label: 'Neck', icon: 'mdi-circle-outline', unit: 'cm' },
+    { key: 'chest', label: 'Chest', icon: 'mdi-weight-lifter', unit: 'cm' },
+    { key: 'biceps', label: 'Biceps', icon: 'mdi-arm-flex-outline', unit: 'cm' },
+    { key: 'forearms', label: 'Forearms', icon: 'mdi-hand-back-left-outline', unit: 'cm' },
+    { key: 'waist', label: 'Waist', icon: 'mdi-ruler', unit: 'cm' },
+    { key: 'hips', label: 'Hips', icon: 'mdi-human-handsdown', unit: 'cm' },
+    { key: 'calves', label: 'Calves', icon: 'mdi-run', unit: 'cm' },
 ];
 
 const form = reactive({

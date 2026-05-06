@@ -8,11 +8,12 @@
             >
                 <v-scroll-y-transition appear>
                     <v-card 
-                        class="feature-card pa-6 text-center border"
+                        :class="['feature-card', 'pa-5', 'text-center', { 'visible': isReady }]"
                         rounded="xl"
                         variant="flat"
+                        class="border"
+                        :style="{ transitionDelay: `${index * 150}ms` }"
                         @click="$router.push(item.path)"
-                        :style="{ transitionDelay: `${index * 100}ms` }" 
                     >
                         <v-card-text>
                             <!-- Icon with green background -->
@@ -33,7 +34,9 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+
+const isReady = ref(false);
 
 const menuItems = [
     { title: 'Workouts', description: 'Log your training sessions', icon: 'mdi-dumbbell', path: '/workouts' },
@@ -42,20 +45,42 @@ const menuItems = [
     { title: 'Macros', description: 'Calculate your daily nutrition', icon: 'mdi-calculator', path: '/macros' },
     // { title: 'Programs', description: 'Follow a structured plan', icon: 'mdi-rocket-launch', path: '/programs' },
 ]
+
+onMounted(() => {
+    // delay to trigger transition
+    setTimeout(() => {
+        isReady.value = true;
+    }, 100);
+});
 </script>
 
 <style scoped>
+/* card invisible and moved */
 .feature-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    opacity: 0;
+    transform: translateY(40px);
+    /* Increase to 1.2 seconds for slow effect */
+    /* Use cubic-bezier for premium feel (smooth deceleration at the end) */
+    transition: 
+        opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), 
+        transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+        box-shadow 0.3s ease;
     cursor: pointer;
 }
 
-/* hower effect */
-.feature-card:hover {
-    transform: translateY(-8px) !important;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+/* Becomes visible */
+.feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
+/* Hover effect remains fast and responsive */
+.feature-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+}
+
+/* Icon wrapper */
 .icon-wrapper {
     width: 72px;
     height: 72px;

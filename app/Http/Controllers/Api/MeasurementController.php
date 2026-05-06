@@ -40,6 +40,8 @@ class MeasurementController extends Controller
         ]);
 
         $measurement = auth()->user()->measurements()->create($validated);
+
+        return response()->json($measurement, 201);
     }
 
     /**

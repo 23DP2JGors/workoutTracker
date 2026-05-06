@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Workout extends Model
 {
+    use \Illuminate\Database\Eloquent\Factories\HasFactory;
     // Fields that can be saved to database
     protected $fillable = [
         'user_id',

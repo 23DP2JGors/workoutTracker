@@ -43,7 +43,6 @@ const menuItems = [
     // { title: 'Exercises', description: 'Browse 60+ exercises', icon: 'mdi-arm-flex', path: '/exercises' },
     { title: 'Measurements', description: 'Track your body changes', icon: 'mdi-scale', path: '/measurements' },
     { title: 'Macros', description: 'Calculate your daily nutrition', icon: 'mdi-calculator', path: '/macros' },
-    // { title: 'Programs', description: 'Follow a structured plan', icon: 'mdi-rocket-launch', path: '/programs' },
 ]
 
 onMounted(() => {

@@ -242,75 +242,74 @@
           </template>
         </v-dialog>
 
-                <!-- Workout History Section -->
-                <v-card variant="flat" rounded="xl" class="pa-6 border mt-6">
-                    <h2 class="font-weight-bold mb-1">Workout History</h2>
-                    <p class="text-medium-emphasis text-body-2 pb-4">
-                        View and manage your past workouts
-                    </p>
+        <!-- Workout History Section -->
+        <v-card variant="flat" rounded="xl" class="pa-6 border mt-6">
+            <h2 class="font-weight-bold mb-1">Workout History</h2>
+            <p class="text-medium-emphasis text-body-2 pb-4">
+                View and manage your past workouts
+            </p>
 
-                    <!-- Scrollable List of Workouts -->
-                    <div style="max-height: 500px; overflow-y: auto;" class="pr-2">
+            <!-- Scrollable List of Workouts -->
+            <div style="max-height: 500px; overflow-y: auto;" class="pr-2">
 
-                        <!-- Empty state alert -->
-                        <v-alert v-if="!workouts.length" type="info" variant="tonal" rounded="lg">
-                            No workouts yet. Start by creating a new workout.
-                        </v-alert>
+                <!-- Empty state alert -->
+                <v-alert v-if="!workouts.length" type="info" variant="tonal" rounded="lg">
+                    No workouts yet. Start by creating a new workout.
+                </v-alert>
 
-                        <!-- Main Loop for workout history entries -->
-                        <v-card
-                            v-for="workout in workouts"
-                            :key="workout.id"
-                            variant="outlined"
-                            rounded="xl"
-                            class="pa-3 mb-4 border workout-card"
-                            @click="openWorkout(workout)"
-                        >
-                            <v-row align="center">
-                                <!-- Workout Data Column -->
-                                <v-col cols="12" sm="8">
-                                    <div class="font-weight-bold mb-1 text-primary ">
-                                        {{ workout.name || 'Workout' }}
-                                    </div>
+                <!-- Main Loop for workout history entries -->
+                <v-card
+                    v-for="workout in workouts"
+                    :key="workout.id"
+                    variant="outlined"
+                    rounded="xl"
+                    class="pa-3 mb-4 border workout-card"
+                    @click="openWorkout(workout)"
+                >
+                    <v-row align="center">
+                        <!-- Workout Data Column -->
+                        <v-col cols="12" sm="8">
+                            <div class="font-weight-bold mb-1 text-primary ">
+                                {{ workout.name || 'Workout' }}
+                            </div>
 
-                                    <div class="text-body-small text-medium-emphasis mb-3">
-                                        {{ formatWorkoutDate(workout.date) }}
-                                    </div>
+                            <div class="text-body-small text-medium-emphasis mb-3">
+                                {{ formatWorkoutDate(workout.date) }}
+                            </div>
 
-                                    <div class="d-flex flex-wrap">
-                                        <v-chip
-                                            variant="tonal"
-                                            color="primary"
-                                            size="small"
-                                            class="mr-2 mb-2 text-caption"
-                                        >
-                                            {{ exerciseCount(workout) }} exercises
-                                        </v-chip>
+                            <div class="d-flex flex-wrap">
+                                <v-chip
+                                    variant="tonal"
+                                    color="primary"
+                                    size="small"
+                                    class="mr-2 mb-2 text-caption"
+                                >
+                                    {{ exerciseCount(workout) }} exercises
+                                </v-chip>
 
-                                        <v-chip
-                                            variant="outlined"
-                                            size="small"
-                                            class="mr-2 mb-2 text-caption"
-                                        >
-                                            {{ setCount(workout) }} sets
-                                        </v-chip>
-                                    </div>
-                                </v-col>
+                                <v-chip
+                                    variant="outlined"
+                                    size="small"
+                                    class="mr-2 mb-2 text-caption"
+                                >
+                                    {{ setCount(workout) }} sets
+                                </v-chip>
+                            </div>
+                        </v-col>
 
-                                <!-- Right Side Column -->
-                                <v-col cols="12" sm="4" class="d-flex justify-end align-center">
-                                    <v-btn
-                                        icon="mdi-chevron-right"
-                                        variant="text"
-                                        size="small"
-                                        color="primary"
-                                    ></v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card>
-                    </div>
+                        <!-- Right Side Column -->
+                        <v-col cols="12" sm="4" class="d-flex justify-end align-center">
+                            <v-btn
+                                icon="mdi-chevron-right"
+                                variant="text"
+                                size="small"
+                                color="primary"
+                            ></v-btn>
+                        </v-col>
+                    </v-row>
                 </v-card>
-
+            </div>
+        </v-card>
       </v-col>
     </v-row>
     <!-- Success notification -->

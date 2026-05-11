@@ -10,15 +10,76 @@
             @click="router.back()"
             >
         </v-btn>
-        <v-app-bar-title>Workout Tracker</v-app-bar-title>
+        <v-app-bar-title class="font-weight-bold">Workout Tracker</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn 
-        prepend-icon="mdi-logout"
-        variant="text"
-        @click="handleLogout"
-    >
-        Logout
-    </v-btn>
+
+      <!-- User menu -->
+      <v-menu>
+        <template #activator="{ props }">
+          <v-btn
+            v-bind="props"
+            variant="text"
+            color="default"
+            append-icon="mdi-chevron-down"
+            prepend-icon="mdi-account-circle-outline"
+          >
+            {{ user?.username || user?.name || 'Account' }}
+          </v-btn>
+        </template>
+
+        <v-card min-width="220" rounded="lg">
+          <v-list density="compact">
+            <v-list-item
+              prepend-icon="mdi-logout"
+              title="Logout"
+              @click="handleLogout"
+            />
+
+            <v-divider class="my-1"></v-divider>
+
+            <v-list-item
+              prepend-icon="mdi-delete-outline"
+              title="Delete account"
+              class="text-error"
+              @click="deleteDialog = true"
+            />
+          </v-list>
+        </v-card>
+      </v-menu>
+
+      <!-- Delete account dialog -->
+      <v-dialog v-model="deleteDialog" max-width="420">
+        <v-card rounded="xl" class="pa-2">
+          <v-card-title class="text-title-large font-weight-bold">
+            Delete account?
+          </v-card-title>
+
+          <v-card-text class="text-body-medium text-medium-emphasis">
+            This action will permanently delete your account and all related data,
+            including workouts, measurements and progress history.
+          </v-card-text>
+
+          <v-card-actions class="px-4 pb-4">
+            <v-spacer></v-spacer>
+
+            <v-btn
+              variant="text"
+              color="default"
+              @click="deleteDialog = false"
+            >
+              Cancel
+            </v-btn>
+
+            <v-btn
+              color="error"
+              variant="flat"
+              @click="handleDeleteAccount"
+            >
+              Delete
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-btn 
       color="default"
         :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
@@ -56,6 +117,7 @@ const drawer = ref(false)
 const theme = useTheme()
 const route = useRoute()
 const router = useRouter()
+const deleteDialog = ref(false)
 
 // Check if user is logged in when app loads
 onMounted(() => {
@@ -70,6 +132,14 @@ function toggleTheme() {
 const handleLogout = async () => {
     await axios.post('/logout')
     user.value = null
+    await router.push('/')
+}
+
+// Delete account
+const handleDeleteAccount = async () => {
+    await axios.delete('/api/user')
+    user.value = null
+    deleteDialog.value = false
     await router.push('/')
 }
 </script>

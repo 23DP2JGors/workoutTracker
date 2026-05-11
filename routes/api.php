@@ -43,4 +43,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     // Create or update user profile
     Route::post('/user-profile', [UserProfileController::class, 'update']);
+    
+    // Delete current user account
+    Route::delete('/user', function (Request $request) {
+        $request->user()->delete();
+
+        return response()->json([
+            'message' => 'Account deleted successfully.'
+        ]);
+    });
 });

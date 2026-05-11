@@ -4,10 +4,10 @@
       <v-col cols="12" md="8">
         <v-card variant="flat" rounded="xl" class="pa-6 border">
           <h1 class="font-weight-bold mb-1">Body Measurements</h1>
-          <p class="text-medium-emphasis text-body-2 pb-6">Track your body composition over time</p>
+          <p class="text-medium-emphasis pb-6">Track your body composition over time</p>
 
           <!-- Selection Grid -->
-          <p class="text-body-2 text-medium-emphasis text-uppercase font-weight-bold pb-3">
+          <p class="text-medium-emphasis text-uppercase font-weight-bold pb-3">
             Select measurements
           </p>
           <v-row dense class="mb-2">
@@ -106,7 +106,7 @@
         <!-- Measurement History Section -->
         <v-card variant="flat" rounded="xl" class="pa-6 border mt-6">
             <h2 class="font-weight-bold mb-1">History</h2>
-            <p class="text-medium-emphasis text-body-2 pb-4">View and manage your past entries</p>
+            <p class="text-medium-emphasis pb-4">View and manage your past entries</p>
 
             <!-- Highlight Filters (Top selection chips) -->
             <div class="mb-6">
@@ -207,7 +207,7 @@
     <v-dialog v-model="editDialog" max-width="500">
       <v-card rounded="xl" class="pa-6">
           <h2 class="font-weight-bold mb-1">Edit Measurement</h2>
-          <p class="text-medium-emphasis text-body-2 pb-6">Update your recorded data</p>
+          <p class="text-medium-emphasis pb-6">Update your recorded data</p>
 
           <v-row>
               <v-col cols="12">

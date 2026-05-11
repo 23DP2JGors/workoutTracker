@@ -161,11 +161,6 @@ const features = ref([
     text: 'Find your ideal calories and macros based on your goals. No guesswork needed.',
     icon: 'mdi-calculator'
   },
-  {
-    title: 'Starter Programs',
-    text: 'New to training? Start with ready-to-use programs designed to get you going.',
-    icon: 'mdi-rocket-launch'
-  }
 ])
 </script>
 

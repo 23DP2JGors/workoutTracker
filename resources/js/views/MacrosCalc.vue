@@ -3,18 +3,28 @@
     <v-row justify="center">
       <v-col cols="12" md="10" lg="8">
         <v-card variant="flat" class="rounded-xl border pa-6">
-          <h1 class="font-weight-bold mb-1">Macros Calculator</h1>
-           <p class="text-medium-emphasis text-body-2 pb-4">Enter your metrics to calculate daily requirements</p>
+          <h1 class="font-weight-bold mb-1">
+            {{ $t('macros.title') }}
+          </h1>
+           <div class="text-medium-emphasis text-body-2 pb-4">
+            {{ $t('macros.subtitle') }}
+          </div>
 
           <!-- Wrap inputs in v-form to track validation state -->
           <v-form v-model="isFormValid">
             <v-card-text class="px-0">
               <v-row>
                 <v-col cols="12">
-                  <div class="text-subtitle-2 mb-2">Gender</div>
+                  <div class="text-subtitle-2 mb-2">
+                    {{ $t('macros.gender') }}
+                  </div>
                   <v-btn-toggle v-model="form.gender" color="primary" rounded="lg" mandatory block @update:model-value="handleInputChange">
-                    <v-btn value="male" class="flex-grow-1">Male</v-btn>
-                    <v-btn value="female" class="flex-grow-1">Female</v-btn>
+                    <v-btn value="male" class="flex-grow-1">
+                      {{ $t('macros.male') }}
+                    </v-btn>
+                    <v-btn value="female" class="flex-grow-1">
+                      {{ $t('macros.female') }}
+                    </v-btn>
                   </v-btn-toggle>
                 </v-col>
 
@@ -22,7 +32,7 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
                     v-model="form.weight"
-                    label="Weight (kg)"
+                    :label="$t('macros.weight')"
                     variant="outlined"
                     type="number"
                     hide-details="auto" 
@@ -36,7 +46,7 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
                     v-model="form.height"
-                    label="Height (cm)"
+                    :label="$t('macros.height')"
                     variant="outlined"
                     type="number"
                     hide-details="auto" 
@@ -50,7 +60,7 @@
                 <v-col cols="12" sm="12" md="4">
                   <v-text-field
                     v-model="form.age"
-                    label="Age"
+                    :label="$t('macros.age')"
                     variant="outlined"
                     type="number"
                     hide-details="auto" 
@@ -66,7 +76,7 @@
                     :items="activityOptions"
                     :item-props="true"
                     item-value="value"
-                    label="Activity Level"
+                    :label="$t('macros.activityLevel')"
                     variant="outlined"
                     hide-details="auto" 
                     :rules="[rules.required]"
@@ -80,7 +90,7 @@
                     :items="goalOptions"
                     :item-props="true"
                     item-value="value"
-                    label="Your Goal"
+                    :label="$t('macros.goal')"
                     variant="outlined"
                     hide-details="auto" 
                     :rules="[rules.required]"
@@ -96,28 +106,31 @@
             <div v-if="showResult && result" class="mt-4">
               <v-divider class="mb-6"></v-divider>
               <div class="text-center mb-6">
-                <div class="text-overline text-grey-darken-1">Daily Target</div>
-                <div class="text-h2 font-weight-black text-primary">
-                  {{ result.calories }} <span class="text-h6 text-grey">kcal</span>
+                <div class="text-label-medium text-medium-emphasis text-uppercase">
+                  {{ $t('macros.dailyTarget') }}
+                </div>
+                <div class="text-display-small font-weight-black text-primary">
+                  {{ result.calories }}
+                  <span class="text-title-large text-grey">{{ $t('macros.kcal') }}</span>
                 </div>
               </div>
               <v-row dense>
                 <v-col cols="4">
                   <v-card variant="flat" class="border rounded-xl text-center py-4">
-                    <div class="text-caption text-grey text-uppercase">Protein</div>
-                    <div class="text-h6 font-weight-bold">{{ result.protein }}g</div>
+                    <div class="text-caption text-grey text-uppercase">{{ $t('macros.protein') }}</div>
+                    <div class="font-weight-bold">{{ result.protein }}g</div>
                   </v-card>
                 </v-col>
                 <v-col cols="4">
                   <v-card variant="flat" class="border rounded-xl text-center py-4">
-                    <div class="text-caption text-grey text-uppercase">Fats</div>
-                    <div class="text-h6 font-weight-bold">{{ result.fats }}g</div>
+                    <div class="text-caption text-grey text-uppercase">{{ $t('macros.fats') }}</div>
+                    <div class="font-weight-bold">{{ result.fats }}g</div>
                   </v-card>
                 </v-col>
                 <v-col cols="4">
                   <v-card variant="flat" class="border rounded-xl text-center py-4">
-                    <div class="text-caption text-grey text-uppercase">Carbs</div>
-                    <div class="text-h6 font-weight-bold">{{ result.carbs }}g</div>
+                    <div class="text-caption text-grey text-uppercase">{{ $t('macros.carbs') }}</div>
+                    <div class="font-weight-bold">{{ result.carbs }}g</div>
                   </v-card>
                 </v-col>
               </v-row>
@@ -135,14 +148,13 @@
               class="rounded-pill"
               @click="saveProfile"
             >
-              Save & Calculate
+              {{ $t('macros.saveCalculate') }}
             </v-btn>
           </v-card-actions>
 
           <!-- Disclaimer -->
           <div class="text-caption text-grey-darken-1 text-center mt-4 font-italic text-label-medium">
-            * Note: These calculations are estimates based on general formulas. 
-            Individual needs may vary. Consult with a professional for precise nutrition planning.
+            {{ $t('macros.disclaimer') }}
           </div>
         </v-card>
       </v-col>
@@ -160,6 +172,7 @@ import { reactive, onMounted, computed, ref} from 'vue'
 import axios from 'axios'
 import { rules } from '@/utils/rules' // validation rules
 import { calculateMacros } from '@/utils/calculateMacros' // macros calculation logic
+import { useI18n } from 'vue-i18n'
 
 // Logic for showing success message
 const isFormValid = ref(false)
@@ -167,6 +180,9 @@ const snackbar = ref(false)
 const snackbarText = ref('')
 const snackbarColor = ref('success')
 const showResult = ref(false) // Control result visibility
+
+// Provides translation function for macros page
+const { t } = useI18n()
 
 const saveError = ref(false) // New state for error snackbar
 
@@ -239,7 +255,7 @@ const saveProfile = async () => {
     const response = await axios.post('/api/user-profile', form)
     
     // Success feedback
-    snackbarText.value = 'Data saved and macros calculated!';
+    snackbarText.value = t('macros.messages.saved')
     snackbarColor.value = 'success';
     snackbar.value = true;
     
@@ -254,7 +270,7 @@ const saveProfile = async () => {
       const firstError = Object.values(errors)[0][0];
       snackbarText.value = firstError;
     } else {
-      snackbarText.value = 'Server error. Please try again later.';
+        snackbarText.value = t('macros.messages.serverError');
     }
     snackbarColor.value = 'error';
     snackbar.value = true;
@@ -263,56 +279,57 @@ const saveProfile = async () => {
 }
 
 // Activity options for the select input
-const activityOptions = [
-  { 
-    title: '[1.25] Sedentary', 
-    subtitle: 'Office job, walking < 1h, or 1 light workout per week',
-    value: 1.25 
+const activityOptions = computed(() => [
+  {
+    title: t('macros.activity.sedentary.title'),
+    subtitle: t('macros.activity.sedentary.subtitle'),
+    value: 1.25,
   },
-  { 
-    title: '[1.3] Light Activity', 
-    subtitle: '2-3 low-intensity workouts (yoga, dancing, pool) per week',
-    value: 1.3 
+  {
+    title: t('macros.activity.light.title'),
+    subtitle: t('macros.activity.light.subtitle'),
+    value: 1.3,
   },
-  { 
-    title: '[1.35] Moderate Activity', 
-    subtitle: '2-3 moderate workouts (gym, fitness, cardio) per week',
-    value: 1.35 
+  {
+    title: t('macros.activity.moderate.title'),
+    subtitle: t('macros.activity.moderate.subtitle'),
+    value: 1.35,
   },
-  { 
-    title: '[1.375] High Activity', 
-    subtitle: 'Stable 3+ intense workouts per week (50 min+)',
-    value: 1.375 
+  {
+    title: t('macros.activity.high.title'),
+    subtitle: t('macros.activity.high.subtitle'),
+    value: 1.375,
   },
-  { 
-    title: '[1.4] Very High Activity', 
-    subtitle: '4-5 high-intensity workouts per week',
-    value: 1.4 
+  {
+    title: t('macros.activity.veryHigh.title'),
+    subtitle: t('macros.activity.veryHigh.subtitle'),
+    value: 1.4,
   },
-  { 
-    title: '[1.45] Athlete / Pro', 
-    subtitle: '5+ intense workouts per week or daily training',
-    value: 1.45 
-  }
-]
+  {
+    title: t('macros.activity.athlete.title'),
+    subtitle: t('macros.activity.athlete.subtitle'),
+    value: 1.45,
+  },
+])
 
-const goalOptions = [
-  { 
-    title: 'Maintenance', 
-    subtitle: 'Keep your current weight and stay fit',
-    value: 'maintenance' 
+// Goal options for the select input
+const goalOptions = computed(() => [
+  {
+    title: t('macros.goals.maintenance.title'),
+    subtitle: t('macros.goals.maintenance.subtitle'),
+    value: 'maintenance',
   },
-  { 
-    title: 'Weight Loss', 
-    subtitle: 'Burn fat with a safe calorie deficit',
-    value: 'loss' 
+  {
+    title: t('macros.goals.loss.title'),
+    subtitle: t('macros.goals.loss.subtitle'),
+    value: 'loss',
   },
-  { 
-    title: 'Muscle Gain', 
-    subtitle: 'Build muscle with a slight calorie surplus',
-    value: 'gain' 
-  }
-]
+  {
+    title: t('macros.goals.gain.title'),
+    subtitle: t('macros.goals.gain.subtitle'),
+    value: 'gain',
+  },
+])
 
 // Automatically fetch data when page loads
 onMounted(async () => {
@@ -335,7 +352,7 @@ onMounted(async () => {
       if (form.weight) showResult.value = true
     }
   } catch (error) {
-    snackbarText.value = 'Could not load your profile. Please refresh the page.'
+    snackbarText.value = t('macros.messages.loadError')
     snackbarColor.value = 'error'
     snackbar.value = true
   }

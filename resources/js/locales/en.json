@@ -1,0 +1,283 @@
+{
+    "app": {
+        "account": "Account",
+        "logout": "Logout",
+        "deleteAccount": "Delete account",
+        "deleteAccountTitle": "Delete account?",
+        "deleteAccountText": "This action will permanently delete your account and all related data, including workouts, measurements and progress history.",
+        "cancel": "Cancel",
+        "delete": "Delete"
+    },
+
+    "landing": {
+        "logo": "WorkoutTracker",
+        "heroLine1": "Track Every Rep.",
+        "heroLine2": "Crush Every Goal.",
+        "heroLine3": "Build Your Legacy.",
+        "signUp": "Sign up",
+        "signIn": "Sign in",
+        "coreFeatures": "Core Features",
+        "coreFeaturesSubtitle": "Everything you need to reach your fitness goals in one place.",
+        "getStarted": "Get Started",
+        "features": {
+            "workoutLogging": {
+                "title": "Workout Logging",
+                "text": "Log every workout with ease. Track sets, reps, and weight without breaking your flow."
+            },
+            "bodyMeasurements": {
+                "title": "Body Measurements",
+                "text": "See how your body changes over time. Keep track of weight and key measurements in one place."
+            },
+            "analytics": {
+                "title": "Analytics & Charts",
+                "text": "Understand your progress with clear, visual stats — from strength gains to training volume."
+            },
+            "macroCalculator": {
+                "title": "Macro Calculator",
+                "text": "Find your ideal calories and macros based on your goals. No guesswork needed."
+            }
+        }
+    },
+    "register": {
+        "title": "Welcome to Workout Tracker!",
+        "subtitle": "Create your account",
+        "username": "Username",
+        "email": "E-mail",
+        "emailPlaceholder": "{'email@example.com'}",
+        "password": "Password",
+        "passwordRepeat": "Password repeat",
+        "agreeText": "I agree to the",
+        "terms": "Terms & Conditions",
+        "and": "and",
+        "privacy": "Privacy Policy",
+        "registrationFailed": "Registration failed. Please try again.",
+        "submit": "Submit",
+        "alreadyHaveAccount": "Already have an account?",
+        "login": "Log in",
+        "fixFormErrors": "Please correct the errors in the form.",
+        "tryAgain": "Registration failed. Try again.",
+        "passwordsDoNotMatch": "Passwords do not match"
+    },
+    "login": {
+        "title": "Welcome back!",
+        "email": "E-mail",
+        "emailPlaceholder": "{'email@example.com'}",
+        "password": "Password",
+        "invalidCredentials": "Invalid email or password. Please try again.",
+        "submit": "Login",
+        "noAccount": "Don't have an account?",
+        "register": "Sign up",
+        "tryAgain": "Login failed. Try again."
+    },
+    "home": {
+        "welcome": "Welcome back, {name}",
+        "subtitle": "Here is your fitness overview. Track your workouts, body measurements and progress in one place.",
+        "newWorkout": "New Workout",
+        "addMeasurement": "Add measurement",
+        "openMeasurements": "Open measurements",
+        "openMacros": "Open macros",
+        "noData": "No data",
+        "quickActions": {
+            "workouts": {
+                "title": "Workouts",
+                "description": "Log your training sessions"
+            },
+            "measurements": {
+                "title": "Measurements",
+                "description": "Track your body changes"
+            },
+            "macros": {
+                "title": "Macros",
+                "description": "Calculate your daily nutrition"
+            }
+        },
+        "weightProgress": {
+            "title": "Weight Progress",
+            "subtitle": "Your body weight changes over time",
+            "emptyTitle": "No weight data yet",
+            "emptyText": "Add your first measurement to start tracking your weight progress."
+        },
+        "overview": {
+            "title": "Overview",
+            "subtitle": "Quick summary of your latest data",
+            "measurementsTab": "Measurements",
+            "nutritionTab": "Nutrition"
+        },
+        "measurements": {
+            "emptyTitle": "No measurements yet",
+            "emptyText": "Add your first body measurement to see your stats here."
+        },
+        "nutrition": {
+            "dailyTarget": "Daily Target",
+            "protein": "Protein",
+            "fats": "Fats",
+            "carbs": "Carbs",
+            "emptyTitle": "No macro data yet",
+            "emptyText": "Fill in your profile to calculate daily calories and macros.",
+            "calculateMacros": "Calculate macros"
+        },
+        "bodyParts": {
+            "neck": "Neck",
+            "chest": "Chest",
+            "biceps": "Biceps",
+            "forearms": "Forearms",
+            "waist": "Waist",
+            "hips": "Hips",
+            "calves": "Calves"
+        }
+    },
+    "workouts": {
+        "stats": {
+            "total": "Total Workouts",
+            "thisWeek": "This Week",
+            "daysSinceLast": "Days Since Last"
+        },
+        "newWorkout": "New workout",
+        "dialog": {
+            "newTitle": "New Workout",
+            "editTitle": "Edit Workout",
+            "workoutName": "Workout name",
+            "workoutPlaceholder": "e.g. Push Day",
+            "date": "Date",
+            "searchExercise": "Search exercise",
+            "set": "set",
+            "kg": "kg",
+            "reps": "reps",
+            "addSet": "+ Add Set",
+            "addExercise": "+ Add Exercise",
+            "cancel": "Cancel",
+            "next": "Next →",
+            "back": "← Back",
+            "saveWorkout": "Save Workout",
+            "saved": "Workout saved successfully!"
+        },
+        "history": {
+            "title": "Workout History",
+            "subtitle": "View and manage your past workouts",
+            "empty": "No workouts yet. Start by creating a new workout.",
+            "defaultName": "Workout",
+            "exercises": "exercises",
+            "sets": "sets"
+        },
+        "details": {
+            "deleteWorkout": "Delete workout",
+            "close": "Close"
+        },
+        "snackbar": {
+            "saved": "Workout saved successfully!",
+            "failed": "Failed to save workout. Please try again.",
+            "close": "Close"
+        },
+        "errors": {
+            "invalidSets": "Please correct the errors in the sets before saving",
+            "noExercises": "Add at least one exercise before saving",
+            "generic": "Something went wrong. Please try again."
+        }
+    },
+    "measurements": {
+        "title": "Body Measurements",
+        "subtitle": "Track your body composition over time",
+        "selectMeasurements": "Select measurements",
+        "date": "Date",
+        "notesObservations": "Notes & Observations",
+        "notes": "Notes",
+        "saveMeasurements": "Save Measurements",
+        "selectBodyParts": "Select body parts above to start logging your progress.",
+        "history": {
+            "title": "History",
+            "subtitle": "View and manage your past entries",
+            "filter": "Filter by body part",
+            "empty": "No measurements recorded yet."
+        },
+        "edit": {
+            "title": "Edit Measurement",
+            "subtitle": "Update your recorded data",
+            "cancel": "Cancel",
+            "save": "Save"
+        },
+        "messages": {
+            "recorded": "Measurement recorded successfully!",
+            "checkFields": "Please check the highlighted fields",
+            "saveError": "An error occurred while saving. Please try again.",
+            "updated": "Entry updated!",
+            "updateError": "Failed to update entry",
+            "deleted": "Entry deleted",
+            "deleteError": "Failed to delete entry",
+            "noDataForPart": "No data found for {part} in your history yet."
+        },
+        "bodyParts": {
+            "weight": "Weight",
+            "neck": "Neck",
+            "chest": "Chest",
+            "biceps": "Biceps",
+            "forearms": "Forearms",
+            "waist": "Waist",
+            "hips": "Hips",
+            "calves": "Calves"
+        }
+    },
+    "macros": {
+        "title": "Macros Calculator",
+        "subtitle": "Enter your metrics to calculate daily requirements",
+        "gender": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "weight": "Weight (kg)",
+        "height": "Height (cm)",
+        "age": "Age",
+        "activityLevel": "Activity Level",
+        "goal": "Your Goal",
+        "dailyTarget": "Daily Target",
+        "kcal": "kcal",
+        "protein": "Protein",
+        "fats": "Fats",
+        "carbs": "Carbs",
+        "saveCalculate": "Save & Calculate",
+        "disclaimer": "* Note: These calculations are estimates based on general formulas. Individual needs may vary. Consult with a professional for precise nutrition planning.",
+        "messages": {
+            "saved": "Data saved and macros calculated!",
+            "serverError": "Server error. Please try again later.",
+            "loadError": "Could not load your profile. Please refresh the page."
+        },
+        "activity": {
+            "sedentary": {
+                "title": "[1.25] Sedentary",
+                "subtitle": "Office job, walking < 1h, or 1 light workout per week"
+            },
+            "light": {
+                "title": "[1.3] Light Activity",
+                "subtitle": "2-3 low-intensity workouts (yoga, dancing, pool) per week"
+            },
+            "moderate": {
+                "title": "[1.35] Moderate Activity",
+                "subtitle": "2-3 moderate workouts (gym, fitness, cardio) per week"
+            },
+            "high": {
+                "title": "[1.375] High Activity",
+                "subtitle": "Stable 3+ intense workouts per week (50 min+)"
+            },
+            "veryHigh": {
+                "title": "[1.4] Very High Activity",
+                "subtitle": "4-5 high-intensity workouts per week"
+            },
+            "athlete": {
+                "title": "[1.45] Athlete / Pro",
+                "subtitle": "5+ intense workouts per week or daily training"
+            }
+        },
+        "goals": {
+            "maintenance": {
+                "title": "Maintenance",
+                "subtitle": "Keep your current weight and stay fit"
+            },
+            "loss": {
+                "title": "Weight Loss",
+                "subtitle": "Burn fat with a safe calorie deficit"
+            },
+            "gain": {
+                "title": "Muscle Gain",
+                "subtitle": "Build muscle with a slight calorie surplus"
+            }
+        }
+    }
+}

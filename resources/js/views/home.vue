@@ -5,10 +5,10 @@
             <div class="d-flex flex-column flex-md-row justify-space-between align-md-center">
                 <div>
                     <div class="text-title-large font-weight-bold mb-1">
-                        Welcome back, {{ user?.username || user?.name || 'User' }}
+                        {{ $t('home.welcome', { name: user?.username || user?.name || 'User' }) }}
                     </div>
                     <p class="text-body-medium text-medium-emphasis">
-                        Here is your fitness overview. Track your workouts, body measurements and progress in one place.
+                        {{ $t('home.subtitle') }}
                     </p>
                 </div>
 
@@ -20,7 +20,7 @@
                     prepend-icon="mdi-plus"
                     @click="$router.push('/workouts')"
                 >
-                    New Workout
+                    {{ $t('home.newWorkout') }}
                 </v-btn>
             </div>
         </v-card>
@@ -74,11 +74,8 @@
                 <v-card variant="flat" rounded="xl" class="pa-6 border progress-card">
                     <div class="mb-4">
                         <div class="text-title-large font-weight-bold mb-1">
-                            Weight Progress
+                            {{ $t('home.weightProgress.title') }}
                         </div>
-                        <p class="text-body-medium text-medium-emphasis mb-0">
-                            Your body weight changes over time
-                        </p>
                     </div>
 
                     <!-- Chart is shown only when weight data exists -->
@@ -91,12 +88,12 @@
                         <v-icon icon="mdi-chart-line" color="primary" size="42" class="mb-3"></v-icon>
 
                         <div class="text-title-medium font-weight-bold mb-1">
-                            No weight data yet
+                            {{ $t('home.weightProgress.emptyTitle') }}
                         </div>
 
                         <div class="mb-4">
                             <p class="text-body-medium text-medium-emphasis">
-                            Add your first measurement to start tracking your weight progress.
+                            {{ $t('home.weightProgress.emptyText') }}
                         </p>
                         </div>
 
@@ -106,7 +103,7 @@
                             rounded="lg"
                             @click="$router.push('/measurements')"
                         >
-                            Add measurement
+                            {{ $t('home.addMeasurement') }}
                         </v-btn>
                     </div>
                 </v-card>
@@ -117,11 +114,11 @@
                 <v-card variant="flat" rounded="xl" class="pa-5 border overview-card">
                     <div class="mb-4">
                         <div class="text-title-large font-weight-bold mb-1">
-                            Overview
+                            {{ $t('home.overview.title') }}
                         </div>
 
                         <div class="text-body-medium text-medium-emphasis">
-                            Quick summary of your latest data
+                            {{ $t('home.overview.subtitle') }}
                         </div>
                     </div>
 
@@ -134,11 +131,11 @@
                         class="mb-4"
                     >
                         <v-tab value="measurements">
-                            Measurements
+                            {{ $t('home.overview.measurementsTab') }}
                         </v-tab>
 
                         <v-tab value="nutrition">
-                            Nutrition
+                            {{ $t('home.overview.nutritionTab') }}
                         </v-tab>
                     </v-tabs>
 
@@ -180,7 +177,7 @@
                                     block
                                     @click="$router.push('/measurements')"
                                 >
-                                    Open measurements
+                                    {{ $t('home.openMeasurements') }}
                                 </v-btn>
                             </div>
 
@@ -189,11 +186,11 @@
                                 <v-icon icon="mdi-scale-bathroom" color="primary" size="38" class="mb-3"></v-icon>
 
                                 <div class="text-title-medium font-weight-bold mb-1">
-                                    No measurements yet
+                                    {{ $t('home.measurements.emptyTitle') }}
                                 </div>
 
                                 <div class="text-body-medium text-medium-emphasis mb-4">
-                                    Add your first body measurement to see your stats here.
+                                    {{ $t('home.measurements.emptyText') }}
                                 </div>
 
                                 <v-btn
@@ -202,7 +199,7 @@
                                     rounded="lg"
                                     @click="$router.push('/measurements')"
                                 >
-                                    Add measurement
+                                    {{ $t('home.addMeasurement') }}
                                 </v-btn>
                             </div>
                         </v-window-item>
@@ -212,7 +209,7 @@
                             <div v-if="macroResult">
                                 <div class="text-center mb-4">
                                     <div class="text-body-small text-medium-emphasis text-uppercase">
-                                        Daily Target
+                                        {{ $t('home.nutrition.dailyTarget') }}
                                     </div>
 
                                     <div class="text-display-small font-weight-bold text-primary">
@@ -225,7 +222,7 @@
                                     <v-col cols="4">
                                         <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
                                             <div class="text-body-small text-medium-emphasis">
-                                                Protein
+                                                {{ $t('home.nutrition.protein') }}
                                             </div>
 
                                             <div class="text-title-medium font-weight-bold">
@@ -237,7 +234,7 @@
                                     <v-col cols="4">
                                         <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
                                             <div class="text-body-small text-medium-emphasis">
-                                                Fats
+                                                {{ $t('home.nutrition.fats') }}
                                             </div>
 
                                             <div class="text-title-medium font-weight-bold">
@@ -249,7 +246,7 @@
                                     <v-col cols="4">
                                         <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
                                             <div class="text-body-small text-medium-emphasis">
-                                                Carbs
+                                                {{ $t('home.nutrition.carbs') }}
                                             </div>
 
                                             <div class="text-title-medium font-weight-bold">
@@ -267,7 +264,7 @@
                                     block
                                     @click="$router.push('/macros')"
                                 >
-                                    Open macros
+                                    {{ $t('home.openMacros') }}
                                 </v-btn>
                             </div>
 
@@ -276,11 +273,11 @@
                                 <v-icon icon="mdi-calculator" color="primary" size="38" class="mb-3"></v-icon>
 
                                 <div class="text-title-medium font-weight-bold mb-1">
-                                    No macro data yet
+                                    {{ $t('home.nutrition.emptyTitle') }}
                                 </div>
 
                                 <div class="text-body-medium text-medium-emphasis mb-4">
-                                    Fill in your profile to calculate daily calories and macros.
+                                    {{ $t('home.nutrition.emptyText') }}
                                 </div>
 
                                 <v-btn
@@ -289,7 +286,7 @@
                                     rounded="lg"
                                     @click="$router.push('/macros')"
                                 >
-                                    Calculate macros
+                                    {{ $t('home.nutrition.calculateMacros') }}
                                 </v-btn>
                             </div>
                         </v-window-item>
@@ -301,11 +298,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import axios from 'axios'
 import Chart from 'chart.js/auto'
 import { user } from '@/stores/auth.js'
 import { calculateMacros } from '@/utils/calculateMacros'
+import { useI18n } from 'vue-i18n'
 
 // Controls the entrance animation for quick action cards
 const isReady = ref(false)
@@ -322,26 +320,44 @@ const userProfile = ref(null)
 // Controls the right overview card tabs
 const overviewTab = ref('measurements')
 
+// Provides translation function and current language
+const { t, locale } = useI18n()
+
 // Keeps the chart instance so it can be destroyed before re-rendering
 let weightChart = null
 
 // Main dashboard navigation items
-const menuItems = [
-    { title: 'Workouts', description: 'Log your training sessions', icon: 'mdi-dumbbell', path: '/workouts' },
-    { title: 'Measurements', description: 'Track your body changes', icon: 'mdi-scale', path: '/measurements' },
-    { title: 'Macros', description: 'Calculate your daily nutrition', icon: 'mdi-calculator', path: '/macros' },
-]
+const menuItems = computed(() => [
+    {
+        title: t('home.quickActions.workouts.title'),
+        description: t('home.quickActions.workouts.description'),
+        icon: 'mdi-dumbbell',
+        path: '/workouts',
+    },
+    {
+        title: t('home.quickActions.measurements.title'),
+        description: t('home.quickActions.measurements.description'),
+        icon: 'mdi-scale',
+        path: '/measurements',
+    },
+    {
+        title: t('home.quickActions.macros.title'),
+        description: t('home.quickActions.macros.description'),
+        icon: 'mdi-calculator',
+        path: '/macros',
+    },
+])
 
 // Body parts shown in the latest measurements card
-const bodyParts = [
-    { key: 'neck', label: 'Neck' },
-    { key: 'chest', label: 'Chest' },
-    { key: 'biceps', label: 'Biceps' },
-    { key: 'forearms', label: 'Forearms' },
-    { key: 'waist', label: 'Waist' },
-    { key: 'hips', label: 'Hips' },
-    { key: 'calves', label: 'Calves' },
-]
+const bodyParts = computed(() => [
+    { key: 'neck', label: t('home.bodyParts.neck') },
+    { key: 'chest', label: t('home.bodyParts.chest') },
+    { key: 'biceps', label: t('home.bodyParts.biceps') },
+    { key: 'forearms', label: t('home.bodyParts.forearms') },
+    { key: 'waist', label: t('home.bodyParts.waist') },
+    { key: 'hips', label: t('home.bodyParts.hips') },
+    { key: 'calves', label: t('home.bodyParts.calves') },
+])
 
 // Prepares only measurements that contain body weight
 const weightChartData = computed(() => {
@@ -352,7 +368,7 @@ const weightChartData = computed(() => {
 
 // Finds the newest measurement records
 const latestMeasurementsByPart = computed(() => {
-    return bodyParts.map(part => {
+    return bodyParts.value.map(part => {
         const latestEntry = [...measurements.value]
             .filter(m => m[part.key] !== null && m[part.key] !== undefined)
             .sort((a, b) => new Date(b.measured_at) - new Date(a.measured_at))[0]
@@ -447,11 +463,11 @@ function renderWeightChart() {
     })
 }
 
-// Formats database dates for display
+// Formats dates based on selected language
 function formatDate(date) {
     if (!date) return ''
 
-    return new Date(date).toLocaleDateString('en-GB', {
+    return new Date(date).toLocaleDateString(locale.value === 'lv' ? 'lv-LV' : 'en-GB', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
@@ -464,6 +480,15 @@ function formatNum(value) {
 
     return Number(value).toFixed(1).replace('.0', '')
 }
+
+// Re-render chart labels when language changes
+watch(locale, async () => {
+    await nextTick()
+
+    if (weightChartData.value.length) {
+        renderWeightChart()
+    }
+})
 </script>
 
 <style scoped>

@@ -3,22 +3,26 @@
     <v-row justify="center">
         <v-col cols="12" sm="10" md="8" lg="5">
             <v-sheet color="surface" rounded="lg">
-                <p class="title-h1 px-6 pt-5 text-center">welcome to workout tracker!</p>
-                <p class="text-center font-weight-thin" color="subheading">Create your account</p>
+                <p class="title-h1 px-6 pt-5 text-center">
+                    {{ $t('register.title') }}
+                </p>
+                <p class="text-center font-weight-thin" color="subheading">
+                    {{ $t('register.subtitle') }}
+                </p>
                 <v-form ref="formRef" fast-fail @submit.prevent="handleRegister" class="pa-6">
                 <v-text-field class="mb-3"
                     v-model="form.username"
                     type="text"
                     maxlength="50"
                     :rules="[rules.required]"
-                    label="Username"
+                    :label="$t('register.username')"
                 ></v-text-field>
 
                 <v-text-field class="mb-3"
                     v-model="form.email"
                     :rules="[rules.required, rules.email]"
-                    label="E-mail"
-                    placeholder="email@example.com"
+                    :label="$t('register.email')"
+                    :placeholder="$t('register.emailPlaceholder')"
                 ></v-text-field>
 
                 <v-text-field class="mb-3"
@@ -26,7 +30,7 @@
                     :type="visible ? 'text' : 'password'"   
                     v-model="form.password"
                     :rules="[rules.required, rules.minLength,rules.hasLower, rules.hasSymbol, rules.hasUpper]"
-                    label="Password"
+                    :label="$t('register.password')"
                     @click:append-inner="visible = !visible"
                 ></v-text-field>
 
@@ -34,7 +38,7 @@
                     v-model="form.password_confirmation"
                     :type="visible ? 'text' : 'password'"
                     :rules="[rules.required, confirmPassword]"
-                    label="Password repeat"
+                    :label="$t('register.passwordRepeat')"
                 ></v-text-field>
 
                 <v-checkbox
@@ -44,10 +48,14 @@
                 >
                     <template #label>
                         <div>
-                            I agree to the 
-                            <a href="#" @click.stop class="text-decoration-none">Teams & Conditions</a>
-                            and
-                            <a href="#" @click.stop class="text-decoration-none">Privacy Policy</a>
+                            {{ $t('register.agreeText') }}
+                            <a href="#" @click.stop class="text-decoration-none">
+                                {{ $t('register.terms') }}
+                            </a>
+                            {{ $t('register.and') }}
+                            <a href="#" @click.stop class="text-decoration-none">
+                                {{ $t('register.privacy') }}
+                            </a>
                         </div>
                     </template>
                 </v-checkbox>
@@ -60,13 +68,15 @@
                     class="mb-3"
                     :class="{ 'shake': shake }"
                 >
-                    Registration failed. Please try again.
+                    {{ $t('register.registrationFailed') }}
                 </v-alert>
-                <v-btn class="mt-2" type="submit" block>Submit</v-btn>
+                <v-btn class="mt-2" type="submit" block>
+                    {{ $t('register.submit') }}
+                </v-btn>
 
                 <div class="text-center mt-4">
-                    Already have an account?
-                    <router-link to="/login">Log in</router-link>
+                    {{ $t('register.alreadyHaveAccount') }}
+                    <router-link to="/login">{{ $t('register.login') }}</router-link>
                 </div>
                 </v-form>
             </v-sheet>
@@ -82,12 +92,17 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { rules } from '@/utils/rules.js';
+import { useI18n } from 'vue-i18n';
+
 
 // Initialize router for navigation
 const router = useRouter();
 const shake = ref(false);
 const errorMessage = ref('');
 const formRef = ref(null)
+
+// Provides translated validation and error messages
+const { t } = useI18n()
 
 // Reactive data for the registration form; .value is sent to the API as payload
 const form = ref({
@@ -100,8 +115,8 @@ const form = ref({
 // checkbox
 const checkbox = ref(false);
 
-// Function to confirm password matches
-const confirmPassword = v => v === form.value.password || 'Passwords does not match';
+// Checks that repeated password matches the original password
+const confirmPassword = v => v === form.value.password || t('register.passwordsDoNotMatch')
 
 // Reactive state for password visibility toggle
 const visible = ref(false);
@@ -118,7 +133,7 @@ const handleRegister = async () => {
     // Validate form before sending
     const { valid } = await formRef.value.validate()
     if (!valid) {
-        errorMessage.value = 'Please correct the errors in the form.';
+        errorMessage.value = t('register.fixFormErrors')
         shake.value = true;
         setTimeout(() => shake.value = false, 500);
         return;
@@ -139,7 +154,7 @@ const handleRegister = async () => {
         await router.push('/home');
     }
     } catch (error) {
-        errorMessage.value = error.response?.data?.message || 'Registration failed. Try again.';
+        errorMessage.value = error.response?.data?.message || t('register.tryAgain')
         // Trigger shake animation
         shake.value = true
         setTimeout(() => shake.value = false, 500)

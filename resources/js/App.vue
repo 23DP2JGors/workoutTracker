@@ -10,7 +10,9 @@
             @click="router.back()"
             >
         </v-btn>
-        <v-app-bar-title class="font-weight-bold">Workout Tracker</v-app-bar-title>
+          <v-app-bar-title class="font-weight-bold">
+              WorkoutTracker
+          </v-app-bar-title>
       <v-spacer></v-spacer>
 
       <!-- User menu -->
@@ -23,7 +25,7 @@
             append-icon="mdi-chevron-down"
             prepend-icon="mdi-account-circle-outline"
           >
-            {{ user?.username || user?.name || 'Account' }}
+            {{ user?.username || user?.name || $t('app.account') }}
           </v-btn>
         </template>
 
@@ -31,7 +33,7 @@
           <v-list density="compact">
             <v-list-item
               prepend-icon="mdi-logout"
-              title="Logout"
+              :title="$t('app.logout')"
               @click="handleLogout"
             />
 
@@ -39,7 +41,7 @@
 
             <v-list-item
               prepend-icon="mdi-delete-outline"
-              title="Delete account"
+              :title="$t('app.deleteAccount')"
               class="text-error"
               @click="deleteDialog = true"
             />
@@ -51,12 +53,11 @@
       <v-dialog v-model="deleteDialog" max-width="420">
         <v-card rounded="xl" class="pa-2">
           <v-card-title class="text-title-large font-weight-bold">
-            Delete account?
+            {{ $t('app.deleteAccountTitle') }}
           </v-card-title>
 
           <v-card-text class="text-body-medium text-medium-emphasis">
-            This action will permanently delete your account and all related data,
-            including workouts, measurements and progress history.
+            {{ $t('app.deleteAccountText') }}
           </v-card-text>
 
           <v-card-actions class="px-4 pb-4">
@@ -67,7 +68,7 @@
               color="default"
               @click="deleteDialog = false"
             >
-              Cancel
+              {{ $t('app.cancel') }}
             </v-btn>
 
             <v-btn
@@ -75,11 +76,14 @@
               variant="flat"
               @click="handleDeleteAccount"
             >
-              Delete
+              {{ $t('app.delete') }}
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
+      
+      <LanguageSwitcher />
+      
       <v-btn 
       color="default"
         :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
@@ -89,8 +93,13 @@
 
     <!-- Top for auth pages -->
     <v-app-bar v-if="route.meta.layout === 'auth'" elevation="0" color="transparent">
-        <v-app-bar-title class="text-title-large font-weight-bold">Workout Tracker</v-app-bar-title>
+        <v-app-bar-title class="text-title-large font-weight-bold">
+            Workout Tracker
+        </v-app-bar-title>
         <v-spacer></v-spacer>
+        
+        <LanguageSwitcher />
+        
         <v-btn 
             color="default"
             :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
@@ -108,10 +117,12 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { fetchUser, user } from '@/stores/auth.js'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useTheme } from 'vuetify'
 import { onMounted } from 'vue'
+
 
 const drawer = ref(false)
 const theme = useTheme()

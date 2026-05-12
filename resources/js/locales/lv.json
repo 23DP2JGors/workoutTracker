@@ -1,0 +1,282 @@
+{
+    "app": {
+        "account": "Konts",
+        "logout": "Izrakstīties",
+        "deleteAccount": "Dzēst kontu",
+        "deleteAccountTitle": "Dzēst kontu?",
+        "deleteAccountText": "Šī darbība neatgriezeniski dzēsīs tavu kontu un visus saistītos datus, tostarp treniņus, mērījumus un progresa vēsturi.",
+        "cancel": "Atcelt",
+        "delete": "Dzēst"
+    },
+    "landing": {
+        "logo": "WorkoutTracker",
+        "heroLine1": "Seko katram atkārtojumam.",
+        "heroLine2": "Sasniedz katru mērķi.",
+        "heroLine3": "Veido savu progresu.",
+        "signUp": "Reģistrēties",
+        "signIn": "Pieslēgties",
+        "coreFeatures": "Galvenās funkcijas",
+        "coreFeaturesSubtitle": "Viss nepieciešamais, lai sekotu līdzi saviem fitnesa mērķiem vienuviet.",
+        "getStarted": "Sākt",
+        "features": {
+            "workoutLogging": {
+                "title": "Treniņu pierakstīšana",
+                "text": "Ērti pieraksti katru treniņu. Seko līdzi piegājieniem, atkārtojumiem un svaram."
+            },
+            "bodyMeasurements": {
+                "title": "Ķermeņa mērījumi",
+                "text": "Redzi, kā tavs ķermenis mainās laika gaitā. Saglabā svaru un svarīgākos mērījumus vienuviet."
+            },
+            "analytics": {
+                "title": "Analītika un grafiki",
+                "text": "Pārskati savu progresu ar vienkāršiem un saprotamiem grafikiem."
+            },
+            "macroCalculator": {
+                "title": "Makro kalkulators",
+                "text": "Aprēķini kalorijas un makroelementus atbilstoši savam mērķim."
+            }
+        }
+    },
+    "register": {
+        "title": "Laipni lūdzam Workout Tracker!",
+        "subtitle": "Izveido savu kontu",
+        "username": "Lietotājvārds",
+        "email": "E-pasts",
+        "emailPlaceholder": "{'email@example.com'}",
+        "password": "Parole",
+        "passwordRepeat": "Atkārtot paroli",
+        "agreeText": "Es piekrītu",
+        "terms": "Noteikumiem",
+        "and": "un",
+        "privacy": "Privātuma politikai",
+        "registrationFailed": "Reģistrācija neizdevās. Lūdzu, mēģini vēlreiz.",
+        "submit": "Iesniegt",
+        "alreadyHaveAccount": "Tev jau ir konts?",
+        "login": "Pieslēgties",
+        "fixFormErrors": "Lūdzu, izlabo kļūdas formā.",
+        "tryAgain": "Reģistrācija neizdevās. Mēģini vēlreiz.",
+        "passwordsDoNotMatch": "Paroles nesakrīt"
+    },
+    "login": {
+        "title": "Laipni atpakaļ!",
+        "email": "E-pasts",
+        "emailPlaceholder": "{'email@example.com'}",
+        "password": "Parole",
+        "invalidCredentials": "Nepareizs e-pasts vai parole. Lūdzu, mēģini vēlreiz.",
+        "submit": "Pieslēgties",
+        "noAccount": "Tev vēl nav konta?",
+        "register": "Reģistrēties",
+        "tryAgain": "Pieslēgšanās neizdevās. Mēģini vēlreiz."
+    },
+    "home": {
+        "welcome": "Sveiks atpakaļ, {name}",
+        "subtitle": "Šeit ir tavs fitnesa pārskats. Seko līdzi treniņiem, ķermeņa mērījumiem un progresam vienuviet.",
+        "newWorkout": "Jauns treniņš",
+        "addMeasurement": "Pievienot mērījumu",
+        "openMeasurements": "Atvērt mērījumus",
+        "openMacros": "Atvērt makro kalkulatoru",
+        "noData": "Nav datu",
+        "quickActions": {
+            "workouts": {
+                "title": "Treniņi",
+                "description": "Pieraksti savas treniņu sesijas"
+            },
+            "measurements": {
+                "title": "Mērījumi",
+                "description": "Seko ķermeņa izmaiņām"
+            },
+            "macros": {
+                "title": "Makro",
+                "description": "Aprēķini ikdienas uzturu"
+            }
+        },
+        "weightProgress": {
+            "title": "Svara progress",
+            "subtitle": "Tava ķermeņa svara izmaiņas laika gaitā",
+            "emptyTitle": "Svara dati vēl nav pievienoti",
+            "emptyText": "Pievieno pirmo mērījumu, lai sāktu sekot svara progresam."
+        },
+        "overview": {
+            "title": "Pārskats",
+            "subtitle": "Īss tavu jaunāko datu kopsavilkums",
+            "measurementsTab": "Mērījumi",
+            "nutritionTab": "Uzturs"
+        },
+        "measurements": {
+            "emptyTitle": "Mērījumu vēl nav",
+            "emptyText": "Pievieno pirmo ķermeņa mērījumu, lai redzētu savus datus šeit."
+        },
+        "nutrition": {
+            "dailyTarget": "Dienas mērķis",
+            "protein": "Olbaltumvielas",
+            "fats": "Tauki",
+            "carbs": "Ogļhidrāti",
+            "emptyTitle": "Makro dati vēl nav pievienoti",
+            "emptyText": "Aizpildi profilu, lai aprēķinātu kalorijas un makroelementus.",
+            "calculateMacros": "Aprēķināt makro"
+        },
+        "bodyParts": {
+            "neck": "Kakls",
+            "chest": "Krūtis",
+            "biceps": "Bicepss",
+            "forearms": "Apakšdelmi",
+            "waist": "Viduklis",
+            "hips": "Gurni",
+            "calves": "Ikri"
+        }
+    },
+    "workouts": {
+        "stats": {
+            "total": "Kopā treniņi",
+            "thisWeek": "Šonedēļ",
+            "daysSinceLast": "Dienas kopš pēdējā"
+        },
+        "newWorkout": "Jauns treniņš",
+        "dialog": {
+            "newTitle": "Jauns treniņš",
+            "editTitle": "Rediģēt treniņu",
+            "workoutName": "Treniņa nosaukums",
+            "workoutPlaceholder": "piem., Push Day",
+            "date": "Datums",
+            "searchExercise": "Meklēt vingrinājumu",
+            "set": "piegājiens",
+            "kg": "kg",
+            "reps": "atkārtojumi",
+            "addSet": "+ Pievienot piegājienu",
+            "addExercise": "+ Pievienot vingrinājumu",
+            "cancel": "Atcelt",
+            "next": "Tālāk →",
+            "back": "← Atpakaļ",
+            "saveWorkout": "Saglabāt treniņu",
+            "saved": "Treniņš veiksmīgi saglabāts!"
+        },
+        "history": {
+            "title": "Treniņu vēsture",
+            "subtitle": "Apskati un pārvaldi savus iepriekšējos treniņus",
+            "empty": "Treniņu vēl nav. Sāc ar jauna treniņa izveidi.",
+            "defaultName": "Treniņš",
+            "exercises": "vingrinājumi",
+            "sets": "piegājieni"
+        },
+        "details": {
+            "deleteWorkout": "Dzēst treniņu",
+            "close": "Aizvērt"
+        },
+        "snackbar": {
+            "saved": "Treniņš veiksmīgi saglabāts!",
+            "failed": "Neizdevās saglabāt treniņu. Lūdzu, mēģini vēlreiz.",
+            "close": "Aizvērt"
+        },
+        "errors": {
+            "invalidSets": "Lūdzu, izlabo kļūdas piegājienos pirms saglabāšanas",
+            "noExercises": "Pirms saglabāšanas pievieno vismaz vienu vingrinājumu",
+            "generic": "Kaut kas nogāja greizi. Lūdzu, mēģini vēlreiz."
+        }
+    },
+    "measurements": {
+        "title": "Ķermeņa mērījumi",
+        "subtitle": "Seko līdzi ķermeņa izmaiņām laika gaitā",
+        "selectMeasurements": "Izvēlies mērījumus",
+        "date": "Datums",
+        "notesObservations": "Piezīmes un novērojumi",
+        "notes": "Piezīmes",
+        "saveMeasurements": "Saglabāt mērījumus",
+        "selectBodyParts": "Izvēlies ķermeņa daļas, lai sāktu reģistrēt progresu.",
+        "history": {
+            "title": "Vēsture",
+            "subtitle": "Apskati un pārvaldi iepriekšējos ierakstus",
+            "filter": "Filtrēt pēc ķermeņa daļas",
+            "empty": "Mērījumi vēl nav pievienoti."
+        },
+        "edit": {
+            "title": "Rediģēt mērījumu",
+            "subtitle": "Atjaunini saglabātos datus",
+            "cancel": "Atcelt",
+            "save": "Saglabāt"
+        },
+        "messages": {
+            "recorded": "Mērījums veiksmīgi saglabāts!",
+            "checkFields": "Lūdzu, pārbaudi izceltos laukus",
+            "saveError": "Saglabāšanas laikā radās kļūda. Lūdzu, mēģini vēlreiz.",
+            "updated": "Ieraksts atjaunināts!",
+            "updateError": "Neizdevās atjaunināt ierakstu",
+            "deleted": "Ieraksts dzēsts",
+            "deleteError": "Neizdevās dzēst ierakstu",
+            "noDataForPart": "Vēsturē vēl nav datu par: {part}."
+        },
+        "bodyParts": {
+            "weight": "Svars",
+            "neck": "Kakls",
+            "chest": "Krūtis",
+            "biceps": "Bicepss",
+            "forearms": "Apakšdelmi",
+            "waist": "Viduklis",
+            "hips": "Gurni",
+            "calves": "Ikri"
+        }
+    },
+    "macros": {
+        "title": "Makro kalkulators",
+        "subtitle": "Ievadi savus datus, lai aprēķinātu dienas uztura vajadzības",
+        "gender": "Dzimums",
+        "male": "Vīrietis",
+        "female": "Sieviete",
+        "weight": "Svars (kg)",
+        "height": "Augums (cm)",
+        "age": "Vecums",
+        "activityLevel": "Aktivitātes līmenis",
+        "goal": "Tavs mērķis",
+        "dailyTarget": "Dienas mērķis",
+        "kcal": "kcal",
+        "protein": "Olbaltumvielas",
+        "fats": "Tauki",
+        "carbs": "Ogļhidrāti",
+        "saveCalculate": "Saglabāt un aprēķināt",
+        "disclaimer": "* Piezīme: šie aprēķini ir aptuveni un balstīti uz vispārīgām formulām. Individuālās vajadzības var atšķirties. Precīzai uztura plānošanai konsultējies ar speciālistu.",
+        "messages": {
+            "saved": "Dati saglabāti un makroelementi aprēķināti!",
+            "serverError": "Servera kļūda. Lūdzu, mēģini vēlreiz vēlāk.",
+            "loadError": "Neizdevās ielādēt profilu. Lūdzu, atsvaidzini lapu."
+        },
+        "activity": {
+            "sedentary": {
+                "title": "[1.25] Mazkustīgs",
+                "subtitle": "Biroja darbs, pastaigas < 1h vai 1 viegls treniņš nedēļā"
+            },
+            "light": {
+                "title": "[1.3] Viegla aktivitāte",
+                "subtitle": "2-3 zemas intensitātes treniņi nedēļā"
+            },
+            "moderate": {
+                "title": "[1.35] Vidēja aktivitāte",
+                "subtitle": "2-3 vidējas intensitātes treniņi nedēļā"
+            },
+            "high": {
+                "title": "[1.375] Augsta aktivitāte",
+                "subtitle": "Stabili 3+ intensīvi treniņi nedēļā"
+            },
+            "veryHigh": {
+                "title": "[1.4] Ļoti augsta aktivitāte",
+                "subtitle": "4-5 augstas intensitātes treniņi nedēļā"
+            },
+            "athlete": {
+                "title": "[1.45] Sportists / profesionālis",
+                "subtitle": "5+ intensīvi treniņi nedēļā vai ikdienas treniņi"
+            }
+        },
+        "goals": {
+            "maintenance": {
+                "title": "Uzturēšana",
+                "subtitle": "Saglabāt pašreizējo svaru un formu"
+            },
+            "loss": {
+                "title": "Svara samazināšana",
+                "subtitle": "Samazināt tauku daudzumu ar drošu kaloriju deficītu"
+            },
+            "gain": {
+                "title": "Muskuļu masa",
+                "subtitle": "Veidot muskuļus ar nelielu kaloriju pārpalikumu"
+            }
+        }
+    }
+}

@@ -8,7 +8,7 @@
               <v-icon size="28" class="text-primary">mdi-calendar-check</v-icon>
             </v-col>
             <v-col>
-              <div class="text-caption text-uppercase text-medium-emphasis mb-2">Total Workouts</div>
+              {{ $t('workouts.stats.total') }}
               <div class="text-h4 font-weight-bold">{{ totalWorkouts }}</div>
             </v-col>
           </v-row>
@@ -22,7 +22,7 @@
               <v-icon size="28" class="text-primary">mdi-fire</v-icon>
             </v-col>
             <v-col>
-              <div class="text-caption text-uppercase text-medium-emphasis mb-2">This Week</div>
+              {{ $t('workouts.stats.thisWeek') }}
               <div class="text-h4 font-weight-bold">{{ thisWeekWorkouts }}</div>
             </v-col>
           </v-row>
@@ -36,7 +36,7 @@
               <v-icon size="28" class="text-primary">mdi-clock-outline</v-icon>
             </v-col>
             <v-col>
-              <div class="text-caption text-uppercase text-medium-emphasis mb-2">Days Since Last</div>
+              {{ $t('workouts.stats.daysSinceLast') }}
               <div class="text-h4 font-weight-bold">{{ daysSinceLastWorkout }}</div>
             </v-col>
           </v-row>
@@ -52,12 +52,17 @@
           :width="$vuetify.display.smAndDown ? '100%' : '700'"
           >                    
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn v-bind="activatorProps" text="New workout" block @click="openNewModal"></v-btn>
+            <v-btn
+                v-bind="activatorProps"
+                :text="$t('workouts.newWorkout')"
+                block
+                @click="openNewModal"
+            ></v-btn>
           </template>
 
           <template v-slot:default="{ isActive }">
             <v-card>
-              <v-toolbar :title="isEditing ? 'Edit Workout' : (step === 1 ? 'New Workout' : form.name)"></v-toolbar>
+              <v-toolbar :title="isEditing ? $t('workouts.dialog.editTitle') : (step === 1 ? $t('workouts.dialog.newTitle') : form.name)"></v-toolbar>
 
               <v-card-text class="pa-6">
 
@@ -65,18 +70,18 @@
                 <div v-if="step === 1">
                   <v-text-field
                     v-model="form.name"
-                    label="Workout name"
+                    :label="$t('workouts.dialog.workoutName')"
                     variant="outlined"
                     type="text"
                     maxlength="50"
                     class="mb-4"
-                    placeholder="e.g. Push Day"
+                    :placeholder="$t('workouts.dialog.workoutPlaceholder')"
                     
                   ></v-text-field>
 
                   <v-text-field
                     v-model="form.date"
-                    label="Date"
+                    :label="$t('workouts.dialog.date')"
                     type="date"
                     variant="outlined"
                   ></v-text-field>
@@ -88,7 +93,7 @@
                   <v-autocomplete
                     v-model="selectedExercise"
                     :items="groupedExercises"
-                    label="Search exercise"
+                    :label="$t('workouts.dialog.searchExercise')"
                     variant="outlined"
                   >
                     <template v-slot:subheader="{ props }">
@@ -113,9 +118,9 @@
                     
                     <!-- Sets table header -->
                     <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2">
-                      <v-col cols="2">set</v-col>
-                      <v-col cols="4">kg</v-col>
-                      <v-col cols="4">reps</v-col>
+                      <v-col cols="2">{{ $t('workouts.dialog.set') }}</v-col>
+                      <v-col cols="4">{{ $t('workouts.dialog.kg') }}</v-col>
+                      <v-col cols="4">{{ $t('workouts.dialog.reps') }}</v-col>
                       <v-col cols="2"></v-col>
                     </v-row>
 
@@ -161,7 +166,7 @@
                         color="primary" 
                         @click="exercise.sets.push({ weight: '', reps: '' })" 
                         >
-                        + Add Set
+                        {{ $t('workouts.dialog.addSet') }}
                       </v-btn>
                       </v-col>
 
@@ -183,7 +188,7 @@
 
                   <!-- Add exercise button -->
                   <v-btn variant="text" color="primary" class="mt-2" @click="addExercise" :disabled="!selectedExercise">
-                    + Add Exercise
+                    {{ $t('workouts.dialog.addExercise') }}
                   </v-btn>
                   </v-form>
                 </div>
@@ -193,16 +198,16 @@
               <v-card-actions class="pa-4">
                 <!-- Step 1 actions -->
                 <template v-if="step === 1">
-                  <v-btn variant="text" @click="isActive.value = false">Cancel</v-btn>
+                  <v-btn variant="text" @click="isActive.value = false">{{ $t('workouts.dialog.cancel') }}</v-btn>
                   <v-spacer></v-spacer>
                   <v-btn color="primary" @click="step = 2" :disabled="!form.name || !form.date">
-                    Next →
+                    {{ $t('workouts.dialog.next') }}
                   </v-btn>
                 </template>
 
                 <!-- Step 2 actions -->
                 <template v-if="step === 2">
-                  <v-btn variant="text" @click="step = 1">← Back</v-btn>
+                  <v-btn variant="text" @click="step = 1"> {{ $t('workouts.dialog.back') }}</v-btn>
                   <v-spacer></v-spacer>
 
                   <v-alert 
@@ -226,7 +231,7 @@
                     rounded="lg"
                     class="mb-3"
                   >
-                    Workout saved successfully!
+                    {{ $t('workouts.dialog.saved') }}
                   </v-alert>
 
                   <v-btn 
@@ -234,7 +239,7 @@
                     :loading="isSaving" 
                     @click="saveWorkout"
                   >
-                    Save Workout
+                    {{ $t('workouts.dialog.saveWorkout') }}
                   </v-btn>
                 </template>
               </v-card-actions>
@@ -244,17 +249,17 @@
 
         <!-- Workout History Section -->
         <v-card variant="flat" rounded="xl" class="pa-6 border mt-6">
-            <h2 class="font-weight-bold mb-1">Workout History</h2>
-            <p class="text-medium-emphasis text-body-2 pb-4">
-                View and manage your past workouts
-            </p>
+            <h2 class="font-weight-bold mb-1">{{ $t('workouts.history.title') }}</h2>
+            <div class="text-medium-emphasis text-body-2 pb-4">
+                {{ $t('workouts.history.subtitle') }}
+            </div>
 
             <!-- Scrollable List of Workouts -->
             <div style="max-height: 500px; overflow-y: auto;" class="pr-2">
 
                 <!-- Empty state alert -->
                 <v-alert v-if="!workouts.length" type="info" variant="tonal" rounded="lg">
-                    No workouts yet. Start by creating a new workout.
+                    {{ $t('workouts.history.empty') }}
                 </v-alert>
 
                 <!-- Main Loop for workout history entries -->
@@ -270,7 +275,7 @@
                         <!-- Workout Data Column -->
                         <v-col cols="12" sm="8">
                             <div class="font-weight-bold mb-1 text-primary ">
-                                {{ workout.name || 'Workout' }}
+                                {{ workout.name || $t('workouts.history.defaultName') }}
                             </div>
 
                             <div class="text-body-small text-medium-emphasis mb-3">
@@ -284,7 +289,7 @@
                                     size="small"
                                     class="mr-2 mb-2 text-caption"
                                 >
-                                    {{ exerciseCount(workout) }} exercises
+                                    {{ exerciseCount(workout) }} {{ $t('workouts.history.exercises') }}
                                 </v-chip>
 
                                 <v-chip
@@ -292,7 +297,7 @@
                                     size="small"
                                     class="mr-2 mb-2 text-caption"
                                 >
-                                    {{ setCount(workout) }} sets
+                                    {{ setCount(workout) }} {{ $t('workouts.history.sets') }}
                                 </v-chip>
                             </div>
                         </v-col>
@@ -320,7 +325,7 @@
       elevation="24"
       :timeout="3000"
     >
-      Workout saved successfully!
+      {{ $t('workouts.snackbar.saved') }}
       
       <template v-slot:actions>
         <v-btn variant="text" @click="successSnackbar = false">Close</v-btn>
@@ -335,10 +340,10 @@
       elevation="24"
       :timeout="5000"
     >
-      Failed to save workout. Please try again.
+      {{ $t('workouts.snackbar.failed') }}
       
       <template v-slot:actions>
-        <v-btn variant="text" @click="errorSnackbar = false">Close</v-btn>
+        <v-btn variant="text" @click="errorSnackbar = false">{{ $t('workouts.snackbar.close') }}</v-btn>
       </template>
     </v-snackbar>
     <v-dialog v-model="detailDialog" max-width="600" transition="dialog-bottom-transition">
@@ -347,7 +352,7 @@
           <template v-slot:append>
              <v-btn icon="mdi-pencil" variant="text" @click="openEditModal(selectedWorkout)" class="mr-2"></v-btn>                        
              <v-btn color="error" variant="text" @click="deleteWorkout" class="mr-10">
-              Delete workout
+              {{ $t('workouts.details.deleteWorkout') }}
             </v-btn>
           </template>
         </v-toolbar>
@@ -359,9 +364,9 @@
               <p class="font-weight-bold text-primary">{{ ex.exercise?.name }}</p>
             </div>
             <v-row class="text-caption text-uppercase text-medium-emphasis px-2 no-gutters mb-n5">
-              <v-col cols="2">set</v-col>
-              <v-col cols="5">kg</v-col>
-              <v-col cols="5">reps</v-col>
+              <v-col cols="2">{{ $t('workouts.dialog.set') }}</v-col>
+              <v-col cols="5">{{ $t('workouts.dialog.kg') }}</v-col>
+              <v-col cols="5">{{ $t('workouts.dialog.reps') }}</v-col>
             </v-row>
             <v-row v-for="(set, i) in ex.sets" :key="set.id" class="px-2 no-gutters" align="center">
               <v-col cols="2" class="mb-n3">{{ i + 1 }}</v-col>
@@ -373,7 +378,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="detailDialog = false">Close</v-btn>
+          <v-btn @click="detailDialog = false">{{ $t('workouts.details.close') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -383,7 +388,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
-import { rules } from '@/utils/rules.js';
+import { rules } from '@/utils/rules.js'
+import { useI18n } from 'vue-i18n'
+
+// Provides translation function and current language
+const { t, locale } = useI18n()
 
 const saveError = ref(null)
 const saveSuccess = ref(false)
@@ -506,7 +515,8 @@ const formatWorkoutDate = (dateString) => {
     const date = new Date(dateString)
     if (Number.isNaN(date.getTime())) return 'N/A'
 
-    return date.toLocaleDateString('en-GB', {
+    // Format date based on the selected language
+    return date.toLocaleDateString(locale.value === 'lv' ? 'lv-LV' : 'en-GB', {
         day: 'numeric',
         month: 'long',
     })
@@ -546,13 +556,13 @@ const saveWorkout = async () => {
     
     // If any field is invalid (e.g., -10kg), stop here
     if (!valid) {
-        saveError.value = 'Please correct the errors in the sets before saving';
+        saveError.value = t('workouts.errors.invalidSets')
         return;
     }
 
     // 3. Keep your manual check for exercise existence
     if (workoutExercises.value.length === 0) {
-        saveError.value = 'Add at least one exercise before saving';
+        saveError.value = t('workouts.errors.noExercises')
         return;
     }
 
@@ -631,7 +641,7 @@ const saveWorkout = async () => {
 
     } catch (error) {
         errorSnackbar.value = true;
-        saveError.value = 'Something went wrong. Please try again.';
+        saveError.value = t('workouts.errors.generic')
     } finally {
         isSaving.value = false; // Stop loading animation regardless of success/fail
     }

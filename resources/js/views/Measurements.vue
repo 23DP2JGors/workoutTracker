@@ -3,13 +3,18 @@
     <v-row justify="center">
       <v-col cols="12" md="8">
         <v-card variant="flat" rounded="xl" class="pa-6 border">
-          <h1 class="font-weight-bold mb-1">Body Measurements</h1>
-          <p class="text-medium-emphasis pb-6">Track your body composition over time</p>
+          <h1 class="font-weight-bold mb-1">
+            {{ $t('measurements.title') }}
+        </h1>
+
+        <div class="text-medium-emphasis pb-6">
+            {{ $t('measurements.subtitle') }}
+        </div>
 
           <!-- Selection Grid -->
-          <p class="text-medium-emphasis text-uppercase font-weight-bold pb-3">
-            Select measurements
-          </p>
+          <div class="text-medium-emphasis text-uppercase font-weight-bold pb-3">
+            {{ $t('measurements.selectMeasurements') }}
+          </div>
           <v-row dense class="mb-2">
             <v-col v-for="item in bodyParts" :key="item.key" cols="4" sm="3" md="2">
               <v-card
@@ -42,7 +47,7 @@
               <v-col cols="12" sm="6">
                 <v-text-field 
                   v-model="form.measured_at" 
-                  label="Date" 
+                :label="$t('measurements.date')"
                   type="date" 
                   variant="outlined"
                   rounded="lg"
@@ -68,7 +73,7 @@
               <v-col cols="12">
                 <v-textarea
                   v-model="form.notes"
-                  label="Notes & Observations"
+                  :label="$t('measurements.notesObservations')"
                   variant="outlined"
                   rounded="lg"
                   rows="2"
@@ -89,14 +94,14 @@
               class="mt-2"
               :loading="loading"
             >
-              Save Measurements
+              {{ $t('measurements.saveMeasurements') }}
             </v-btn>
           </v-form>
 
           <v-alert v-else type="info" variant="tonal" rounded="lg" class="mt-2">
-            Select body parts above to start logging your progress.
-          </v-alert>
-        </v-card>
+                {{ $t('measurements.selectBodyParts') }}
+            </v-alert>
+            </v-card>
       </v-col>
     </v-row>
 
@@ -105,13 +110,15 @@
 
         <!-- Measurement History Section -->
         <v-card variant="flat" rounded="xl" class="pa-6 border mt-6">
-            <h2 class="font-weight-bold mb-1">History</h2>
-            <p class="text-medium-emphasis pb-4">View and manage your past entries</p>
+            <h2 class="font-weight-bold mb-1">{{ $t('measurements.history.title') }}</h2>
+            <p class="text-medium-emphasis pb-4">{{ $t('measurements.history.subtitle') }}</p>
 
             <!-- Highlight Filters (Top selection chips) -->
             <div class="mb-6">
                 <div class="text-caption text-grey mb-2 font-weight-bold text-uppercase">
-                    Filter by body part
+                    <div class="text-caption text-grey mb-2 font-weight-bold text-uppercase">
+                        {{ $t('measurements.history.filter') }}
+                    </div>
                 </div>
                 <v-chip-group
                     v-model="historyFilters"
@@ -138,7 +145,7 @@
                 
                 <!-- Empty state alert -->
                 <v-alert v-if="!filteredMeasurements.length" type="info" variant="tonal" rounded="lg">
-                    No measurements recorded yet.
+                    {{ $t('measurements.history.empty') }}
                 </v-alert>
 
                 <!-- Main Loop for history entries -->
@@ -206,14 +213,19 @@
     <!-- Edit Dialog -->
     <v-dialog v-model="editDialog" max-width="500">
       <v-card rounded="xl" class="pa-6">
-          <h2 class="font-weight-bold mb-1">Edit Measurement</h2>
-          <p class="text-medium-emphasis pb-6">Update your recorded data</p>
+          <h2 class="font-weight-bold mb-1">
+        {{ $t('measurements.edit.title') }}
+          </h2>
+
+            <div class="text-medium-emphasis pb-6">
+                {{ $t('measurements.edit.subtitle') }}
+            </div>
 
           <v-row>
               <v-col cols="12">
                   <v-text-field
                       v-model="editForm.measured_at"
-                      label="Date"
+                      :label="$t('measurements.date')"
                       type="date"
                       variant="outlined"
                       rounded="lg"
@@ -224,7 +236,7 @@
                   <v-text-field
                       v-if="editForm[key] !== null && editForm[key] !== undefined"
                       v-model="editForm[key]"
-                      :label="getLabel(key) || 'Weight (kg)'"
+                      :label="getLabel(key) || `${$t('measurements.bodyParts.weight')} (kg)`"
                       type="number"
                       variant="outlined"
                       rounded="lg"
@@ -236,7 +248,7 @@
               <v-col cols="12">
                   <v-textarea
                       v-model="editForm.notes"
-                      label="Notes"
+                      :label="$t('measurements.notes')"
                       variant="outlined"
                       rounded="lg"
                       rows="2"
@@ -246,8 +258,13 @@
           </v-row>
 
           <div class="d-flex justify-space-between mt-6">
-              <v-btn variant="text" @click="editDialog = false">Cancel</v-btn>
-              <v-btn color="primary" rounded="lg" @click="updateMeasurement">Save</v-btn>
+              <v-btn variant="text" @click="editDialog = false">
+                    {{ $t('measurements.edit.cancel') }}
+                </v-btn>
+
+                <v-btn color="primary" rounded="lg" @click="updateMeasurement">
+                    {{ $t('measurements.edit.save') }}
+                </v-btn>
           </div>
       </v-card>
     </v-dialog>
@@ -270,11 +287,15 @@
 import { ref, reactive, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
 import { rules } from '@/utils/rules';
+import { useI18n } from 'vue-i18n';
 
 const loading = ref(false);
 const formRef = ref(null);
 const errors = ref({});
 const selectedParts = ref([]); // Stores active keys, e.g., ['biceps', 'waist']
+
+// Provides translation function and current language
+const { t, locale } = useI18n()
 
 // Snackbar state for feedback
 const snackbar = ref(false);
@@ -290,17 +311,17 @@ const editableFields = ['weight', 'neck', 'chest', 'biceps', 'forearms', 'waist'
 // Variable to store selected filters for history
 const historyFilters = ref([]); 
 
-// Define icons and labels for our clickable cards
-const bodyParts = [
-    { key: 'weight', label: 'Weight', icon: 'mdi-scale-bathroom', unit: 'kg' },
-    { key: 'neck', label: 'Neck', icon: 'mdi-circle-outline', unit: 'cm' },
-    { key: 'chest', label: 'Chest', icon: 'mdi-weight-lifter', unit: 'cm' },
-    { key: 'biceps', label: 'Biceps', icon: 'mdi-arm-flex-outline', unit: 'cm' },
-    { key: 'forearms', label: 'Forearms', icon: 'mdi-hand-back-left-outline', unit: 'cm' },
-    { key: 'waist', label: 'Waist', icon: 'mdi-ruler', unit: 'cm' },
-    { key: 'hips', label: 'Hips', icon: 'mdi-human-handsdown', unit: 'cm' },
-    { key: 'calves', label: 'Calves', icon: 'mdi-run', unit: 'cm' },
-];
+// Defines selectable body parts with translated labels
+const bodyParts = computed(() => [
+    { key: 'weight', label: t('measurements.bodyParts.weight'), icon: 'mdi-scale-bathroom', unit: 'kg' },
+    { key: 'neck', label: t('measurements.bodyParts.neck'), icon: 'mdi-circle-outline', unit: 'cm' },
+    { key: 'chest', label: t('measurements.bodyParts.chest'), icon: 'mdi-weight-lifter', unit: 'cm' },
+    { key: 'biceps', label: t('measurements.bodyParts.biceps'), icon: 'mdi-arm-flex-outline', unit: 'cm' },
+    { key: 'forearms', label: t('measurements.bodyParts.forearms'), icon: 'mdi-hand-back-left-outline', unit: 'cm' },
+    { key: 'waist', label: t('measurements.bodyParts.waist'), icon: 'mdi-ruler', unit: 'cm' },
+    { key: 'hips', label: t('measurements.bodyParts.hips'), icon: 'mdi-human-handsdown', unit: 'cm' },
+    { key: 'calves', label: t('measurements.bodyParts.calves'), icon: 'mdi-run', unit: 'cm' },
+])
 
 const form = reactive({
     measured_at: new Date().toISOString().substr(0, 10),
@@ -340,8 +361,8 @@ watch(historyFilters, (newFilters) => {
 
     if (!exists) {
         // Show snackbar if no data found for this body part
-        const part = bodyParts.find(p => p.key === lastFilter);
-        snackbarText.value = `No data found for ${part?.label} in your history yet.`;
+        const part = bodyParts.value.find(p => p.key === lastFilter);
+        snackbarText.value = t('measurements.messages.noDataForPart', { part: part?.label });
         snackbarColor.value = 'info';
         snackbar.value = true;
     }
@@ -372,7 +393,7 @@ const togglePart = (key) => {
  * Helper to get the display label for the input fields
  */
 const getLabel = (key) => {
-    const part = bodyParts.find(p => p.key === key);
+    const part = bodyParts.value.find(p => p.key === key);
     return part ? `${part.label} (${part.unit})` : '';
 };
 
@@ -424,7 +445,7 @@ const submitMeasurement = async () => {
     try {
         await axios.post('/api/measurements', form);
         await loadMeasurements()
-         showMessage('Measurement recorded successfully!'); // Success UI
+         showMessage(t('measurements.messages.recorded')); // Success UI
 
         // Reset selection and weight/notes
         selectedParts.value = [];
@@ -434,19 +455,21 @@ const submitMeasurement = async () => {
     } catch (error) {
         if (error.response?.status === 422) {
             errors.value = error.response.data.errors;
-            showMessage('Please check the highlighted fields', 'error'); // Validation UI
+            showMessage(t('measurements.messages.checkFields'), 'error'); // Validation UI
         }else{
-            showMessage('An error occurred while saving. Please try again.', 'error'); // General error UI
+            showMessage(t('measurements.messages.saveError'), 'error'); // General error UI
         }
     } finally {
         loading.value = false;
     }
 };
 
-// Format date for display in history
+// Formats dates based on selected language
 const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'long', year: 'numeric'
+    return new Date(dateString).toLocaleDateString(locale.value === 'lv' ? 'lv-LV' : 'en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
     })
 }
 
@@ -478,9 +501,9 @@ const updateMeasurement = async () => {
         await axios.put(`/api/measurements/${editForm.value.id}`, editForm.value)
         await loadMeasurements()
         editDialog.value = false
-        showMessage('Entry updated!');
+        showMessage(t('measurements.messages.updated'));
     } catch (error) {
-        showMessage('Failed to update entry', 'error');
+        showMessage(t('measurements.messages.updateError'), 'error');
     }
 }
 
@@ -489,9 +512,9 @@ const deleteMeasurement = async (id) => {
     try {
         await axios.delete(`/api/measurements/${id}`)
         await loadMeasurements()
-        showMessage('Entry deleted', 'warning'); // Use warning color for deletion
+        showMessage(t('measurements.messages.deleted'), 'warning'); // Use warning color for deletion
     } catch (error) {
-        showMessage('Failed to delete entry', 'error');
+        showMessage(t('measurements.messages.deleteError'), 'error');
     }
 }
 

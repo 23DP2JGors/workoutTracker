@@ -2,26 +2,29 @@
   <transition name="page-fade">
     <div v-if="showPage">
       <div class="hero">
-        <div class="logo">WorkoutTracker</div>
+        <div class="logo">{{ $t('landing.logo') }}</div>
+        <div class="landing-actions">
+            <LanguageSwitcher />
+        </div>
         <v-container class="pt-16">
           <v-row>
             <v-col cols="5"></v-col>
 
             <v-col cols="7">
-              <p class="text-display-large font-weight-black">Track Every Rep.</p>
-              <p class="text-display-large font-weight-black">Crush Every Goal.</p>
-              <p class="text-display-large font-weight-black">Build Your Legacy.</p>
+              <p class="text-display-large font-weight-black">{{ $t('landing.heroLine1') }}</p>
+              <p class="text-display-large font-weight-black">{{ $t('landing.heroLine2') }}</p>
+              <p class="text-display-large font-weight-black">{{ $t('landing.heroLine3') }}</p>
 
               <div class="d-flex justify-center mt-10 pl-16">
                 <router-link to="/register" class="mr-5">
                   <v-btn :class="{ 'btn-highlight': highlight }">
-                    Sign up
+                    {{ $t('landing.signUp') }}
                   </v-btn>
                 </router-link>
 
                 <router-link to="/login">
                   <v-btn :class="{ 'btn-highlight': highlight }">
-                    Sign in
+                    {{ $t('landing.signIn') }}
                   </v-btn>
                 </router-link>
               </div>
@@ -37,8 +40,8 @@
           <!-- Section header for better conversion -->
           <v-row justify="center" class="mb-10">
             <v-col cols="12" md="8" class="text-center">
-              <h2 class="text-headline-small font-weight-bold mb-4">Core Features</h2>
-              <p class="text-grey-lighten-1">Everything you need to reach your fitness goals in one place.</p>
+              <h2 class="text-headline-small font-weight-bold mb-4">{{ $t('landing.coreFeatures') }}</h2>
+              <p class="text-grey-lighten-1">{{ $t('landing.coreFeaturesSubtitle') }}</p>
             </v-col>
           </v-row>
 
@@ -90,7 +93,7 @@
                 class="get-started-btn"
                 @click="scrollToTop"
                     >
-                Get Started
+                {{ $t('landing.getStarted') }}
             </v-btn>
           </div>
         </v-container>
@@ -100,10 +103,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const showPage = ref(false)
 const highlight = ref(false)
+
+// Provides translation function for landing page content
+const { t } = useI18n()
 
 onMounted(() => {
     // Show page with fade-in animation after 200ms delay
@@ -140,27 +148,28 @@ const scrollToTop = () => {
     setTimeout(() => highlight.value = false, 2000)
 }
 
-const features = ref([
-  {
-    title: 'Workout Logging',
-    text: 'Log every workout with ease. Track sets, reps, and weight without breaking your flow.',
-    icon: 'mdi-dumbbell'
-  },
-  {
-    title: 'Body Measurements',
-    text: 'See how your body changes over time. Keep track of weight and key measurements in one place.',
-    icon: 'mdi-scale-bathroom'
-  },
-  {
-    title: 'Analytics & Charts',
-    text: 'Understand your progress with clear, visual stats — from strength gains to training volume.',
-    icon: 'mdi-chart-line'
-  },
-  {
-    title: 'Macro Calculator',
-    text: 'Find your ideal calories and macros based on your goals. No guesswork needed.',
-    icon: 'mdi-calculator'
-  },
+// Builds feature cards from translation files
+const features = computed(() => [
+    {
+        title: t('landing.features.workoutLogging.title'),
+        text: t('landing.features.workoutLogging.text'),
+        icon: 'mdi-dumbbell',
+    },
+    {
+        title: t('landing.features.bodyMeasurements.title'),
+        text: t('landing.features.bodyMeasurements.text'),
+        icon: 'mdi-scale-bathroom',
+    },
+    {
+        title: t('landing.features.analytics.title'),
+        text: t('landing.features.analytics.text'),
+        icon: 'mdi-chart-line',
+    },
+    {
+        title: t('landing.features.macroCalculator.title'),
+        text: t('landing.features.macroCalculator.text'),
+        icon: 'mdi-calculator',
+    },
 ])
 </script>
 
@@ -172,6 +181,13 @@ const features = ref([
   left: 32px;
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.landing-actions {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    z-index: 10;
 }
 
 .hero {

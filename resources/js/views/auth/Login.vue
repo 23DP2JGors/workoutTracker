@@ -3,14 +3,16 @@
     <v-row justify="center">
         <v-col cols="12" sm="10" md="8" lg="5">
             <v-sheet color="surface" rounded="lg">
-                <p class="title-h1 px-6 pt-5 text-center">welcome back!</p>
+                <p class="title-h1 px-6 pt-5 text-center">
+                    {{ $t('login.title') }}
+                </p>
                 <v-form fast-fail @submit.prevent="handleLogin" class="pa-6">
 
                 <v-text-field class="mb-3"
                     v-model="form.email"
                     :rules="[rules.required, rules.email]"
-                    label="E-mail"
-                    placeholder="email@example.com"
+                    :label="$t('login.email')"
+                    :placeholder="$t('login.emailPlaceholder')"
                 ></v-text-field>
 
                 <v-text-field class="mb-3"
@@ -18,7 +20,7 @@
                     :type="visible ? 'text' : 'password'"   
                     v-model="form.password"
                     :rules="[rules.required]"
-                    label="Password"
+                    :label="$t('login.password')"
                     @click:append-inner="visible = !visible"
                 ></v-text-field>
 
@@ -31,14 +33,14 @@
                     class="mb-3"
                     :class="{ shake: shake }"
                 >
-                    Invalid email or password. Please try again.
+                    {{ $t('login.invalidCredentials') }}
                 </v-alert>
 
-                <v-btn class="mt-2" type="submit" block>Login</v-btn>
+                <v-btn class="mt-2" type="submit" block>{{ $t('login.submit') }}</v-btn>
 
                 <div class="text-center mt-4">
-                    Don't have an account?
-                    <router-link to="/register">Sign in</router-link>
+                    {{ $t('login.noAccount') }}
+                    <router-link to="/register">{{ $t('login.register') }}</router-link>
                 </div>
                 </v-form>
             </v-sheet>
@@ -53,9 +55,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { rules } from '@/utils/rules.js';
+import { useI18n } from 'vue-i18n';
 
 // Initialize router for navigation
 const router = useRouter();
+
+// Provides translated login messages
+const { t } = useI18n()
 
 // Reactive data for the registration form; .value is sent to the API as payload
 const form = ref({
@@ -83,7 +89,7 @@ const handleLogin = async () => {
     // 3. On success, navigate to application home/dashboard
     await router.push('/home');
   } catch (error) {
-    errorMessage.value = error.response?.data?.message || 'Login failed. Try again.';
+    errorMessage.value = error.response?.data?.message || t('login.tryAgain')
     // Trigger shake animation
     shake.value = true
     setTimeout(() => shake.value = false, 500)

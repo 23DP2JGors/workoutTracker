@@ -158,7 +158,8 @@
 <script setup>
 import { reactive, onMounted, computed, ref} from 'vue'
 import axios from 'axios'
-import { rules } from '@/utils/rules' //validation rules
+import { rules } from '@/utils/rules' // validation rules
+import { calculateMacros } from '@/utils/calculateMacros' // macros calculation logic
 
 // Logic for showing success message
 const isFormValid = ref(false)
@@ -170,45 +171,7 @@ const showResult = ref(false) // Control result visibility
 const saveError = ref(false) // New state for error snackbar
 
 // Computed property to calculate macros based on form input
-const result = computed(() => {
-    if (!form.weight || !form.height || !form.age || !form.activity_level) return null
-
-    // Calories (Mifflin-St Jeor)
-    let bmr = (10 * form.weight) + (6.25 * form.height) - (5 * form.age)
-    bmr = form.gender === 'male' ? bmr + 5 : bmr - 161
-    let tdee = Math.round(bmr * form.activity_level)
-
-    // Goal adjustment
-    if (form.goal === 'loss') tdee = Math.round(tdee * 0.85) // 15% deficit for weight loss
-    if (form.goal === 'gain') tdee = Math.round(tdee * 1.15) // 15% surplus for muscle gain
-
-    // Proteins (1.8g per kg as average of 1.6-2)
-    const protein = Math.round(form.weight * 1.8)
-
-    // Fats (Men: 0.8g, Women: 1g)
-    let fatCoeff;
-    if (form.goal === 'loss') {
-        // Reduced fats for cutting phase
-        fatCoeff = form.gender === 'male' ? 0.5 : 0.8
-    } else {
-        // Standard fats for maintenance or gain
-        fatCoeff = form.gender === 'male' ? 0.8 : 1.0
-    }
-    const fats = Math.round(form.weight * fatCoeff)
-
-    // Carbs (Remaining calories)
-    // Protein = 4 kcal/g, Fat = 9 kcal/g, Carbs = 4 kcal/g
-    const proteinKcal = protein * 4
-    const fatsKcal = fats * 9
-    const carbs = Math.round((tdee - proteinKcal - fatsKcal) / 4)
-
-    return {
-        calories: tdee,
-        protein,
-        fats,
-        carbs
-    }
-})
+const result = computed(() => calculateMacros(form))
 
 // Basic form state
 const form = reactive({

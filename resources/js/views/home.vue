@@ -7,7 +7,7 @@
                     <div class="text-title-large font-weight-bold mb-1">
                         Welcome back, {{ user?.username || user?.name || 'User' }}
                     </div>
-                    <p class="text-body-medium text-medium-emphasis mb-0">
+                    <p class="text-body-medium text-medium-emphasis">
                         Here is your fitness overview. Track your workouts, body measurements and progress in one place.
                     </p>
                 </div>
@@ -25,7 +25,7 @@
             </div>
         </v-card>
         <!-- Quick navigation cards -->
-        <v-row>
+        <v-row class="mb-4">
             <v-col
                 v-for="(item, index) in menuItems"
                 :key="item.title"
@@ -35,34 +35,40 @@
             >
                 <v-scroll-y-transition appear>
                     <v-card
-                        :class="['feature-card', 'pa-5', 'text-center', { 'visible': isReady }]"
+                        :class="['feature-card', 'pa-4', { 'visible': isReady }]"
                         rounded="xl"
                         variant="flat"
                         class="border"
                         :style="!isReady ? { transitionDelay: `${index * 150}ms` } : { transitionDelay: '0ms' }"
                         @click="$router.push(item.path)"
                     >
-                        <v-card-text>
-                            <!-- Feature icon -->
-                            <div class="icon-wrapper mx-auto mb-4">
-                                <v-icon :icon="item.icon" color="primary" size="36"></v-icon>
+                        <div class="d-flex align-center">
+                            <!-- Small icon block for quick actions -->
+                            <div class="small-icon-wrapper mr-4">
+                                <v-icon :icon="item.icon" color="primary" size="28"></v-icon>
                             </div>
 
-                            <div class="text-title-large font-weight-bold mb-2">
-                                {{ item.title }}
+                            <div>
+                                <div class="text-title-medium font-weight-bold">
+                                    {{ item.title }}
+                                </div>
+
+                                <p class="text-body-small text-medium-emphasis mb-0">
+                                    {{ item.description }}
+                                </p>
                             </div>
 
-                            <p class="text-body-medium text-medium-emphasis mb-0">
-                                {{ item.description }}
-                            </p>
-                        </v-card-text>
+                            <v-spacer></v-spacer>
+
+                            <v-icon icon="mdi-chevron-right" color="primary" size="22"></v-icon>
+                        </div>
                     </v-card>
                 </v-scroll-y-transition>
             </v-col>
         </v-row>
 
         <!-- Progress overview section -->
-        <v-row class="mt-2">
+        <v-row>
             <!-- Weight progress chart -->
             <v-col cols="12" md="8">
                 <v-card variant="flat" rounded="xl" class="pa-6 border progress-card">
@@ -88,9 +94,11 @@
                             No weight data yet
                         </div>
 
-                        <p class="text-body-medium text-medium-emphasis mb-4">
+                        <div class="mb-4">
+                            <p class="text-body-medium text-medium-emphasis">
                             Add your first measurement to start tracking your weight progress.
                         </p>
+                        </div>
 
                         <v-btn
                             color="primary"
@@ -104,78 +112,188 @@
                 </v-card>
             </v-col>
 
-            <!-- Latest body measurements summary -->
+            <!-- Right dashboard overview with tabs -->
             <v-col cols="12" md="4">
-                <v-card variant="flat" rounded="xl" class="pa-6 border progress-card">
+                <v-card variant="flat" rounded="xl" class="pa-5 border overview-card">
                     <div class="mb-4">
                         <div class="text-title-large font-weight-bold mb-1">
-                            Latest Measurements
+                            Overview
                         </div>
-                        <p class="text-body-medium text-medium-emphasis mb-0">
-                            Your most recent body stats
-                        </p>
+
+                        <div class="text-body-medium text-medium-emphasis">
+                            Quick summary of your latest data
+                        </div>
                     </div>
 
-                    <!-- Shows the newest measurement entry without body weight -->
-                    <div v-if="latestMeasurement">
-                        <div class="text-body-small text-medium-emphasis mb-4">
-                            {{ formatDate(latestMeasurement.measured_at) }}
-                        </div>
+                    <!-- Tabs switch between measurements and nutrition -->
+                    <v-tabs
+                        v-model="overviewTab"
+                        color="primary"
+                        density="compact"
+                        grow
+                        class="mb-4"
+                    >
+                        <v-tab value="measurements">
+                            Measurements
+                        </v-tab>
 
-                        <div class="d-flex flex-wrap">
-                            <template v-for="part in latestBodyParts" :key="part.key">
-                                <v-chip
-                                    v-if="latestMeasurement[part.key] !== null && latestMeasurement[part.key] !== undefined"
-                                    size="small"
+                        <v-tab value="nutrition">
+                            Nutrition
+                        </v-tab>
+                    </v-tabs>
+
+                    <v-window v-model="overviewTab">
+                        <!-- Latest measurements tab -->
+                        <v-window-item value="measurements">
+                            <div v-if="measurements.length">
+                                <v-row dense>
+                                    <v-col
+                                        v-for="part in latestMeasurementsByPart"
+                                        :key="part.key"
+                                        cols="6"
+                                    >
+                                        <v-card
+                                            variant="tonal"
+                                            rounded="lg"
+                                            class="pa-3 measurement-mini-card"
+                                        >
+                                            <div class="text-body-small text-medium-emphasis">
+                                                {{ part.label }}
+                                            </div>
+
+                                            <div class="text-title-medium font-weight-bold text-primary">
+                                                {{ part.value ? `${formatNum(part.value)} cm` : '—' }}
+                                            </div>
+
+                                            <div class="text-label-small text-medium-emphasis">
+                                                {{ part.date ? formatDate(part.date) : 'No data' }}
+                                            </div>
+                                        </v-card>
+                                    </v-col>
+                                </v-row>
+
+                                <v-btn
+                                    class="mt-4"
+                                    variant="outlined"
                                     color="primary"
-                                    variant="tonal"
-                                    class="mr-2 mb-2"
+                                    rounded="lg"
+                                    block
+                                    @click="$router.push('/measurements')"
                                 >
-                                    {{ part.label }} {{ formatNum(latestMeasurement[part.key]) }} cm
-                                </v-chip>
-                            </template>
-                        </div>
+                                    Open measurements
+                                </v-btn>
+                            </div>
 
-                        <p
-                            v-if="latestMeasurement.notes"
-                            class="text-body-small text-medium-emphasis mt-3 font-italic"
-                        >
-                            "{{ latestMeasurement.notes }}"
-                        </p>
+                            <!-- Empty state for users without measurements -->
+                            <div v-else class="small-empty-state">
+                                <v-icon icon="mdi-scale-bathroom" color="primary" size="38" class="mb-3"></v-icon>
 
-                        <v-btn
-                            class="mt-4"
-                            variant="outlined"
-                            color="primary"
-                            rounded="lg"
-                            block
-                            @click="$router.push('/measurements')"
-                        >
-                            Open measurements
-                        </v-btn>
-                    </div>
+                                <div class="text-title-medium font-weight-bold mb-1">
+                                    No measurements yet
+                                </div>
 
-                    <!-- Empty state for users without measurements -->
-                    <div v-else class="empty-state">
-                        <v-icon icon="mdi-scale-bathroom" color="primary" size="42" class="mb-3"></v-icon>
+                                <div class="text-body-medium text-medium-emphasis mb-4">
+                                    Add your first body measurement to see your stats here.
+                                </div>
 
-                        <div class="text-title-medium font-weight-bold mb-1">
-                            No measurements yet
-                        </div>
+                                <v-btn
+                                    color="primary"
+                                    variant="flat"
+                                    rounded="lg"
+                                    @click="$router.push('/measurements')"
+                                >
+                                    Add measurement
+                                </v-btn>
+                            </div>
+                        </v-window-item>
 
-                        <p class="text-body-medium text-medium-emphasis mb-4">
-                            Add your first body measurement to see your latest stats here.
-                        </p>
+                        <!-- Daily nutrition tab -->
+                        <v-window-item value="nutrition">
+                            <div v-if="macroResult">
+                                <div class="text-center mb-4">
+                                    <div class="text-body-small text-medium-emphasis text-uppercase">
+                                        Daily Target
+                                    </div>
 
-                        <v-btn
-                            color="primary"
-                            variant="flat"
-                            rounded="lg"
-                            @click="$router.push('/measurements')"
-                        >
-                            Add measurement
-                        </v-btn>
-                    </div>
+                                    <div class="text-display-small font-weight-bold text-primary">
+                                        {{ macroResult.calories }}
+                                        <span class="text-title-medium text-medium-emphasis">kcal</span>
+                                    </div>
+                                </div>
+
+                                <v-row dense>
+                                    <v-col cols="4">
+                                        <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
+                                            <div class="text-body-small text-medium-emphasis">
+                                                Protein
+                                            </div>
+
+                                            <div class="text-title-medium font-weight-bold">
+                                                {{ macroResult.protein }}g
+                                            </div>
+                                        </v-card>
+                                    </v-col>
+
+                                    <v-col cols="4">
+                                        <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
+                                            <div class="text-body-small text-medium-emphasis">
+                                                Fats
+                                            </div>
+
+                                            <div class="text-title-medium font-weight-bold">
+                                                {{ macroResult.fats }}g
+                                            </div>
+                                        </v-card>
+                                    </v-col>
+
+                                    <v-col cols="4">
+                                        <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
+                                            <div class="text-body-small text-medium-emphasis">
+                                                Carbs
+                                            </div>
+
+                                            <div class="text-title-medium font-weight-bold">
+                                                {{ macroResult.carbs }}g
+                                            </div>
+                                        </v-card>
+                                    </v-col>
+                                </v-row>
+
+                                <v-btn
+                                    class="mt-4"
+                                    variant="outlined"
+                                    color="primary"
+                                    rounded="lg"
+                                    block
+                                    @click="$router.push('/macros')"
+                                >
+                                    Open macros
+                                </v-btn>
+                            </div>
+
+                            <!-- Empty state for users without macro profile data -->
+                            <div v-else class="small-empty-state">
+                                <v-icon icon="mdi-calculator" color="primary" size="38" class="mb-3"></v-icon>
+
+                                <div class="text-title-medium font-weight-bold mb-1">
+                                    No macro data yet
+                                </div>
+
+                                <div class="text-body-medium text-medium-emphasis mb-4">
+                                    Fill in your profile to calculate daily calories and macros.
+                                </div>
+
+                                <v-btn
+                                    color="primary"
+                                    variant="flat"
+                                    rounded="lg"
+                                    @click="$router.push('/macros')"
+                                >
+                                    Calculate macros
+                                </v-btn>
+                            </div>
+                        </v-window-item>
+                    </v-window>
                 </v-card>
             </v-col>
         </v-row>
@@ -187,6 +305,7 @@ import { ref, computed, onMounted, nextTick } from 'vue'
 import axios from 'axios'
 import Chart from 'chart.js/auto'
 import { user } from '@/stores/auth.js'
+import { calculateMacros } from '@/utils/calculateMacros'
 
 // Controls the entrance animation for quick action cards
 const isReady = ref(false)
@@ -199,6 +318,9 @@ const weightChartCanvas = ref(null)
 
 // Extracts the most recent measurement entry for summary display
 const userProfile = ref(null)
+
+// Controls the right overview card tabs
+const overviewTab = ref('measurements')
 
 // Keeps the chart instance so it can be destroyed before re-rendering
 let weightChart = null
@@ -243,14 +365,9 @@ const latestMeasurementsByPart = computed(() => {
     })
 })
 
-// Filters out empty body parts from the latest measurement
-const latestBodyParts = computed(() => {
-    if (!latestMeasurement.value) return []
-
-    return bodyParts.filter(part => {
-        const value = latestMeasurement.value[part.key]
-        return value !== null && value !== undefined
-    })
+// Calculates daily macros from saved user profile data
+const macroResult = computed(() => {
+    return calculateMacros(userProfile.value)
 })
 
 onMounted(async () => {
@@ -259,8 +376,9 @@ onMounted(async () => {
         isReady.value = true
     }, 100)
 
-    // Load measurements before rendering dashboard data
+     // Load dashboard data before rendering charts and cards
     await fetchMeasurements()
+    await fetchUserProfile()
     await nextTick()
 
     // Render chart only when there is weight data
@@ -372,31 +490,64 @@ function formatNum(value) {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18) !important;
 }
 
-/* Icon background used in quick action cards */
-.icon-wrapper {
-    width: 72px;
-    height: 72px;
+/* Compact icon background for quick navigation cards */
+.small-icon-wrapper {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(var(--v-theme-primary), 0.1);
-    border-radius: 20px;
+    border-radius: 16px;
 }
 
-/* Keeps chart and summary cards visually balanced */
+/* Main dashboard card height */
 .progress-card {
-    min-height: 360px;
+    min-height: 430px;
 }
 
 /* Fixed chart height for responsive rendering */
 .chart-wrapper {
-    height: 260px;
+    height: 330px;
     position: relative;
 }
 
-/* Centered message for empty dashboard sections */
+/* Measurement row layout */
+.measurement-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+}
+
+.measurement-row:last-child {
+    border-bottom: none;
+}
+
+.overview-card {
+    min-height: 430px;
+}
+
+.measurement-mini-card {
+    min-height: 92px;
+}
+
+/* Centered empty state for large cards */
 .empty-state {
-    min-height: 240px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Centered empty state for smaller cards */
+.small-empty-state {
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     align-items: center;

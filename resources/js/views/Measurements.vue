@@ -447,10 +447,14 @@ const submitMeasurement = async () => {
         await loadMeasurements()
          showMessage(t('measurements.messages.recorded')); // Success UI
 
-        // Reset selection and weight/notes
-        selectedParts.value = [];
-        form.weight = null;
-        form.notes = '';
+        // Reset selected parts and all measurement fields after successful save
+        selectedParts.value = []
+
+        editableFields.forEach(field => {
+            form[field] = null
+        })
+
+        form.notes = ''
         
     } catch (error) {
         if (error.response?.status === 422) {

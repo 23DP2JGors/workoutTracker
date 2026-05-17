@@ -10,8 +10,9 @@
             @click="router.back()"
             >
         </v-btn>
-          <v-app-bar-title class="font-weight-bold">
-              WorkoutTracker
+          <v-app-bar-title class="font-weight-bold app-title">
+              <span class="d-none d-sm-inline">WorkoutTracker</span>
+              <span class="d-inline d-sm-none">WT</span>
           </v-app-bar-title>
       <v-spacer></v-spacer>
 
@@ -19,13 +20,16 @@
       <v-menu>
         <template #activator="{ props }">
           <v-btn
-            v-bind="props"
-            variant="text"
-            color="default"
-            append-icon="mdi-chevron-down"
-            prepend-icon="mdi-account-circle-outline"
+              v-bind="props"
+              variant="text"
+              color="default"
+              class="account-btn"
+              :append-icon="$vuetify.display.smAndUp ? 'mdi-chevron-down' : undefined"
+              prepend-icon="mdi-account-circle-outline"
           >
-            {{ user?.username || user?.name || $t('app.account') }}
+              <span class="d-none d-sm-inline">
+                  {{ user?.username || user?.name || $t('app.account') }}
+              </span>
           </v-btn>
         </template>
 
@@ -93,8 +97,9 @@
 
     <!-- Top for auth pages -->
     <v-app-bar v-if="route.meta.layout === 'auth'" elevation="0" color="transparent">
-        <v-app-bar-title class="text-title-large font-weight-bold">
-            Workout Tracker
+        <v-app-bar-title class="text-title-large font-weight-bold app-title">
+            <span class="d-none d-sm-inline">Workout Tracker</span>
+            <span class="d-inline d-sm-none">WT</span>
         </v-app-bar-title>
         <v-spacer></v-spacer>
         
@@ -154,3 +159,16 @@ const handleDeleteAccount = async () => {
     await router.push('/')
 }
 </script>
+
+<style scoped>
+/* Prevents the app title from taking too much space on small screens */
+.app-title {
+    flex: 0 1 auto;
+    min-width: auto;
+}
+
+/* Keeps account button compact on mobile */
+.account-btn {
+    min-width: 40px;
+}
+</style>

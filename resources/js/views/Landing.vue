@@ -3,33 +3,37 @@
     <div v-if="showPage">
       <div class="hero">
         <div class="logo">{{ $t('landing.logo') }}</div>
+
         <div class="landing-actions">
             <LanguageSwitcher />
         </div>
-        <v-container class="pt-16">
-          <v-row>
-            <v-col cols="5"></v-col>
 
-            <v-col cols="7">
-              <p class="text-display-large font-weight-black">{{ $t('landing.heroLine1') }}</p>
-              <p class="text-display-large font-weight-black">{{ $t('landing.heroLine2') }}</p>
-              <p class="text-display-large font-weight-black">{{ $t('landing.heroLine3') }}</p>
+        <v-container class="hero-container">
+            <v-row class="fill-height" align="center">
+                <v-col cols="12" md="5" class="d-none d-md-block"></v-col>
 
-              <div class="d-flex justify-center mt-10 pl-16">
-                <router-link to="/register" class="mr-5">
-                  <v-btn :class="{ 'btn-highlight': highlight }">
-                    {{ $t('landing.signUp') }}
-                  </v-btn>
-                </router-link>
+                <v-col cols="12" md="7" class="hero-content">
+                    <div class="hero-title font-weight-black">
+                        <div>{{ $t('landing.heroLine1') }}</div>
+                        <div>{{ $t('landing.heroLine2') }}</div>
+                        <div>{{ $t('landing.heroLine3') }}</div>
+                    </div>
 
-                <router-link to="/login">
-                  <v-btn :class="{ 'btn-highlight': highlight }">
-                    {{ $t('landing.signIn') }}
-                  </v-btn>
-                </router-link>
-              </div>
-            </v-col>
-          </v-row>
+                    <div class="hero-buttons">
+                        <router-link to="/register" class="mr-4">
+                            <v-btn :class="{ 'btn-highlight': highlight }">
+                                {{ $t('landing.signUp') }}
+                            </v-btn>
+                        </router-link>
+
+                        <router-link to="/login">
+                            <v-btn :class="{ 'btn-highlight': highlight }">
+                                {{ $t('landing.signIn') }}
+                            </v-btn>
+                        </router-link>
+                    </div>
+                </v-col>
+            </v-row>
         </v-container>
       </div>
 
@@ -41,7 +45,9 @@
           <v-row justify="center" class="mb-10">
             <v-col cols="12" md="8" class="text-center">
               <h2 class="text-headline-small font-weight-bold mb-4">{{ $t('landing.coreFeatures') }}</h2>
-              <p class="text-grey-lighten-1">{{ $t('landing.coreFeaturesSubtitle') }}</p>
+              <div class="text-grey-lighten-1">
+                  {{ $t('landing.coreFeaturesSubtitle') }}
+              </div>
             </v-col>
           </v-row>
 
@@ -174,117 +180,205 @@ const features = computed(() => [
 </script>
 
 <style scoped>
-
+/* Main logo position in the hero section */
 .logo {
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.landing-actions {
     position: absolute;
     top: 24px;
+    left: 32px;
+    z-index: 10;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Language switcher position */
+.landing-actions {
+    position: absolute;
+    top: 20px;
     right: 32px;
     z-index: 10;
 }
 
+/* Full-screen hero section with dark overlay and background image */
 .hero {
-  position: relative;
-  min-height: 100vh;
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.3) 0%,
-      rgba(18, 18, 18, 1) 70%
-    ),
-    url('/images/bg_landing.jpg');
-  background-size: cover;
-  background-position: center;
+    position: relative;
+    min-height: 100vh;
+    background-image:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.35) 0%,
+            rgba(18, 18, 18, 1) 82%
+        ),
+        url('/images/bg_landing.jpg');
+    background-size: cover;
+    background-position: center;
 }
 
-/* Initial state — cards are invisible and shifted down */
+/* Centers hero content vertically */
+.hero-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+/* Desktop text alignment */
+.hero-content {
+    text-align: left;
+}
+
+/* Responsive hero headline size */
+.hero-title {
+    font-size: clamp(2.4rem, 6vw, 4.7rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+}
+
+/* Spacing above hero buttons */
+.hero-buttons {
+    margin-top: 40px;
+}
+
+/* Hidden state before feature cards enter viewport */
 .feature-card {
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  opacity: 0;
-  transform: translateY(30px);
-  transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.6s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.6s ease;
 }
 
-/* Visible state — triggered by IntersectionObserver adding this class */
+/* Visible state added by IntersectionObserver */
 .feature-card.visible {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/*
-  Visual styling for the icon container to make it
-  look more like a "feature" block rather than just an icon
-*/
+/* Icon background for feature cards */
 .icon-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  background: rgba(var(--v-theme-primary), 0.1);
-  border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: rgba(var(--v-theme-primary), 0.1);
+    border-radius: 20px;
 }
 
-/* Annimation */
-
-/* Hover effect — card lifts up and border highlights with primary color */
+/* Hover effect for feature cards */
 .feature-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(var(--v-theme-primary), 0.4);
+    transform: translateY(-8px);
+    border-color: rgba(var(--v-theme-primary), 0.4);
 }
 
-/* Subtle scale effect on all buttons when hovered */
+/* Small button scale on hover */
 .v-btn:hover {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
-/* Page fade-in animation — controls entry transition duration and delay */
+/* Page fade animation settings */
 .page-fade-enter-active {
-  transition: all 0.6s ease;
-  transition-delay: 0.1s;
+    transition: all 0.6s ease;
+    transition-delay: 0.1s;
 }
 
-/* Starting state of page fade — invisible and slightly below position */
+/* Page fade start state */
 .page-fade-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
+    opacity: 0;
+    transform: translateY(20px);
 }
 
-/* End state of page fade — fully visible at correct position */
+/* Page fade end state */
 .page-fade-enter-to {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* Pulse animation applied to Sign in/Sign up buttons after scrolling back to top */
+/* Highlight animation for sign buttons */
 .btn-highlight {
     animation: pulse 0.5s ease 3;
 }
 
-/* Pulse keyframes — button scales up and back to normal */
+/* Button pulse animation */
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
 
-/* Get Started button — glowing border effect using primary color */
+/* Glow effect for Get Started button */
 .get-started-btn {
     border-width: 2px;
     box-shadow: 0 0 15px rgba(181, 232, 83, 0.3);
     transition: box-shadow 0.3s ease;
 }
 
-/* Stronger glow on hover for Get Started button */
+/* Stronger glow on hover */
 .get-started-btn:hover {
     box-shadow: 0 0 25px rgba(181, 232, 83, 0.6);
 }
 
+/* Mobile layout adjustments */
+@media (max-width: 600px) {
+    /* Shorter hero and better image crop on phones */
+    .hero {
+        min-height: 92vh;
+        background-position: center;
+    }
+
+    /* Adds spacing so content does not overlap the logo */
+    .hero-container {
+        min-height: 92vh;
+        padding-top: 88px;
+        padding-bottom: 48px;
+    }
+
+    /* Smaller logo on mobile */
+    .logo {
+        top: 18px;
+        left: 20px;
+        font-size: 1rem;
+    }
+
+    /* Keeps language switcher inside the mobile viewport */
+    .landing-actions {
+        top: 10px;
+        right: 12px;
+    }
+
+    /* Center hero text on mobile */
+    .hero-content {
+        text-align: center;
+    }
+
+    /* Smaller headline for mobile screens */
+    .hero-title {
+        font-size: 2.25rem;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+    }
+
+    /* Center buttons under the headline */
+    .hero-buttons {
+        margin-top: 32px;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Smaller icon block in feature cards */
+    .icon-wrapper {
+        width: 68px;
+        height: 68px;
+    }
+}
+
+/* Extra adjustments for very small phones */
+@media (max-width: 380px) {
+    /* Prevents hero title from taking too much vertical space */
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    /* Keeps logo compact on narrow screens */
+    .logo {
+        font-size: 0.95rem;
+    }
+}
 </style>

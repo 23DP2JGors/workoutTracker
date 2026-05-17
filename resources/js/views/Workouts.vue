@@ -112,12 +112,12 @@
                   <div v-for="(exercise, exIndex) in workoutExercises" :key="exIndex" class="mb-4 mt-4">
                     
                     <!-- Exercise name -->
-                    <div class="mb-4">
-                      <p class="text-title-medium font-weight-bold text-primary">{{ exercise.name }}</p>
-                    </div>  
+                    <div class="text-title-medium font-weight-bold text-primary mb-4">
+                        {{ exercise.name }}
+                    </div>
                     
                     <!-- Sets table header -->
-                    <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2">
+                    <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2 d-none d-sm-flex">
                       <v-col cols="2">{{ $t('workouts.dialog.set') }}</v-col>
                       <v-col cols="4">{{ $t('workouts.dialog.kg') }}</v-col>
                       <v-col cols="4">{{ $t('workouts.dialog.reps') }}</v-col>
@@ -125,36 +125,69 @@
                     </v-row>
 
                     <!-- Sets -->
-                    <v-row v-for="(set, setIndex) in exercise.sets" :key="setIndex" class="mb-1 px-2 mt-1 mb-5"  align="center">
-                      <v-col cols="2">{{ setIndex + 1 }}</v-col>
-                        <v-col cols="4">
-                          <v-text-field
-                            v-model="set.weight"
-                            variant="outlined"
-                            density="compact"
-                            hide-details="auto"
-                            type="number"
-                            step="0.5"
-                            placeholder="0.00"
-                            @blur="set.weight = fixWeight(set.weight)"
-                            @input="set.weight = set.weight.toString().slice(0, 6)"
-                            :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
-                          ></v-text-field>
+                    <v-row
+                        v-for="(set, setIndex) in exercise.sets"
+                        :key="setIndex"
+                        class="set-row px-2 mt-2 mb-4"
+                        align="center"
+                    >
+                        <!-- Set number -->
+                        <v-col cols="12" sm="2" class="pb-0 pb-sm-3">
+                            <div class="text-body-medium text-medium-emphasis text-uppercase font-weight-medium">
+                                <span class="d-inline d-sm-none">
+                                    {{ $t('workouts.dialog.set') }}
+                                </span>
+                                {{ setIndex + 1 }}
+                            </div>
                         </v-col>
-                        <v-col cols="4">
-                          <v-text-field
-                            v-model="set.reps"
-                            variant="outlined"
-                            density="compact"
-                            hide-details="auto"
-                            type="number"
-                            @input="set.reps = set.reps.toString().slice(0, 3)"
-                            :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
-                          ></v-text-field>
+
+                        <!-- Weight input -->
+                        <v-col cols="6" sm="4">
+                            <div class="d-block d-sm-none text-body-small text-medium-emphasis text-uppercase font-weight-medium mb-1">
+                                {{ $t('workouts.dialog.kg') }}
+                            </div>
+
+                            <v-text-field
+                                v-model="set.weight"
+                                variant="outlined"
+                                density="compact"
+                                hide-details="auto"
+                                type="number"
+                                step="0.5"
+                                placeholder="0.00"
+                                @blur="set.weight = fixWeight(set.weight)"
+                                @input="set.weight = set.weight.toString().slice(0, 6)"
+                                :rules="[rules.required, rules.positiveNumber, rules.maxWeight]"
+                            ></v-text-field>
                         </v-col>
-                      <v-col cols="2">
-                        <v-btn icon="mdi-close" density="compact" variant="text" @click="exercise.sets.splice(setIndex, 1)"></v-btn>
-                      </v-col>
+
+                        <!-- Reps input -->
+                        <v-col cols="6" sm="4">
+                            <div class="d-block d-sm-none text-body-small text-medium-emphasis text-uppercase font-weight-medium mb-1">
+                                {{ $t('workouts.dialog.reps') }}
+                            </div>
+
+                            <v-text-field
+                                v-model="set.reps"
+                                variant="outlined"
+                                density="compact"
+                                hide-details="auto"
+                                type="number"
+                                @input="set.reps = set.reps.toString().slice(0, 3)"
+                                :rules="[rules.required, rules.positiveNumber, rules.wholeNumber, rules.maxReps]"
+                            ></v-text-field>
+                        </v-col>
+
+                        <!-- Remove set button -->
+                        <v-col cols="12" sm="2" class="d-flex justify-end pt-0 pt-sm-3">
+                            <v-btn
+                                icon="mdi-close"
+                                density="compact"
+                                variant="text"
+                                color="primary"
+                                @click="exercise.sets.splice(setIndex, 1)"
+                            ></v-btn>
+                        </v-col>
                     </v-row>
 
                     <!-- Add set and delete button -->
@@ -195,7 +228,34 @@
 
               </v-card-text>
 
-              <v-card-actions class="pa-4">
+              <!-- Save feedback messages -->
+              <div v-if="step === 2" class="px-4">
+                  <v-alert
+                      v-if="saveError"
+                      type="error"
+                      variant="tonal"
+                      density="compact"
+                      rounded="lg"
+                      class="mb-3"
+                      closable
+                      @click:close="saveError = null"
+                  >
+                      {{ saveError }}
+                  </v-alert>
+
+                  <v-alert
+                      v-if="saveSuccess"
+                      type="success"
+                      variant="tonal"
+                      density="compact"
+                      rounded="lg"
+                      class="mb-3"
+                  >
+                      {{ $t('workouts.dialog.saved') }}
+                  </v-alert>
+              </div>
+
+              <v-card-actions class="pa-4 flex-wrap ga-2">
                 <!-- Step 1 actions -->
                 <template v-if="step === 1">
                   <v-btn variant="text" @click="isActive.value = false">{{ $t('workouts.dialog.cancel') }}</v-btn>
@@ -207,40 +267,24 @@
 
                 <!-- Step 2 actions -->
                 <template v-if="step === 2">
-                  <v-btn variant="text" @click="step = 1"> {{ $t('workouts.dialog.back') }}</v-btn>
-                  <v-spacer></v-spacer>
+                    <v-btn
+                        variant="text"
+                        :block="$vuetify.display.xs"
+                        @click="step = 1"
+                    >
+                        {{ $t('workouts.dialog.back') }}
+                    </v-btn>
 
-                  <v-alert 
-                    v-if="saveError"
-                    type="error"
-                    variant="tonal"
-                    density="compact"
-                    rounded="lg"
-                    class="mb-3"
-                    closable
-                    @click:close="saveError = null"
-                  >
-                    {{ saveError }}
-                  </v-alert>
+                    <v-spacer class="d-none d-sm-flex"></v-spacer>
 
-                  <v-alert 
-                    v-if="saveSuccess"
-                    type="success"
-                    variant="tonal"
-                    density="compact"
-                    rounded="lg"
-                    class="mb-3"
-                  >
-                    {{ $t('workouts.dialog.saved') }}
-                  </v-alert>
-
-                  <v-btn 
-                    color="primary" 
-                    :loading="isSaving" 
-                    @click="saveWorkout"
-                  >
-                    {{ $t('workouts.dialog.saveWorkout') }}
-                  </v-btn>
+                    <v-btn
+                        color="primary"
+                        :loading="isSaving"
+                        :block="$vuetify.display.xs"
+                        @click="saveWorkout"
+                    >
+                        {{ $t('workouts.dialog.saveWorkout') }}
+                    </v-btn>
                 </template>
               </v-card-actions>
             </v-card>
@@ -720,5 +764,19 @@ onMounted(async () => {
 .workout-card:hover {
     box-shadow: 0 4px 20px rgba(181, 232, 83, 0.15);
     border-color: rgba(181, 232, 83, 0.5);
+}
+
+/* Adds separation between set rows on mobile */
+.set-row {
+    border-radius: 16px;
+}
+
+/* Makes each set visually separated on phones */
+@media (max-width: 600px) {
+    .set-row {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+    }
 }
 </style>

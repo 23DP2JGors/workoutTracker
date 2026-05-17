@@ -128,6 +128,7 @@
                         color="primary"
                         density="compact"
                         grow
+                        :show-arrows="false"
                         class="mb-4"
                     >
                         <v-tab value="measurements">

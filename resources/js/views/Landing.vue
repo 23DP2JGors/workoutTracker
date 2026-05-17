@@ -223,11 +223,12 @@ const features = computed(() => [
 /* Desktop text alignment */
 .hero-content {
     text-align: left;
+    transform: translateY(-130px);
 }
 
 /* Responsive hero headline size */
 .hero-title {
-    font-size: clamp(2.4rem, 6vw, 4.7rem);
+    font-size: clamp(2.4rem, 6vw, 4.1rem);
     line-height: 1.08;
     letter-spacing: -0.04em;
 }

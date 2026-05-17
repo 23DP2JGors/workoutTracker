@@ -9,36 +9,31 @@
         </div>
 
         <v-container class="hero-container">
-            <v-row class="fill-height" align="center">
-                <v-col cols="12" md="5" class="d-none d-md-block"></v-col>
+            <div class="hero-content">
+                <div class="hero-title font-weight-black">
+                    <div>{{ $t('landing.heroLine1') }}</div>
+                    <div>{{ $t('landing.heroLine2') }}</div>
+                    <div>{{ $t('landing.heroLine3') }}</div>
+                </div>
 
-                <v-col cols="12" md="7" class="hero-content">
-                    <div class="hero-title font-weight-black">
-                        <div>{{ $t('landing.heroLine1') }}</div>
-                        <div>{{ $t('landing.heroLine2') }}</div>
-                        <div>{{ $t('landing.heroLine3') }}</div>
-                    </div>
+                <div class="hero-buttons">
+                    <router-link to="/register" class="text-decoration-none">
+                        <v-btn :class="{ 'btn-highlight': highlight }">
+                            {{ $t('landing.signUp') }}
+                        </v-btn>
+                    </router-link>
 
-                    <div class="hero-buttons d-flex justify-center justify-md-center">
-                      <router-link to="/register" class="mr-4">
-                          <v-btn :class="{ 'btn-highlight': highlight }">
-                              {{ $t('landing.signUp') }}
-                          </v-btn>
-                      </router-link>
-
-                      <router-link to="/login">
-                          <v-btn :class="{ 'btn-highlight': highlight }">
-                              {{ $t('landing.signIn') }}
-                          </v-btn>
-                      </router-link>
-                    </div>
-                </v-col>
-            </v-row>
+                    <router-link to="/login" class="text-decoration-none">
+                        <v-btn :class="{ 'btn-highlight': highlight }">
+                            {{ $t('landing.signIn') }}
+                        </v-btn>
+                    </router-link>
+                </div>
+            </div>
         </v-container>
       </div>
 
       <!-- Future cards -->
-
       <div class="features-section py-6">
         <v-container>
           <!-- Section header for better conversion -->
@@ -222,6 +217,9 @@ const features = computed(() => [
 
 /* Desktop text alignment */
 .hero-content {
+    width: min(600px, 58vw);
+    margin-left: auto;
+    margin-right: 0;
     text-align: left;
     transform: translateY(-130px);
 }
@@ -235,10 +233,11 @@ const features = computed(() => [
 
 /* Keeps hero buttons centered under the hero text */
 .hero-buttons {
+    width: 100%;
     margin-top: 40px;
     display: flex;
-    justify-content: right;
-    transform: translateX(-80px);
+    justify-content: center;
+    gap: 16px;
 }
 
 /* Hidden state before feature cards enter viewport */
@@ -321,55 +320,36 @@ const features = computed(() => [
 
 /* Mobile layout adjustments */
 @media (max-width: 600px) {
-    /* Shorter hero and better image crop on phones */
     .hero {
         min-height: 92vh;
-        background-position: center;
+        background-position: center left;
     }
 
-    /* Adds spacing so content does not overlap the logo */
     .hero-container {
         min-height: 92vh;
         padding-top: 88px;
         padding-bottom: 48px;
+        justify-content: center;
     }
 
-    /* Smaller logo on mobile */
-    .logo {
-        top: 18px;
-        left: 20px;
-        font-size: 1rem;
-    }
-
-    /* Keeps language switcher inside the mobile viewport */
-    .landing-actions {
-        top: 10px;
-        right: 12px;
-    }
-
-    /* Center hero text on mobile */
     .hero-content {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
         text-align: center;
         transform: translateY(-35px);
     }
 
-    /* Smaller headline for mobile screens */
     .hero-title {
         font-size: 2.25rem;
         line-height: 1.12;
         letter-spacing: -0.03em;
     }
 
-    /* Center buttons under the headline */
     .hero-buttons {
         margin-top: 32px;
-        justify-content: right;
-    }
-
-    /* Smaller icon block in feature cards */
-    .icon-wrapper {
-        width: 68px;
-        height: 68px;
+        justify-content: center;
+        gap: 12px;
     }
 }
 

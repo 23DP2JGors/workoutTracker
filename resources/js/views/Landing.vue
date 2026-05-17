@@ -19,18 +19,18 @@
                         <div>{{ $t('landing.heroLine3') }}</div>
                     </div>
 
-                    <div class="hero-buttons">
-                        <router-link to="/register" class="mr-4">
-                            <v-btn :class="{ 'btn-highlight': highlight }">
-                                {{ $t('landing.signUp') }}
-                            </v-btn>
-                        </router-link>
+                    <div class="hero-buttons d-flex justify-center justify-md-center">
+                      <router-link to="/register" class="mr-4">
+                          <v-btn :class="{ 'btn-highlight': highlight }">
+                              {{ $t('landing.signUp') }}
+                          </v-btn>
+                      </router-link>
 
-                        <router-link to="/login">
-                            <v-btn :class="{ 'btn-highlight': highlight }">
-                                {{ $t('landing.signIn') }}
-                            </v-btn>
-                        </router-link>
+                      <router-link to="/login">
+                          <v-btn :class="{ 'btn-highlight': highlight }">
+                              {{ $t('landing.signIn') }}
+                          </v-btn>
+                      </router-link>
                     </div>
                 </v-col>
             </v-row>
@@ -233,9 +233,12 @@ const features = computed(() => [
     letter-spacing: -0.04em;
 }
 
-/* Spacing above hero buttons */
+/* Keeps hero buttons centered under the hero text */
 .hero-buttons {
     margin-top: 40px;
+    display: flex;
+    justify-content: right;
+    transform: translateX(-80px);
 }
 
 /* Hidden state before feature cards enter viewport */
@@ -347,6 +350,7 @@ const features = computed(() => [
     /* Center hero text on mobile */
     .hero-content {
         text-align: center;
+        transform: translateY(-35px);
     }
 
     /* Smaller headline for mobile screens */
@@ -359,8 +363,7 @@ const features = computed(() => [
     /* Center buttons under the headline */
     .hero-buttons {
         margin-top: 32px;
-        display: flex;
-        justify-content: center;
+        justify-content: right;
     }
 
     /* Smaller icon block in feature cards */

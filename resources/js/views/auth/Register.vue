@@ -29,7 +29,7 @@
                     :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                     :type="visible ? 'text' : 'password'"   
                     v-model="form.password"
-                    :rules="[rules.required, rules.minLength,rules.hasLower, rules.hasSymbol, rules.hasUpper]"
+                    :rules="[rules.required, rules.minLength,rules.hasLower, rules.hasSymbol, rules.hasUpper, rules.hasNumber]"
                     :label="$t('register.password')"
                     @click:append-inner="visible = !visible"
                 ></v-text-field>

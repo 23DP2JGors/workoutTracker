@@ -6,6 +6,7 @@ export const rules = {
     hasUpper: v => /[A-Z]/.test(v) || 'Include an uppercase letter',
     hasLower: v => /[a-z]/.test(v) || 'Include an lowercase letter',
     hasSymbol: v => /[^a-zA-Z0-9]/.test(v) || 'Include special character',
+    hasNumber: v => /\d/.test(v) || 'Include at least one number',
     agree: v => !!v || 'You must agree to continue!',
     positiveNumber: v => v > 0 || 'Must be greater than 0',
     wholeNumber: v => Number.isInteger(Number(v)) || 'Must be a whole number',

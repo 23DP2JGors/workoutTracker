@@ -31,7 +31,7 @@
                 :key="item.title"
                 cols="12"
                 sm="6"
-                md="4"
+                lg="4"
             >
                 <v-scroll-y-transition appear>
                     <v-card
@@ -218,43 +218,38 @@
                                     </div>
                                 </div>
 
-                                <v-row dense>
-                                    <v-col cols="4">
-                                        <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
-                                            <div class="text-body-small text-medium-emphasis">
-                                                {{ $t('home.nutrition.protein') }}
-                                            </div>
+                                <!-- Macro summary rows -->
+                                <div class="nutrition-list">
+                                    <div class="nutrition-row">
+                                        <div class="text-body-medium text-medium-emphasis">
+                                            {{ $t('home.nutrition.protein') }}
+                                        </div>
 
-                                            <div class="text-title-medium font-weight-bold">
-                                                {{ macroResult.protein }}g
-                                            </div>
-                                        </v-card>
-                                    </v-col>
+                                        <div class="text-title-medium font-weight-bold text-primary">
+                                            {{ macroResult.protein }}g
+                                        </div>
+                                    </div>
 
-                                    <v-col cols="4">
-                                        <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
-                                            <div class="text-body-small text-medium-emphasis">
-                                                {{ $t('home.nutrition.fats') }}
-                                            </div>
+                                    <div class="nutrition-row">
+                                        <div class="text-body-medium text-medium-emphasis">
+                                            {{ $t('home.nutrition.fats') }}
+                                        </div>
 
-                                            <div class="text-title-medium font-weight-bold">
-                                                {{ macroResult.fats }}g
-                                            </div>
-                                        </v-card>
-                                    </v-col>
+                                        <div class="text-title-medium font-weight-bold text-primary">
+                                            {{ macroResult.fats }}g
+                                        </div>
+                                    </div>
 
-                                    <v-col cols="4">
-                                        <v-card variant="tonal" rounded="lg" class="pa-3 text-center">
-                                            <div class="text-body-small text-medium-emphasis">
-                                                {{ $t('home.nutrition.carbs') }}
-                                            </div>
+                                    <div class="nutrition-row">
+                                        <div class="text-body-medium text-medium-emphasis">
+                                            {{ $t('home.nutrition.carbs') }}
+                                        </div>
 
-                                            <div class="text-title-medium font-weight-bold">
-                                                {{ macroResult.carbs }}g
-                                            </div>
-                                        </v-card>
-                                    </v-col>
-                                </v-row>
+                                        <div class="text-title-medium font-weight-bold text-primary">
+                                            {{ macroResult.carbs }}g
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <v-btn
                                     class="mt-4"
@@ -578,5 +573,36 @@ watch(locale, async () => {
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+/* Vertical macro rows for narrow overview cards */
+.nutrition-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Keeps macro label and value readable */
+.nutrition-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background-color: rgba(var(--v-theme-on-surface), 0.06);
+}
+
+/* Prevents long translated labels from breaking letter by letter */
+.nutrition-row > div:first-child {
+    min-width: 0;
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+/* Keeps macro value on one line */
+.nutrition-row > div:last-child {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 </style>

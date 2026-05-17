@@ -12,28 +12,38 @@
         </div>
 
           <!-- Selection Grid -->
-          <div class="text-medium-emphasis text-uppercase font-weight-bold pb-3">
+        <div class="text-medium-emphasis text-uppercase font-weight-bold pb-3">
             {{ $t('measurements.selectMeasurements') }}
-          </div>
-          <v-row dense class="mb-2">
-            <v-col v-for="item in bodyParts" :key="item.key" cols="4" sm="3" md="2">
-              <v-card
-                :color="selectedParts.includes(item.key) ? 'primary' : undefined"
-                :variant="selectedParts.includes(item.key) ? 'flat' : 'outlined'"
-                rounded="lg"
-                class="text-center py-3 body-part-card cursor-pointer"
-                @click="togglePart(item.key)"
-              >
-                <v-icon 
-                    size="24" 
-                    :icon="item.icon"
-                    :color="selectedParts.includes(item.key) ? 'black' : 'default'"
-                ></v-icon>
+        </div>
 
-                <div class="text-caption mt-1 font-weight-medium">{{ item.label }}</div>
-              </v-card>
+        <v-row dense class="mb-2">
+            <v-col
+                v-for="item in bodyParts"
+                :key="item.key"
+                cols="6"
+                sm="4"
+                md="3"
+                lg="2"
+            >
+                <v-card
+                    :color="selectedParts.includes(item.key) ? 'primary' : undefined"
+                    :variant="selectedParts.includes(item.key) ? 'flat' : 'outlined'"
+                    rounded="lg"
+                    class="text-center py-3 body-part-card cursor-pointer"
+                    @click="togglePart(item.key)"
+                >
+                    <v-icon
+                        size="24"
+                        :icon="item.icon"
+                        :color="selectedParts.includes(item.key) ? 'black' : 'default'"
+                    ></v-icon>
+
+                    <div class="body-part-label text-caption mt-1 font-weight-medium">
+                        {{ item.label }}
+                    </div>
+                </v-card>
             </v-col>
-          </v-row>
+        </v-row>
 
           <v-divider class="my-6"></v-divider>
 
@@ -537,7 +547,22 @@ onMounted(async () => {
 <style scoped>
 /* transition on body part cards */
 .body-part-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 85px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Prevents body part names from breaking letter by letter */
+.body-part-label {
+    line-height: 1.2;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+/* Slightly smaller cards on phones */
+@media (max-width: 600px) {
+    .body-part-card { 
+        min-height: 84px;
+    }
 }
 
 .body-part-card:hover {

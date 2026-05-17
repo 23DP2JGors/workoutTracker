@@ -16,6 +16,11 @@ class RegisteredUserController extends Controller
 {
     public function store(Request $request): Response
     {
+        // Normalize email to lowercase and trim whitespace
+        $request->merge([
+        'email' => strtolower(trim($request->email)),
+        ]);
+
         $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],

@@ -15,6 +15,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): Response
     {
+        // Normalize email before login attempt
+        $request->merge([
+            'email' => strtolower(trim($request->email)),
+        ]);
+
         $request->authenticate();
 
         $request->session()->regenerate();

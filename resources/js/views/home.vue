@@ -356,10 +356,22 @@ const bodyParts = computed(() => [
 ])
 
 // Prepares only measurements that contain body weight
+// Prepares weight measurements in chronological order
 const weightChartData = computed(() => {
     return measurements.value
         .filter(m => m.weight !== null && m.weight !== undefined)
-        .sort((a, b) => new Date(a.measured_at) - new Date(b.measured_at))
+        .sort((a, b) => {
+            const dateA = new Date(a.measured_at)
+            const dateB = new Date(b.measured_at)
+
+            // Sort by date first
+            if (dateA.getTime() !== dateB.getTime()) {
+                return dateA - dateB
+            }
+
+            // If date is the same, keep older entries first
+            return a.id - b.id
+        })
 })
 
 // Finds the newest measurement records

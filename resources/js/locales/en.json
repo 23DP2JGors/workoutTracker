@@ -66,6 +66,16 @@
                 "title": "Macro Calculator",
                 "text": "Find your ideal calories and macros based on your goals. No guesswork needed."
             }
+        },
+        "finalSection": {
+            "eyebrow": "Progress worth keeping",
+            "title": "Turn effort into personal records.",
+            "description": "Stay consistent, celebrate every breakthrough, and watch steady training become measurable progress.",
+            "prs": "Personal records",
+            "progress": "Visible progress",
+            "consistency": "Training streak",
+            "latestPr": "Latest personal record",
+            "cta": "Build My Progress"
         }
     },
     "register": {

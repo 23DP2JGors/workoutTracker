@@ -233,6 +233,69 @@
           </article>
         </div>
       </section>
+
+      <!-- Final personal-records showcase -->
+      <section ref="finalSectionRef" class="final-progress-section">
+        <div class="final-progress-glow" aria-hidden="true"></div>
+
+        <v-container class="final-progress-container">
+          <div class="final-copy">
+            <p class="final-eyebrow text-label-medium" data-final-reveal>
+              {{ $t('landing.finalSection.eyebrow') }}
+            </p>
+            <h2 class="final-title text-headline-large font-weight-black" data-final-reveal>
+              {{ $t('landing.finalSection.title') }}
+            </h2>
+            <p class="final-description text-body-medium" data-final-reveal>
+              {{ $t('landing.finalSection.description') }}
+            </p>
+
+            <div class="record-highlights" data-final-reveal>
+              <div class="record-highlight">
+                <strong>PR</strong>
+                <span>{{ $t('landing.finalSection.prs') }}</span>
+              </div>
+              <div class="record-highlight">
+                <strong>+%</strong>
+                <span>{{ $t('landing.finalSection.progress') }}</span>
+              </div>
+              <div class="record-highlight">
+                <strong>7d</strong>
+                <span>{{ $t('landing.finalSection.consistency') }}</span>
+              </div>
+            </div>
+
+            <router-link to="/register" class="text-decoration-none">
+              <v-btn
+                class="final-cta"
+                color="primary"
+                size="large"
+                rounded="lg"
+                elevation="0"
+                data-final-reveal
+              >
+                {{ $t('landing.finalSection.cta') }}
+              </v-btn>
+            </router-link>
+          </div>
+
+          <div class="record-visual" data-final-reveal aria-label="Personal progress preview">
+            <div class="record-visual-top">
+              <span>{{ $t('landing.finalSection.latestPr') }}</span>
+              <span class="record-status">NEW PR</span>
+            </div>
+            <div class="record-score">
+              <strong>120</strong>
+              <span>kg</span>
+            </div>
+            <svg class="record-line" viewBox="0 0 480 180" fill="none" aria-hidden="true">
+              <path class="record-grid" d="M20 150H460 M20 105H460 M20 60H460" />
+              <path class="record-progress-line" d="M25 138 C90 132 122 118 168 120 C220 122 250 92 302 96 C350 100 392 58 455 38" />
+              <circle class="record-point" cx="455" cy="38" r="9" />
+            </svg>
+          </div>
+        </v-container>
+      </section>
     </div>
   </transition>
 </template>
@@ -253,6 +316,7 @@ const coreFeaturesRef = ref(null)
 const extraFeaturesRef = ref(null)
 const extraTrackRef = ref(null)
 const kineticTextRef = ref(null)
+const finalSectionRef = ref(null)
 
 let gsapContext = null
 let floatTween = null
@@ -405,11 +469,37 @@ onMounted(async () => {
                     .to(extraPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.03, ease: 'power1.inOut' }, 0.08)
                     .to('.extra-features .draw-dot', { scale: 1, stagger: 0.04, duration: 0.35 }, 0.25)
 
+                const finalReveal = gsap.utils.toArray('[data-final-reveal]')
+                gsap.set(finalReveal, { opacity: 0, y: 30 })
+
+                const recordLine = finalSectionRef.value.querySelector('.record-progress-line')
+                const recordPoint = finalSectionRef.value.querySelector('.record-point')
+                if (recordLine) {
+                    const lineLength = recordLine.getTotalLength()
+                    gsap.set(recordLine, { strokeDasharray: lineLength, strokeDashoffset: lineLength })
+                }
+                if (recordPoint) gsap.set(recordPoint, { scale: 0, transformOrigin: 'center' })
+
+                const finalTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: finalSectionRef.value,
+                        start: 'top 78%',
+                        once: true,
+                    },
+                })
+
+                finalTimeline
+                    .to(finalReveal, { opacity: 1, y: 0, duration: 0.75, stagger: 0.09, ease: 'power3.out' })
+                    .to(recordLine, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.out' }, 0.25)
+                    .to(recordPoint, { scale: 1, duration: 0.35, ease: 'back.out(2)' }, 0.9)
+
                 return () => {
                     timeline.scrollTrigger?.kill()
                     timeline.kill()
                     extraTimeline.scrollTrigger?.kill()
                     extraTimeline.kill()
+                    finalTimeline.scrollTrigger?.kill()
+                    finalTimeline.kill()
                 }
             })
 
@@ -1163,6 +1253,251 @@ onUnmounted(() => {
     .extra-drawing {
         width: 190px;
         right: 4px;
+    }
+}
+
+/* Final progress and personal records showcase */
+.final-progress-section {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 82% 48%, rgba(124, 134, 255, 0.16), transparent 30%),
+        radial-gradient(circle at 18% 78%, rgba(255, 210, 63, 0.07), transparent 24%),
+        #0B0D17;
+}
+
+.final-progress-glow {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 134, 255, 0.18), rgba(255, 210, 63, 0.05) 42%, transparent 72%);
+    filter: blur(18px);
+}
+
+.final-progress-container {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+    align-items: center;
+    gap: clamp(36px, 6vw, 96px);
+    padding-top: 100px;
+    padding-bottom: 64px;
+}
+
+.final-copy {
+    min-width: 0;
+}
+
+.final-eyebrow {
+    margin: 0 0 14px;
+    color: #FFD23F;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.final-title {
+    max-width: 680px;
+    margin: 0;
+    line-height: 1.02;
+}
+
+.final-description {
+    max-width: 590px;
+    margin: 22px 0 28px;
+    color: #BFC4E6;
+    line-height: 1.65;
+}
+
+.record-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.record-highlight {
+    min-width: 112px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border-left: 2px solid #7C86FF;
+}
+
+.record-highlight strong {
+    color: #FFD23F;
+    font-size: 1.35rem;
+}
+
+.record-highlight span {
+    color: #BFC4E6;
+    font-size: 0.82rem;
+}
+
+.final-cta {
+    min-width: 190px;
+    min-height: 54px;
+    padding-inline: 34px;
+    font-weight: 900;
+    box-shadow: 0 16px 38px rgba(124, 134, 255, 0.24);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.final-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 48px rgba(124, 134, 255, 0.36);
+}
+
+.record-visual {
+    position: relative;
+    min-height: 430px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 34px;
+    border: 1px solid rgba(124, 134, 255, 0.22);
+    border-top: 4px solid #FFD23F;
+    background:
+        linear-gradient(145deg, rgba(29, 34, 56, 0.72), rgba(20, 24, 41, 0.92)),
+        #141829;
+    box-shadow: 0 26px 70px rgba(4, 6, 18, 0.48), 0 0 44px rgba(124, 134, 255, 0.08);
+}
+
+.record-visual-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    color: #BFC4E6;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.record-status {
+    color: #0A0C2E;
+    background: #FFD23F;
+    border-radius: 999px;
+    padding: 7px 12px;
+}
+
+.record-score {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    color: #E9EBFA;
+}
+
+.record-score strong {
+    color: #FFD23F;
+    font-size: clamp(5rem, 9vw, 8.5rem);
+    line-height: 0.82;
+}
+
+.record-score span {
+    color: #8E94B8;
+    font-size: 1.4rem;
+}
+
+.record-line {
+    width: 100%;
+    height: 180px;
+}
+
+.record-grid {
+    stroke: rgba(233, 235, 250, 0.08);
+    stroke-width: 2;
+}
+
+.record-progress-line {
+    stroke: #7C86FF;
+    stroke-width: 8;
+    stroke-linecap: round;
+}
+
+.record-point {
+    fill: #FFD23F;
+    stroke: #0B0D17;
+    stroke-width: 5;
+}
+
+@media (max-width: 959px) {
+    .final-progress-section,
+    .final-progress-container {
+        min-height: auto;
+    }
+
+    .final-progress-container {
+        grid-template-columns: 1fr;
+        gap: 42px;
+        padding-top: 88px;
+        padding-bottom: 72px;
+    }
+
+    .final-copy {
+        text-align: center;
+        margin-inline: auto;
+    }
+
+    .final-title,
+    .final-description {
+        margin-inline: auto;
+    }
+
+    .record-highlights {
+        justify-content: center;
+    }
+
+    .record-highlight {
+        text-align: left;
+    }
+
+    .record-visual {
+        width: min(100%, 620px);
+        min-height: 390px;
+        margin-inline: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .final-progress-container {
+        padding-inline: 16px;
+        padding-top: 72px;
+        padding-bottom: 56px;
+    }
+
+    .record-highlights {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .record-highlight {
+        min-width: 0;
+        padding: 12px 8px;
+    }
+
+    .record-highlight span {
+        line-height: 1.3;
+    }
+
+    .record-visual {
+        min-height: 330px;
+        padding: 22px;
+    }
+
+    .record-score strong {
+        font-size: 5rem;
     }
 }
 </style>

@@ -65,6 +65,16 @@
                 "title": "Makro kalkulators",
                 "text": "Aprēķini kalorijas un makroelementus atbilstoši savam mērķim."
             }
+        },
+        "finalSection": {
+            "eyebrow": "Progresam, ko vērtēt",
+            "title": "Pārvērš pūles personīgajos rekordos.",
+            "description": "Saglabā regularitāti, svini katru izrāvienu un vēro, kā apmērāmās spēka izmaiņas kļūst par reālu progresu.",
+            "prs": "Personīgie rekordi",
+            "progress": "Redzams progress",
+            "consistency": "Treniņu sērija",
+            "latestPr": "Pēdējais personīgais rekords",
+            "cta": "Veidot savu progresu"
         }
     },
     "register": {

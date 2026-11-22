@@ -391,12 +391,16 @@ onMounted(async () => {
                 coreFeaturesRef.value.classList.remove('core-features--fallback')
                 extraFeaturesRef.value.classList.remove('extra-features--fallback')
 
+                // Keep the desktop visual stage cleanly clipped during horizontal scene swipes.
+                const visualStage = coreFeaturesRef.value.querySelector('.core-visuals')
+                visualStage.style.overflow = 'hidden'
+
                 const steps = gsap.utils.toArray('[data-core-step]')
                 const visuals = gsap.utils.toArray('[data-core-visual]')
                 const progress = '.core-progress-fill'
 
-                gsap.set(visuals.slice(1), { autoAlpha: 0, y: 24, scale: 0.96 })
-                gsap.set(visuals[0], { autoAlpha: 1, y: 0, scale: 1 })
+                gsap.set(visuals.slice(1), { autoAlpha: 0, xPercent: 60, y: 0, scale: 1 })
+                gsap.set(visuals[0], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 })
                 gsap.set(progress, { scaleX: 0 })
 
                 const setActiveStep = index => {
@@ -412,20 +416,31 @@ onMounted(async () => {
                         end: '+=180%',
                         pin: true,
                         pinSpacing: true,
-                        scrub: 0.6,
+                        scrub: 0.8,
                         invalidateOnRefresh: true,
                         onUpdate: self => {
                             gsap.set(progress, { scaleX: self.progress })
-                            setActiveStep(self.progress < 0.34 ? 0 : self.progress < 0.67 ? 1 : 2)
+
+                            // Shared thresholds prevent the left step and right visual from diverging.
+                            const activeIndex = self.progress < (1 / 3)
+                                ? 0
+                                : self.progress < (2 / 3)
+                                    ? 1
+                                    : 2
+                            setActiveStep(activeIndex)
                         },
                     },
                 })
 
+                // Scene 1 -> 2 and 2 -> 3 hand off at the same boundaries as the steps.
                 timeline
-                    .to(visuals[0], { autoAlpha: 0, y: -18, scale: 0.96, duration: 0.16 }, 0.28)
-                    .to(visuals[1], { autoAlpha: 1, y: 0, scale: 1, duration: 0.16 }, 0.28)
-                    .to(visuals[1], { autoAlpha: 0, y: -18, scale: 0.96, duration: 0.16 }, 0.62)
-                    .to(visuals[2], { autoAlpha: 1, y: 0, scale: 1, duration: 0.16 }, 0.62)
+                    .set(visuals[0], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 })
+                    .set(visuals.slice(1), { autoAlpha: 0, xPercent: 60, y: 0, scale: 1 })
+                    .to(visuals[0], { autoAlpha: 0, xPercent: -60, ease: 'power2.inOut', duration: 0.12 }, 1 / 3)
+                    .to(visuals[1], { autoAlpha: 1, xPercent: 0, ease: 'power2.inOut', duration: 0.12 }, 1 / 3)
+                    .to(visuals[1], { autoAlpha: 0, xPercent: -60, ease: 'power2.inOut', duration: 0.12 }, 2 / 3)
+                    .to(visuals[2], { autoAlpha: 1, xPercent: 0, ease: 'power2.inOut', duration: 0.12 }, 2 / 3)
+                    .set(visuals[2], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 }, 1)
 
                 const travel = () => {
                     const sectionWidth = extraFeaturesRef.value.clientWidth
@@ -494,12 +509,10 @@ onMounted(async () => {
                     .to(recordPoint, { scale: 1, duration: 0.35, ease: 'back.out(2)' }, 0.9)
 
                 return () => {
+                    const visualStage = coreFeaturesRef.value.querySelector('.core-visuals')
+                    visualStage.style.removeProperty('overflow')
                     timeline.scrollTrigger?.kill()
                     timeline.kill()
-                    extraTimeline.scrollTrigger?.kill()
-                    extraTimeline.kill()
-                    finalTimeline.scrollTrigger?.kill()
-                    finalTimeline.kill()
                 }
             })
 
@@ -711,7 +724,7 @@ onUnmounted(() => {
     opacity: 0.42;
     color: #8E94B8;
     background: rgba(20, 24, 41, 0.28);
-    transition: opacity 0.35s ease, border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+    transition: none
 }
 
 .core-step.is-active {

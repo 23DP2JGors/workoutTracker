@@ -9,7 +9,7 @@
             </v-col>
             <v-col>
               {{ $t('workouts.stats.total') }}
-              <div class="text-h4 font-weight-bold">{{ totalWorkouts }}</div>
+              <div class="text-display-small font-weight-bold">{{ totalWorkouts }}</div>
             </v-col>
           </v-row>
         </v-card>
@@ -23,7 +23,7 @@
             </v-col>
             <v-col>
               {{ $t('workouts.stats.thisWeek') }}
-              <div class="text-h4 font-weight-bold">{{ thisWeekWorkouts }}</div>
+              <div class="text-display-small font-weight-bold">{{ thisWeekWorkouts }}</div>
             </v-col>
           </v-row>
         </v-card>
@@ -37,7 +37,7 @@
             </v-col>
             <v-col>
               {{ $t('workouts.stats.daysSinceLast') }}
-              <div class="text-h4 font-weight-bold">{{ daysSinceLastWorkout }}</div>
+              <div class="text-display-small font-weight-bold">{{ daysSinceLastWorkout }}</div>
             </v-col>
           </v-row>
         </v-card>
@@ -117,7 +117,7 @@
                     </div>
                     
                     <!-- Sets table header -->
-                    <v-row class="text-body-medium text-medium-emphasis text-uppercase px-2 d-none d-sm-flex">
+                    <v-row class="text-body-small text-uppercase text-medium-emphasis px-2 d-none d-sm-flex">
                       <v-col cols="2">{{ $t('workouts.dialog.set') }}</v-col>
                       <v-col cols="4">{{ $t('workouts.dialog.kg') }}</v-col>
                       <v-col cols="4">{{ $t('workouts.dialog.reps') }}</v-col>
@@ -331,7 +331,7 @@
                                     variant="tonal"
                                     color="primary"
                                     size="small"
-                                    class="mr-2 mb-2 text-caption"
+                                    class="mr-2 mb-2 text-body-small"
                                 >
                                     {{ exerciseCount(workout) }} {{ $t('workouts.history.exercises') }}
                                 </v-chip>
@@ -339,7 +339,7 @@
                                 <v-chip
                                     variant="outlined"
                                     size="small"
-                                    class="mr-2 mb-2 text-caption"
+                                    class="mr-2 mb-2 text-body-small"
                                 >
                                     {{ setCount(workout) }} {{ $t('workouts.history.sets') }}
                                 </v-chip>
@@ -407,7 +407,7 @@
             <div class="mb-3">
               <p class="font-weight-bold text-primary">{{ ex.exercise?.name }}</p>
             </div>
-            <v-row class="text-caption text-uppercase text-medium-emphasis px-2 no-gutters mb-n5">
+            <v-row class="text-body-small text-uppercase text-medium-emphasis px-2 no-gutters mb-n5">
               <v-col cols="2">{{ $t('workouts.dialog.set') }}</v-col>
               <v-col cols="5">{{ $t('workouts.dialog.kg') }}</v-col>
               <v-col cols="5">{{ $t('workouts.dialog.reps') }}</v-col>
@@ -762,8 +762,8 @@ onMounted(async () => {
 }
 
 .workout-card:hover {
-    box-shadow: 0 4px 20px rgba(181, 232, 83, 0.15);
-    border-color: rgba(181, 232, 83, 0.5);
+    box-shadow: 0 4px 20px rgba(var(--v-theme-primary), 0.15);
+    border-color: rgba(var(--v-theme-primary), 0.5);
 }
 
 /* Adds separation between set rows on mobile */

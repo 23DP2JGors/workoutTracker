@@ -300,6 +300,7 @@ import Chart from 'chart.js/auto'
 import { user } from '@/stores/auth.js'
 import { calculateMacros } from '@/utils/calculateMacros'
 import { useI18n } from 'vue-i18n'
+import { useTheme } from 'vuetify'
 
 // Controls the entrance animation for quick action cards
 const isReady = ref(false)
@@ -318,6 +319,7 @@ const overviewTab = ref('measurements')
 
 // Provides translation function and current language
 const { t, locale } = useI18n()
+const theme = useTheme()
 
 // Keeps the chart instance so it can be destroyed before re-rendering
 let weightChart = null
@@ -435,6 +437,7 @@ function renderWeightChart() {
 
     const labels = weightChartData.value.map(m => formatDate(m.measured_at))
     const values = weightChartData.value.map(m => Number(m.weight))
+    const colors = theme.current.value.colors
 
     weightChart = new Chart(weightChartCanvas.value, {
         type: 'line',
@@ -449,6 +452,10 @@ function renderWeightChart() {
                     borderWidth: 3,
                     pointRadius: 4,
                     pointHoverRadius: 6,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primary,
+                    pointBorderColor: colors.primary,
+                    pointBackgroundColor: colors.primary,
                 },
             ],
         },
@@ -464,6 +471,18 @@ function renderWeightChart() {
                 y: {
                     ticks: {
                         callback: value => `${value} kg`,
+                        color: colors['on-surface'],
+                    },
+                    grid: {
+                        color: `${colors['on-surface']}33`,
+                    },
+                },
+                x: {
+                    ticks: {
+                        color: colors['on-surface'],
+                    },
+                    grid: {
+                        color: `${colors['on-surface']}33`,
                     },
                 },
             },
@@ -491,6 +510,14 @@ function formatNum(value) {
 
 // Re-render chart labels when language changes
 watch(locale, async () => {
+    await nextTick()
+
+    if (weightChartData.value.length) {
+        renderWeightChart()
+    }
+})
+
+watch(() => theme.global.name.value, async () => {
     await nextTick()
 
     if (weightChartData.value.length) {

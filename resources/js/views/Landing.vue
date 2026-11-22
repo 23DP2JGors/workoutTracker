@@ -201,7 +201,7 @@ const features = computed(() => [
         linear-gradient(
             to bottom,
             rgba(0, 0, 0, 0.35) 0%,
-            rgba(18, 18, 18, 1) 82%
+            rgba(var(--v-theme-background), 1) 82%
         ),
         url('/images/bg_landing.jpg');
     background-size: cover;
@@ -309,13 +309,13 @@ const features = computed(() => [
 /* Glow effect for Get Started button */
 .get-started-btn {
     border-width: 2px;
-    box-shadow: 0 0 15px rgba(181, 232, 83, 0.3);
+    box-shadow: 0 0 15px rgba(var(--v-theme-primary), 0.3);
     transition: box-shadow 0.3s ease;
 }
 
 /* Stronger glow on hover */
 .get-started-btn:hover {
-    box-shadow: 0 0 25px rgba(181, 232, 83, 0.6);
+    box-shadow: 0 0 25px rgba(var(--v-theme-primary), 0.6);
 }
 
 /* Mobile layout adjustments */

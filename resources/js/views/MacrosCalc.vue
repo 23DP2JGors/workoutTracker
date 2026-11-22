@@ -15,7 +15,7 @@
             <v-card-text class="px-0">
               <v-row>
                 <v-col cols="12">
-                  <div class="text-subtitle-2 mb-2">
+                  <div class="text-title-medium mb-2">
                     {{ $t('macros.gender') }}
                   </div>
                   <v-btn-toggle v-model="form.gender" color="primary" rounded="lg" mandatory block @update:model-value="handleInputChange">
@@ -117,19 +117,19 @@
               <v-row dense>
                 <v-col cols="4">
                   <v-card variant="flat" class="border rounded-xl text-center py-4">
-                    <div class="text-caption text-grey text-uppercase">{{ $t('macros.protein') }}</div>
+                    <div class="text-body-small text-grey text-uppercase">{{ $t('macros.protein') }}</div>
                     <div class="font-weight-bold">{{ result.protein }}g</div>
                   </v-card>
                 </v-col>
                 <v-col cols="4">
                   <v-card variant="flat" class="border rounded-xl text-center py-4">
-                    <div class="text-caption text-grey text-uppercase">{{ $t('macros.fats') }}</div>
+                    <div class="text-body-small text-grey text-uppercase">{{ $t('macros.fats') }}</div>
                     <div class="font-weight-bold">{{ result.fats }}g</div>
                   </v-card>
                 </v-col>
                 <v-col cols="4">
                   <v-card variant="flat" class="border rounded-xl text-center py-4">
-                    <div class="text-caption text-grey text-uppercase">{{ $t('macros.carbs') }}</div>
+                    <div class="text-body-small text-grey text-uppercase">{{ $t('macros.carbs') }}</div>
                     <div class="font-weight-bold">{{ result.carbs }}g</div>
                   </v-card>
                 </v-col>
@@ -153,7 +153,7 @@
           </v-card-actions>
 
           <!-- Disclaimer -->
-          <div class="text-caption text-grey-darken-1 text-center mt-4 font-italic text-label-medium">
+          <div class="text-body-small text-medium-emphasis text-center mt-4 font-italic text-label-medium">
             {{ $t('macros.disclaimer') }}
           </div>
         </v-card>

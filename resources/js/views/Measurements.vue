@@ -35,10 +35,10 @@
                     <v-icon
                         size="24"
                         :icon="item.icon"
-                        :color="selectedParts.includes(item.key) ? 'black' : 'default'"
+                        :color="selectedParts.includes(item.key) ? 'on-primary' : 'default'"
                     ></v-icon>
 
-                    <div class="body-part-label text-caption mt-1 font-weight-medium">
+                    <div class="body-part-label text-body-small mt-1 font-weight-medium">
                         {{ item.label }}
                     </div>
                 </v-card>
@@ -125,10 +125,8 @@
 
             <!-- Highlight Filters (Top selection chips) -->
             <div class="mb-6">
-                <div class="text-caption text-grey mb-2 font-weight-bold text-uppercase">
-                    <div class="text-caption text-grey mb-2 font-weight-bold text-uppercase">
-                        {{ $t('measurements.history.filter') }}
-                    </div>
+                <div class="text-body-small text-grey mb-2 font-weight-bold text-uppercase">
+                    {{ $t('measurements.history.filter') }}
                 </div>
                 <v-chip-group
                     v-model="historyFilters"
@@ -179,7 +177,7 @@
                                     <v-chip
                                         v-if="m[part.key] !== null && m[part.key] !== undefined"
                                         size="small"
-                                        class="mr-2 mb-2 text-caption"
+                                        class="mr-2 mb-2 text-body-small"
                                         :color="historyFilters.includes(part.key) ? 'primary' : 'default'"
                                         :variant="historyFilters.includes(part.key) ? 'flat' : 'outlined'"
                                         :class="{ 'font-weight-black': historyFilters.includes(part.key) }"
@@ -190,7 +188,7 @@
                             </div>
 
                             <!-- Display notes if they exist -->
-                            <p v-if="m.notes" class="text-caption text-medium-emphasis mt-2 font-italic">
+                            <p v-if="m.notes" class="text-body-small text-medium-emphasis mt-2 font-italic">
                                 "{{ m.notes }}"
                             </p>
                         </v-col>
@@ -567,13 +565,13 @@ onMounted(async () => {
 
 .body-part-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(181, 232, 83, 0.2);
+  box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.2);
 }
 
 .measurement-card {
     transition: border-color 0.2s ease;
 }
 .measurement-card:hover {
-    border-color: rgba(181, 232, 83, 0.4);
+    border-color: rgba(var(--v-theme-primary), 0.4);
 }
 </style>

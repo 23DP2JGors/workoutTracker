@@ -13,11 +13,41 @@
         "heroLine1": "Seko katram atkārtojumam.",
         "heroLine2": "Sasniedz katru mērķi.",
         "heroLine3": "Veido savu progresu.",
+        "startFree": "Pieslēgties bez maksas",
         "signUp": "Reģistrēties",
         "signIn": "Pieslēgties",
         "coreFeatures": "Galvenās funkcijas",
         "coreFeaturesSubtitle": "Viss nepieciešamais, lai sekotu līdzi saviem fitnesa mērķiem vienuviet.",
         "getStarted": "Sākt",
+        "extraFeatures": {
+            "eyebrow": "Vairāk veidu progresam",
+            "title": "Papildu rīki spēcīgākai apmācībai",
+            "oneRm": {
+                "title": "1RM aprēķins",
+                "text": "Aprēķini maksimālo piegājienu svaru un plāno drošus darba komplektus.",
+                "tag": "Maks. 100 kg"
+            },
+            "templates": {
+                "title": "Treniņu shēmas",
+                "text": "Atkārtoti izmanto pārbaudītas treniņu struktūras un saglabā regularitāti.",
+                "tag": "Stūma · Vilkšana · Kājas"
+            },
+            "exercises": {
+                "title": "Pašu vingrinājumi",
+                "text": "Izveido personīgu vingrinājumu bibliotēku atbilstoši savam stilam.",
+                "tag": "Tava bibliotēka"
+            },
+            "charts": {
+                "title": "Detalizēti grafiki",
+                "text": "Seko spēkam, apjomam, ķermeņa datiem un progresam laikā.",
+                "tag": "Spēks + apjoms"
+            },
+            "trainer": {
+                "title": "Trenera piezīmes",
+                "text": "Saglabā trenera ieteikumus un svarīgas piezīmes pie katra treniņa.",
+                "tag": "Treneris · Pārskats"
+            }
+        },
         "features": {
             "workoutLogging": {
                 "title": "Treniņu pierakstīšana",

@@ -1,8 +1,28 @@
 <template>
   <v-app>
 
+    <!-- Landing page top bar -->
+    <v-app-bar v-if="route.meta.layout === 'none'" class="app-bar app-bar--landing" fixed elevation="0">
+        <v-app-bar-title class="text-title-large font-weight-bold app-title">
+            <span class="d-none d-sm-inline">Workout Tracker</span>
+            <span class="d-inline d-sm-none">WT</span>
+        </v-app-bar-title>
+        <v-spacer></v-spacer>
+
+        <v-btn
+            v-if="route.name !== 'Login'"
+            to="/login"
+            variant="text"
+            class="mr-1"
+        >
+            {{ $t('landing.signIn') }}
+        </v-btn>
+        
+        <LanguageSwitcher />
+    </v-app-bar>
+
     <!-- Top Application Bar - unchanged -->
-    <v-app-bar v-if="route.meta.layout !== 'none' && route.meta.layout !== 'auth'" elevation="2">
+    <v-app-bar v-if="route.meta.layout !== 'none' && route.meta.layout !== 'auth'" class="app-bar" fixed elevation="2">
         <v-btn 
             v-if="route.name !== 'Home'"
             color="default"
@@ -87,29 +107,26 @@
       </v-dialog>
       
       <LanguageSwitcher />
-      
-      <v-btn 
-      color="default"
-        :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
-        @click="toggleTheme"
-      ></v-btn>
     </v-app-bar>
 
     <!-- Top for auth pages -->
-    <v-app-bar v-if="route.meta.layout === 'auth'" elevation="0" color="transparent">
+    <v-app-bar v-if="route.meta.layout === 'auth'" class="app-bar app-bar--auth" fixed elevation="0">
         <v-app-bar-title class="text-title-large font-weight-bold app-title">
             <span class="d-none d-sm-inline">Workout Tracker</span>
             <span class="d-inline d-sm-none">WT</span>
         </v-app-bar-title>
         <v-spacer></v-spacer>
-        
+
+        <v-btn
+            v-if="route.name !== 'Login'"
+            to="/login"
+            variant="text"
+            class="mr-1"
+        >
+            {{ $t('landing.signIn') }}
+        </v-btn>
+
         <LanguageSwitcher />
-        
-        <v-btn 
-            color="default"
-            :icon="theme.global.name.value === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'" 
-            @click="toggleTheme"
-        ></v-btn>
     </v-app-bar>
     <!-- Main content: now ONLY router-view, no hardcoded card -->
     <v-main :class="route.meta.layout === 'none' ? 'pa-0' : ''">
@@ -124,7 +141,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { fetchUser, user } from '@/stores/auth.js'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useTheme } from 'vuetify'
 import { onMounted } from 'vue'
 
@@ -138,7 +155,20 @@ const deleteDialog = ref(false)
 // Check if user is logged in when app loads
 onMounted(() => {
     fetchUser()
+
+    if (route.meta.layout === 'none') {
+        theme.global.name.value = 'dark'
+    }
 })
+
+watch(
+    () => route.meta.layout,
+    layout => {
+        if (layout === 'none') {
+            theme.global.name.value = 'dark'
+        }
+    }
+)
 
 function toggleTheme() {
   theme.global.name.value = theme.global.name.value === 'light' ? 'dark' : 'light'
@@ -170,5 +200,23 @@ const handleDeleteAccount = async () => {
 /* Keeps account button compact on mobile */
 .account-btn {
     min-width: 40px;
+}
+
+/* Keeps navigation readable over every route */
+.app-bar {
+    z-index: 1007;
+}
+
+.app-bar--landing {
+    background: rgba(11, 13, 23, 0.72) !important;
+    border-bottom: 1px solid rgba(233, 235, 250, 0.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.app-bar--auth {
+    background: rgba(11, 13, 23, 0.82) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 </style>

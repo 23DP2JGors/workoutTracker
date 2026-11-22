@@ -1,280 +1,822 @@
 ﻿<template>
   <transition name="page-fade">
     <div v-if="showPage">
-      <div class="hero">
-        <div class="logo">{{ $t('landing.logo') }}</div>
-
-        <div class="landing-actions">
-            <LanguageSwitcher />
-        </div>
-
+      <div class="hero" ref="heroRef">
         <v-container class="hero-container">
             <div class="hero-content">
                 <div class="hero-title font-weight-black">
-                    <div>{{ $t('landing.heroLine1') }}</div>
-                    <div>{{ $t('landing.heroLine2') }}</div>
-                    <div>{{ $t('landing.heroLine3') }}</div>
+                    <div data-hero-line>{{ $t('landing.heroLine1') }}</div>
+                    <div data-hero-line>{{ $t('landing.heroLine2') }}</div>
+                    <div data-hero-line>{{ $t('landing.heroLine3') }}</div>
                 </div>
 
-                <div class="hero-buttons">
+                <div class="hero-actions">
                     <router-link to="/register" class="text-decoration-none">
-                        <v-btn :class="{ 'btn-highlight': highlight }">
-                            {{ $t('landing.signUp') }}
-                        </v-btn>
-                    </router-link>
-
-                    <router-link to="/login" class="text-decoration-none">
-                        <v-btn :class="{ 'btn-highlight': highlight }">
-                            {{ $t('landing.signIn') }}
+                        <v-btn
+                            ref="heroCtaRef"
+                            class="hero-cta"
+                            color="primary"
+                            size="large"
+                            rounded="lg"
+                            elevation="0"
+                        >
+                            {{ $t('landing.startFree') }}
                         </v-btn>
                     </router-link>
                 </div>
             </div>
+
+            <div ref="mascotRef" class="mascot-stage" aria-hidden="true">
+                <img
+                    ref="mascotImageRef"
+                    class="mascot-image"
+                    src="/images/mascot/mascot_Peng.png"
+                    alt=""
+                    draggable="false"
+                />
+            </div>
         </v-container>
       </div>
 
-      <!-- Future cards -->
-      <div class="features-section py-6">
-        <v-container>
-          <!-- Section header for better conversion -->
-          <v-row justify="center" class="mb-10">
-            <v-col cols="12" md="8" class="text-center">
-              <h2 class="text-headline-small font-weight-bold mb-4">{{ $t('landing.coreFeatures') }}</h2>
-              <div class="text-grey-lighten-1">
-                  {{ $t('landing.coreFeaturesSubtitle') }}
-              </div>
-            </v-col>
-          </v-row>
+      <!-- Core Features showcase -->
+      <section ref="coreFeaturesRef" class="core-features">
+        <v-container class="core-showcase">
+          <div class="core-copy">
+            <div class="core-heading">
+              <p class="core-eyebrow text-label-medium">{{ $t('landing.coreFeatures') }}</p>
+              <h2 class="text-headline-small font-weight-bold">
+                {{ $t('landing.coreFeaturesSubtitle') }}
+              </h2>
+            </div>
 
-          <v-row justify="center">
-            <!--
-              Iterate through features array.
-              Using md="4" to create a 3-column layout on desktops for better readability.
-            -->
-            <v-col
-              v-for="(feature, index) in features"
-              :key="index"
-              cols="12"
-              sm="6"
-              md="4"
-              class="d-flex"
-            >
-              <v-card
-                class="feature-card flex-grow-1 pa-4"
-                variant="flat"
-                rounded="xl"
-              >
-                <!-- Center-aligned header section -->
-                <v-card-item class="text-center">
-                  <!-- Icon wrapper to create a distinct focal point -->
-                  <div class="icon-wrapper mb-6 mt-4">
-                    <v-icon
-                      :icon="feature.icon"
-                      color="primary"
-                      size="48"
-                    ></v-icon>
-                  </div>
+            <div class="core-progress" aria-hidden="true">
+              <span class="core-progress-fill"></span>
+            </div>
 
-                  <v-card-title class="font-weight-bold mb-2">
-                    {{ feature.title }}
-                  </v-card-title>
-                </v-card-item>
+            <div class="core-steps">
+              <article class="core-step is-active" data-core-step="0">
+                <span class="core-step-number">01</span>
+                <div>
+                  <h3 class="text-title-medium font-weight-bold">
+                    {{ $t('landing.features.workoutLogging.title') }}
+                  </h3>
+                  <p class="text-body-medium text-medium-emphasis">
+                    {{ $t('landing.features.workoutLogging.text') }}
+                  </p>
+                </div>
+              </article>
 
-                <!-- Main content area -->
-                <v-card-text class="text-center text-body-1 text-grey-lighten-1">
-                  {{ feature.text }}
-                </v-card-text>
+              <article class="core-step" data-core-step="1">
+                <span class="core-step-number">02</span>
+                <div>
+                  <h3 class="text-title-medium font-weight-bold">
+                    {{ $t('landing.features.bodyMeasurements.title') }}
+                  </h3>
+                  <p class="text-body-medium text-medium-emphasis">
+                    {{ $t('landing.features.bodyMeasurements.text') }}
+                  </p>
+                </div>
+              </article>
+
+              <article class="core-step" data-core-step="2">
+                <span class="core-step-number">03</span>
+                <div>
+                  <h3 class="text-title-medium font-weight-bold">
+                    {{ $t('landing.features.macroCalculator.title') }}
+                  </h3>
+                  <p class="text-body-medium text-medium-emphasis">
+                    {{ $t('landing.features.macroCalculator.text') }}
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="core-visuals" aria-live="polite">
+            <div class="core-visual is-active" data-core-visual="0">
+              <div class="visual-glow"></div>
+              <img
+                class="workout-mascot"
+                src="/images/mascot/workout_log.png"
+                alt=""
+                draggable="false"
+              />
+            </div>
+
+            <div class="core-visual measurement-stage" data-core-visual="1">
+              <div class="visual-glow"></div>
+              <v-card class="measurement-preview" variant="flat" rounded="xl">
+                <div class="preview-topline">
+                  <v-icon icon="mdi-scale-bathroom" size="36" color="primary" />
+                  <span class="preview-label text-body-small">Weight</span>
+                </div>
+                <div class="measurement-value text-display-small font-weight-bold">78.4 <small>kg</small></div>
+                <div class="mini-chart" aria-hidden="true">
+                  <span style="height: 38%"></span>
+                  <span style="height: 52%"></span>
+                  <span style="height: 46%"></span>
+                  <span style="height: 68%"></span>
+                  <span style="height: 61%"></span>
+                  <span style="height: 78%"></span>
+                </div>
               </v-card>
-            </v-col>
-          </v-row>
-          <div class="text-center mt-6">
-            <v-btn 
-                variant="outlined"
-                size="large"
-                class="get-started-btn"
-                @click="scrollToTop"
-                    >
-                {{ $t('landing.getStarted') }}
-            </v-btn>
+            </div>
+
+            <div class="core-visual macro-stage" data-core-visual="2">
+              <div class="visual-glow"></div>
+              <v-card class="macro-preview" variant="flat" rounded="xl">
+                <v-icon icon="mdi-calculator" size="42" color="primary" />
+                <div class="macro-ring">
+                  <div class="macro-ring-center">
+                    <strong>2,180</strong>
+                    <span>kcal</span>
+                  </div>
+                </div>
+                <div class="macro-bars">
+                  <div><span>Protein</span><i class="protein-bar"></i></div>
+                  <div><span>Carbs</span><i class="carbs-bar"></i></div>
+                  <div><span>Fats</span><i class="fats-bar"></i></div>
+                </div>
+              </v-card>
+            </div>
           </div>
         </v-container>
-      </div>
+      </section>
+
+      <!-- Extra Features kinetic section -->
+      <section ref="extraFeaturesRef" class="extra-features">
+        <div ref="kineticTextRef" class="kinetic-text" aria-hidden="true">
+          STRENGTH · PATTERNS · CUSTOM · CHARTS · COACHING
+        </div>
+
+        <div class="extra-heading">
+          <p class="extra-eyebrow text-label-medium">{{ $t('landing.extraFeatures.eyebrow') }}</p>
+          <h2 class="text-headline-small font-weight-bold">
+            {{ $t('landing.extraFeatures.title') }}
+          </h2>
+        </div>
+
+        <svg class="extra-connect-path" viewBox="0 0 1800 300" fill="none" aria-hidden="true">
+          <path class="draw-path" d="M20 210 C220 80 330 260 520 145 C720 25 840 245 1030 125 C1230 5 1360 230 1780 95" />
+        </svg>
+
+        <div ref="extraTrackRef" class="extra-track">
+          <article class="extra-station" data-extra-station="0">
+            <span class="extra-number">01</span>
+            <div class="extra-copy">
+              <h3>{{ $t('landing.extraFeatures.oneRm.title') }}</h3>
+              <p>{{ $t('landing.extraFeatures.oneRm.text') }}</p>
+              <span class="extra-tag">{{ $t('landing.extraFeatures.oneRm.tag') }}</span>
+            </div>
+            <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
+              <path class="draw-path" d="M25 190 A125 125 0 0 1 275 190" />
+              <path class="draw-path indigo" d="M150 190 L150 78" />
+              <circle class="draw-dot" cx="150" cy="78" r="12" />
+              <path class="draw-path gold" d="M118 54 H182 M150 54 V36 M130 36 H170" />
+            </svg>
+          </article>
+
+          <article class="extra-station" data-extra-station="1">
+            <span class="extra-number">02</span>
+            <div class="extra-copy">
+              <h3>{{ $t('landing.extraFeatures.templates.title') }}</h3>
+              <p>{{ $t('landing.extraFeatures.templates.text') }}</p>
+              <span class="extra-tag">{{ $t('landing.extraFeatures.templates.tag') }}</span>
+            </div>
+            <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
+              <path class="draw-path" d="M35 180 V55 M35 180 H270" />
+              <path class="draw-bar gold" d="M65 145 V180 M105 115 V180 M145 130 V180 M185 75 V180 M225 95 V180" />
+              <path class="draw-path indigo" d="M65 145 L105 115 L145 130 L185 75 L225 95" />
+            </svg>
+          </article>
+
+          <article class="extra-station" data-extra-station="2">
+            <span class="extra-number">03</span>
+            <div class="extra-copy">
+              <h3>{{ $t('landing.extraFeatures.exercises.title') }}</h3>
+              <p>{{ $t('landing.extraFeatures.exercises.text') }}</p>
+              <span class="extra-tag">{{ $t('landing.extraFeatures.exercises.tag') }}</span>
+            </div>
+            <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
+              <path class="draw-path gold" d="M55 110 H245 M75 82 V138 M225 82 V138 M55 110 L35 110 M245 110 H265" />
+              <circle class="draw-dot indigo" cx="150" cy="110" r="42" />
+              <path class="draw-path indigo" d="M150 68 V152 M108 110 H192" />
+            </svg>
+          </article>
+
+          <article class="extra-station" data-extra-station="3">
+            <span class="extra-number">04</span>
+            <div class="extra-copy">
+              <h3>{{ $t('landing.extraFeatures.charts.title') }}</h3>
+              <p>{{ $t('landing.extraFeatures.charts.text') }}</p>
+              <span class="extra-tag">{{ $t('landing.extraFeatures.charts.tag') }}</span>
+            </div>
+            <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
+              <path class="draw-path" d="M30 185 H270 M40 170 V35" />
+              <path class="draw-path gold" d="M42 160 C75 145 92 158 120 125 C148 92 170 112 198 78 C220 52 244 58 266 38" />
+              <circle class="draw-dot indigo" cx="266" cy="38" r="9" />
+            </svg>
+          </article>
+
+          <article class="extra-station" data-extra-station="4">
+            <span class="extra-number">05</span>
+            <div class="extra-copy">
+              <h3>{{ $t('landing.extraFeatures.trainer.title') }}</h3>
+              <p>{{ $t('landing.extraFeatures.trainer.text') }}</p>
+              <span class="extra-tag">{{ $t('landing.extraFeatures.trainer.tag') }}</span>
+            </div>
+            <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
+              <circle class="draw-path gold" cx="150" cy="110" r="72" />
+              <path class="draw-path indigo" d="M78 110 H115 L132 72 L158 150 L178 110 H222" />
+              <circle class="draw-dot gold" cx="150" cy="110" r="7" />
+            </svg>
+          </article>
+        </div>
+      </section>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import gsap from 'gsap'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const showPage = ref(false)
-const highlight = ref(false)
+const heroRef = ref(null)
+const heroCtaRef = ref(null)
+const mascotRef = ref(null)
+const mascotImageRef = ref(null)
+const coreFeaturesRef = ref(null)
+const extraFeaturesRef = ref(null)
+const extraTrackRef = ref(null)
+const kineticTextRef = ref(null)
 
-// Provides translation function for landing page content
-const { t } = useI18n()
+let gsapContext = null
+let floatTween = null
+let removeCursorTracking = null
+const timers = []
 
-onMounted(() => {
-    // Show page with fade-in animation after 200ms delay
-    setTimeout(() => {
+onMounted(async () => {
+    timers.push(setTimeout(async () => {
         showPage.value = true
+        await nextTick()
 
-        // Wait 100ms for cards to render in DOM before observing
-        setTimeout(() => {
-            // Create observer that watches when elements enter viewport
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    // When card becomes visible — add class to trigger CSS animation
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible')
-                    } else {
-                        // Card left viewport — hide it again
-                        entry.target.classList.remove('visible')
-                    }
+        gsapContext = gsap.context(() => {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+            if (reducedMotion) {
+                gsap.set(['[data-hero-line]', '.hero-cta', '.mascot-stage'], {
+                    opacity: 1,
+                    y: 0,
+                    x: 0,
+                    rotate: 0,
                 })
-            }, { threshold: 0.15 }) // fire when 15% of element is visible
+            } else {
+                const entrance = gsap.timeline({ defaults: { ease: 'power3.out' } })
+                entrance
+                    .from('[data-hero-line]', { y: 28, opacity: 0, stagger: 0.12, duration: 0.75 })
+                    .from('.hero-cta', { y: 18, opacity: 0, duration: 0.55 }, '-=0.35')
+                    .from('.mascot-stage', { x: 36, opacity: 0, scale: 0.96, duration: 0.9 }, '-=0.65')
 
-            // Start observing every feature card on the page
-            document.querySelectorAll('.feature-card').forEach(card => {
-                observer.observe(card)
+                floatTween = gsap.to(mascotImageRef.value, {
+                    y: -8,
+                    duration: 2.8,
+                    ease: 'sine.inOut',
+                    yoyo: true,
+                    repeat: -1,
+                })
+
+                const canTrackCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+                    && window.innerWidth > 900
+
+                if (canTrackCursor) {
+                    const moveX = gsap.quickTo(mascotRef.value, 'x', { duration: 0.55, ease: 'power3.out' })
+                    const moveY = gsap.quickTo(mascotRef.value, 'y', { duration: 0.55, ease: 'power3.out' })
+                    const tilt = gsap.quickTo(mascotRef.value, 'rotation', { duration: 0.55, ease: 'power3.out' })
+
+                    const handlePointerMove = event => {
+                        const rect = heroRef.value.getBoundingClientRect()
+                        const normalizedX = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+                        const normalizedY = ((event.clientY - rect.top) / rect.height - 0.5) * 2
+                        moveX(normalizedX * 12)
+                        moveY(normalizedY * 8)
+                        tilt(normalizedX * 1.8)
+                    }
+
+                    const resetMascot = () => {
+                        moveX(0)
+                        moveY(0)
+                        tilt(0)
+                    }
+
+                    heroRef.value.addEventListener('pointermove', handlePointerMove)
+                    heroRef.value.addEventListener('pointerleave', resetMascot)
+                    removeCursorTracking = () => {
+                        heroRef.value?.removeEventListener('pointermove', handlePointerMove)
+                        heroRef.value?.removeEventListener('pointerleave', resetMascot)
+                    }
+                }
+            }
+
+            const media = gsap.matchMedia()
+
+            media.add('(min-width: 960px) and (prefers-reduced-motion: no-preference)', () => {
+                coreFeaturesRef.value.classList.remove('core-features--fallback')
+                extraFeaturesRef.value.classList.remove('extra-features--fallback')
+
+                const steps = gsap.utils.toArray('[data-core-step]')
+                const visuals = gsap.utils.toArray('[data-core-visual]')
+                const progress = '.core-progress-fill'
+
+                gsap.set(visuals.slice(1), { autoAlpha: 0, y: 24, scale: 0.96 })
+                gsap.set(visuals[0], { autoAlpha: 1, y: 0, scale: 1 })
+                gsap.set(progress, { scaleX: 0 })
+
+                const setActiveStep = index => {
+                    steps.forEach((step, stepIndex) => {
+                        step.classList.toggle('is-active', stepIndex === index)
+                    })
+                }
+
+                const timeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: coreFeaturesRef.value,
+                        start: 'center center',
+                        end: '+=180%',
+                        pin: true,
+                        pinSpacing: true,
+                        scrub: 0.6,
+                        invalidateOnRefresh: true,
+                        onUpdate: self => {
+                            gsap.set(progress, { scaleX: self.progress })
+                            setActiveStep(self.progress < 0.34 ? 0 : self.progress < 0.67 ? 1 : 2)
+                        },
+                    },
+                })
+
+                timeline
+                    .to(visuals[0], { autoAlpha: 0, y: -18, scale: 0.96, duration: 0.16 }, 0.28)
+                    .to(visuals[1], { autoAlpha: 1, y: 0, scale: 1, duration: 0.16 }, 0.28)
+                    .to(visuals[1], { autoAlpha: 0, y: -18, scale: 0.96, duration: 0.16 }, 0.62)
+                    .to(visuals[2], { autoAlpha: 1, y: 0, scale: 1, duration: 0.16 }, 0.62)
+
+                const travel = () => {
+                    const sectionWidth = extraFeaturesRef.value.clientWidth
+                    const trackWidth = extraTrackRef.value.scrollWidth
+                    return Math.max(0, trackWidth - sectionWidth + 96)
+                }
+
+                const extraPaths = gsap.utils.toArray('.extra-features .draw-path')
+                extraPaths.forEach(path => {
+                    const length = path.getTotalLength()
+                    gsap.set(path, { strokeDasharray: length, strokeDashoffset: length })
+                })
+
+                gsap.set('.extra-features .draw-dot', { scale: 0.65, transformOrigin: 'center' })
+
+                const kineticStart = () => {
+                    const sectionWidth = extraFeaturesRef.value.clientWidth
+                    const textWidth = kineticTextRef.value.scrollWidth
+                    return Math.min(24, sectionWidth - textWidth - 24)
+                }
+
+                const kineticEnd = () => 24
+
+                gsap.set(kineticTextRef.value, { x: kineticStart() })
+
+                const extraTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: extraFeaturesRef.value,
+                        start: 'top top',
+                        end: () => `+=${travel()}`,
+                        pin: true,
+                        pinSpacing: true,
+                        scrub: 0.7,
+                        invalidateOnRefresh: true,
+                    },
+                })
+
+                extraTimeline
+                    .to(extraTrackRef.value, { x: () => -travel(), ease: 'none' }, 0)
+                    .to(kineticTextRef.value, { x: kineticEnd, ease: 'none' }, 0)
+                    .to(extraPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.03, ease: 'power1.inOut' }, 0.08)
+                    .to('.extra-features .draw-dot', { scale: 1, stagger: 0.04, duration: 0.35 }, 0.25)
+
+                return () => {
+                    timeline.scrollTrigger?.kill()
+                    timeline.kill()
+                    extraTimeline.scrollTrigger?.kill()
+                    extraTimeline.kill()
+                }
             })
-        }, 600)
 
-    }, 300)
+            media.add('(max-width: 959px), (prefers-reduced-motion: reduce)', () => {
+                coreFeaturesRef.value.classList.add('core-features--fallback')
+                extraFeaturesRef.value.classList.add('extra-features--fallback')
+                gsap.set(extraTrackRef.value, { x: 0, clearProps: 'position' })
+                gsap.set(kineticTextRef.value, { x: 0 })
+                gsap.set('.extra-features .draw-path', { clearProps: 'strokeDasharray,strokeDashoffset' })
+                gsap.set('.extra-features .draw-dot', { scale: 1, clearProps: 'transform' })
+
+                return () => {
+                    coreFeaturesRef.value?.classList.remove('core-features--fallback')
+                    extraFeaturesRef.value?.classList.remove('extra-features--fallback')
+                }
+            })
+        })
+    }, 300))
 })
 
-const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    highlight.value = true
-    setTimeout(() => highlight.value = false, 2000)
-}
-
-// Builds feature cards from translation files
-const features = computed(() => [
-    {
-        title: t('landing.features.workoutLogging.title'),
-        text: t('landing.features.workoutLogging.text'),
-        icon: 'mdi-dumbbell',
-    },
-    {
-        title: t('landing.features.bodyMeasurements.title'),
-        text: t('landing.features.bodyMeasurements.text'),
-        icon: 'mdi-scale-bathroom',
-    },
-    {
-        title: t('landing.features.analytics.title'),
-        text: t('landing.features.analytics.text'),
-        icon: 'mdi-chart-line',
-    },
-    {
-        title: t('landing.features.macroCalculator.title'),
-        text: t('landing.features.macroCalculator.text'),
-        icon: 'mdi-calculator',
-    },
-])
+onUnmounted(() => {
+    timers.forEach(clearTimeout)
+    removeCursorTracking?.()
+    floatTween?.kill()
+    gsapContext?.revert()
+})
 </script>
 
 <style scoped>
-/* Main logo position in the hero section */
-.logo {
-    position: absolute;
-    top: 24px;
-    left: 32px;
-    z-index: 10;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-/* Language switcher position */
-.landing-actions {
-    position: absolute;
-    top: 20px;
-    right: 32px;
-    z-index: 10;
-}
-
-/* Full-screen hero section with dark overlay and background image */
+/* Layered dark Hero gradient that fades into the next section */
 .hero {
     position: relative;
     min-height: 100vh;
-    background-image:
-        linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.35) 0%,
-            rgba(var(--v-theme-background), 1) 82%
-        ),
-        url('/images/bg_landing.jpg');
-    background-size: cover;
-    background-position: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 76% 46%, rgba(124, 134, 255, 0.18) 0%, rgba(124, 134, 255, 0.06) 23%, transparent 48%),
+        radial-gradient(circle at 18% 18%, rgba(255, 210, 63, 0.055) 0%, transparent 28%),
+        linear-gradient(135deg, #11142A 0%, #0B0D17 62%, #0B0D17 100%);
 }
 
-/* Centers hero content vertically */
+.hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 180px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent 0%, rgba(11, 13, 23, 0.88) 72%, #0B0D17 100%);
+}
+
+/* Balanced desktop layout */
 .hero-container {
+    position: relative;
+    z-index: 1;
     min-height: 100vh;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 500px);
     align-items: center;
+    gap: clamp(24px, 5vw, 72px);
+    padding-top: 96px;
+    padding-bottom: 56px;
 }
 
-/* Desktop text alignment */
 .hero-content {
-    width: min(600px, 58vw);
-    margin-left: auto;
-    margin-right: 0;
+    min-width: 0;
     text-align: left;
-    transform: translateY(-130px);
 }
 
 /* Responsive hero headline size */
 .hero-title {
+    max-width: 680px;
     font-size: clamp(2.4rem, 6vw, 4.1rem);
     line-height: 1.08;
     letter-spacing: -0.04em;
 }
 
-/* Keeps hero buttons centered under the hero text */
-.hero-buttons {
+/* Hero actions margin */
+.hero-actions {
+    margin-top: 28px;
+}
+
+/* Prominent primary Hero CTA */
+.hero-cta {
+    min-width: 178px;
+    min-height: 54px;
+    padding-inline: 34px;
+    font-size: 1.125rem;
+    font-weight: 800;
+    box-shadow: 0 14px 34px rgba(124, 134, 255, 0.28);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 42px rgba(124, 134, 255, 0.38);
+}
+
+/* Mascot stage and ambient glow */
+.mascot-stage {
+    position: relative;
     width: 100%;
-    margin-top: 40px;
+    max-width: 500px;
+    justify-self: end;
     display: flex;
-    justify-content: center;
-    gap: 16px;
-}
-
-/* Hidden state before feature cards enter viewport */
-.feature-card {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    opacity: 0;
-    transform: translateY(30px);
-    transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.6s ease;
-}
-
-/* Visible state added by IntersectionObserver */
-.feature-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Icon background for feature cards */
-.icon-wrapper {
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
-    height: 80px;
-    background: rgba(var(--v-theme-primary), 0.1);
-    border-radius: 20px;
+    overflow: visible;
 }
 
-/* Hover effect for feature cards */
-.feature-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(var(--v-theme-primary), 0.4);
+.mascot-stage::before {
+    content: '';
+    position: absolute;
+    width: 88%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 58% 48%, rgba(124, 134, 255, 0.24) 0%, rgba(124, 134, 255, 0.11) 38%, transparent 68%),
+        radial-gradient(circle at 38% 72%, rgba(255, 210, 63, 0.10) 0%, transparent 42%);
+    filter: blur(14px);
+    z-index: 0;
 }
 
-/* Small button scale on hover */
-.v-btn:hover {
-    transform: scale(1.05);
+.mascot-image {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    max-height: min(72vh, 680px);
+    object-fit: contain;
+    object-position: center;
+    user-select: none;
+    filter: drop-shadow(0 26px 34px rgba(0, 0, 0, 0.34));
 }
+
+/* Core Features section styles */
+.core-features {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    background: #0B0D17;
+}
+
+.core-showcase {
+    height: 100svh;
+    min-height: 680px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(320px, 0.88fr) minmax(420px, 1.12fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+    padding-top: 84px;
+    padding-bottom: 38px;
+}
+
+.core-copy,
+.core-visuals {
+    min-width: 0;
+}
+
+.core-heading {
+    max-width: 560px;
+}
+
+.core-heading h2 {
+    max-width: 520px;
+    line-height: 1.18;
+}
+
+.core-eyebrow {
+    margin: 0 0 12px;
+    color: #7C86FF;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.core-progress {
+    width: 100%;
+    height: 3px;
+    margin: 22px 0 16px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(233, 235, 250, 0.10);
+}
+
+.core-progress-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    background: linear-gradient(90deg, #7C86FF, #FFD23F);
+}
+
+.core-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.core-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 10px;
+    padding: 15px 16px;
+    border: 1px solid rgba(233, 235, 250, 0.055);
+    border-radius: 16px;
+    opacity: 0.42;
+    color: #8E94B8;
+    background: rgba(20, 24, 41, 0.28);
+    transition: opacity 0.35s ease, border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+}
+
+.core-step.is-active {
+    opacity: 1;
+    transform: translateX(6px);
+    border-color: rgba(124, 134, 255, 0.72);
+    background: linear-gradient(90deg, rgba(124, 134, 255, 0.16), rgba(20, 24, 41, 0.82));
+    box-shadow: inset 3px 0 0 #FFD23F, 0 12px 36px rgba(4, 6, 18, 0.28);
+}
+
+.core-step-number {
+    color: #7C86FF;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+}
+
+.core-step.is-active .core-step-number {
+    color: #FFD23F;
+}
+
+.core-step h3,
+.core-step p {
+    margin: 0;
+}
+
+.core-step h3 {
+    color: #E9EBFA;
+    font-size: 1.12rem;
+    line-height: 1.25;
+}
+
+.core-step p {
+    margin-top: 5px;
+    max-width: 520px;
+    color: #A7ABD0;
+    line-height: 1.45;
+}
+
+.core-visuals {
+    position: relative;
+    min-height: min(560px, 70vh);
+    height: min(560px, 70vh);
+}
+
+.core-visual {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.core-visual.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.visual-glow {
+    position: absolute;
+    width: 78%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, rgba(124, 134, 255, 0.24) 0%, rgba(124, 134, 255, 0.08) 42%, transparent 68%),
+        radial-gradient(circle at 68% 68%, rgba(255, 210, 63, 0.10), transparent 42%);
+    filter: blur(12px);
+}
+
+.workout-mascot {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 520px);
+    max-height: 540px;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 38px rgba(0, 0, 0, 0.38));
+}
+
+.measurement-preview,
+.macro-preview {
+    position: relative;
+    z-index: 1;
+    width: min(78%, 430px);
+    height: 400px;
+    min-height: 400px;
+    padding: 28px 30px;
+    border: 1px solid rgba(124, 134, 255, 0.22);
+    background: rgba(20, 24, 41, 0.92) !important;
+    box-shadow: 0 24px 70px rgba(4, 6, 18, 0.55), 0 0 42px rgba(124, 134, 255, 0.08);
+}
+
+.preview-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.preview-label {
+    color: #8E94B8;
+}
+
+.measurement-value {
+    margin-top: 28px;
+}
+
+.measurement-value small {
+    color: #8E94B8;
+    font-size: 0.55em;
+}
+
+.mini-chart {
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 18px 10px 0;
+    border-bottom: 1px solid rgba(233, 235, 250, 0.10);
+}
+
+.mini-chart span {
+    flex: 1;
+    min-width: 18px;
+    border-radius: 8px 8px 2px 2px;
+    background: linear-gradient(180deg, #7C86FF, rgba(124, 134, 255, 0.28));
+}
+
+.macro-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.macro-ring {
+    width: 190px;
+    height: 190px;
+    display: grid;
+    place-items: center;
+    margin: 14px 0 18px;
+    border-radius: 50%;
+    background:
+        conic-gradient(#7C86FF 0 56%, #FFD23F 56% 78%, rgba(233, 235, 250, 0.12) 78% 100%);
+    box-shadow: 0 0 38px rgba(124, 134, 255, 0.14);
+}
+
+.macro-ring::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #141829;
+}
+
+.macro-ring-center {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.macro-ring-center strong {
+    font-size: 1.55rem;
+}
+
+.macro-ring-center span {
+    color: #8E94B8;
+}
+
+.macro-bars {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+}
+
+.macro-bars div {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    align-items: center;
+    gap: 10px;
+    color: #8E94B8;
+    font-size: 0.8rem;
+}
+
+.macro-bars i {
+    height: 8px;
+    border-radius: 999px;
+}
+
+.protein-bar { width: 82%; background: #7C86FF; }
+.carbs-bar { width: 68%; background: #FFD23F; }
+.fats-bar { width: 46%; background: #8E94B8; }
 
 /* Page fade animation settings */
 .page-fade-enter-active {
@@ -294,75 +836,333 @@ const features = computed(() => [
     transform: translateY(0);
 }
 
-/* Highlight animation for sign buttons */
-.btn-highlight {
-    animation: pulse 0.5s ease 3;
+/* Keep preview scenes compact within the pinned viewport */
+.workout-mascot {
+    max-height: min(540px, 66vh);
 }
 
-/* Button pulse animation */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+.measurement-preview,
+.macro-preview {
+    height: 400px;
+    min-height: 400px;
+    padding: 28px 30px;
 }
 
-/* Glow effect for Get Started button */
-.get-started-btn {
-    border-width: 2px;
-    box-shadow: 0 0 15px rgba(var(--v-theme-primary), 0.3);
-    transition: box-shadow 0.3s ease;
+.mini-chart {
+    height: 150px;
+    margin-top: 22px;
 }
 
-/* Stronger glow on hover */
-.get-started-btn:hover {
-    box-shadow: 0 0 25px rgba(var(--v-theme-primary), 0.6);
+.macro-ring {
+    width: 190px;
+    height: 190px;
+    margin: 14px 0 18px;
 }
 
-/* Mobile layout adjustments */
+.macro-ring::before {
+    width: 140px;
+    height: 140px;
+}
+
+/* Mobile and reduced-motion fallback */
+.core-features--fallback,
+.core-features--fallback .core-showcase {
+    height: auto;
+    min-height: 0;
+}
+
+.core-features--fallback .core-showcase {
+    grid-template-columns: 1fr;
+    padding-top: 72px;
+    padding-bottom: 72px;
+}
+
+.core-features--fallback .core-visuals {
+    height: auto;
+    min-height: 0;
+    display: grid;
+    gap: 20px;
+}
+
+.core-features--fallback .core-visual {
+    position: relative;
+    inset: auto;
+    min-height: 420px;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Cardless kinetic Extra Features showcase */
+.extra-features {
+    position: relative;
+    height: 100svh;
+    min-height: 680px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 78% 48%, rgba(124, 134, 255, 0.10), transparent 30%),
+        #0B0D17;
+}
+
+.extra-heading {
+    position: absolute;
+    top: 112px;
+    left: clamp(24px, 6vw, 96px);
+    z-index: 4;
+    max-width: 620px;
+}
+
+.extra-eyebrow {
+    margin: 0 0 8px;
+    color: #FFD23F;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.extra-heading h2 {
+    margin: 0;
+}
+
+.kinetic-text {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    bottom: 4vh;
+    white-space: nowrap;
+    font-size: clamp(6rem, 13vw, 13rem);
+    line-height: 0.82;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+    color: rgba(233, 235, 250, 0.035);
+    -webkit-text-stroke: 1px rgba(124, 134, 255, 0.10);
+    pointer-events: none;
+}
+
+.extra-connect-path {
+    position: absolute;
+    left: 0;
+    bottom: 8%;
+    z-index: 1;
+    width: 1800px;
+    height: 300px;
+    opacity: 0.22;
+    pointer-events: none;
+}
+
+.extra-track {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: max-content;
+    display: flex;
+    align-items: center;
+    gap: clamp(70px, 7vw, 130px);
+    padding: 120px 7vw 30px;
+    will-change: transform;
+}
+
+.extra-station {
+    position: relative;
+    flex: 0 0 clamp(520px, 44vw, 660px);
+    min-height: 470px;
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(28px, 3vw, 46px);
+}
+
+.extra-number {
+    flex: 0 0 clamp(110px, 9vw, 150px);
+    color: #FFD23F;
+    font-size: clamp(4.5rem, 7vw, 7.5rem);
+    line-height: 0.78;
+    font-weight: 950;
+    letter-spacing: -0.08em;
+}
+
+.extra-copy {
+    min-width: 0;
+    max-width: 420px;
+    padding-top: 8px;
+}
+
+.extra-copy h3 {
+    margin: 0 0 12px;
+    color: #E9EBFA;
+    font-size: clamp(2rem, 3.2vw, 3.35rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+}
+
+.extra-copy p {
+    max-width: 380px;
+    margin: 0 0 18px;
+    color: #BFC4E6;
+    font-size: 1.05rem;
+    line-height: 1.55;
+}
+
+.extra-tag {
+    display: inline-block;
+    color: #FFD23F;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    border-bottom: 2px solid rgba(255, 210, 63, 0.72);
+    padding-bottom: 5px;
+}
+
+.extra-drawing {
+    position: absolute;
+    right: 0;
+    bottom: -32px;
+    width: min(42%, 280px);
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 12px 24px rgba(124, 134, 255, 0.10));
+}
+
+.extra-drawing .draw-path,
+.extra-connect-path .draw-path {
+    stroke: #7C86FF;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.extra-drawing .draw-path.gold,
+.extra-drawing .draw-bar.gold {
+    stroke: #FFD23F;
+}
+
+.extra-drawing .draw-path.indigo,
+.extra-drawing .draw-dot.indigo {
+    stroke: #7C86FF;
+}
+
+.extra-drawing .draw-dot {
+    fill: #FFD23F;
+    stroke: #FFD23F;
+    stroke-width: 3;
+}
+
+.extra-drawing .draw-dot.indigo {
+    fill: #7C86FF;
+}
+
+.extra-drawing .draw-bar {
+    stroke-width: 28;
+    stroke-linecap: round;
+}
+
+.extra-features--fallback {
+    height: auto;
+    min-height: 0;
+    padding: 72px 16px;
+}
+
+.extra-features--fallback .extra-heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    max-width: 620px;
+    margin: 0 auto 36px;
+    text-align: center;
+}
+
+.extra-features--fallback .kinetic-text {
+    display: none;
+}
+
+.extra-features--fallback .extra-connect-path {
+    display: none;
+}
+
+.extra-features--fallback .extra-track {
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 46px 24px;
+    padding: 0;
+}
+
+.extra-features--fallback .extra-station {
+    width: 100%;
+    min-width: 0;
+    min-height: 390px;
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.extra-features--fallback .extra-number {
+    flex-basis: 48px;
+    font-size: 3.35rem;
+}
+
+@media (max-width: 959px) {
+    .extra-features--fallback {
+        overflow: hidden;
+        padding: 64px 16px;
+    }
+
+    .extra-features--fallback .extra-track {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        max-width: 680px;
+        margin-inline: auto;
+    }
+
+    .extra-features--fallback .extra-station {
+        min-height: 350px;
+        grid-template-columns: 58px minmax(0, 1fr);
+    }
+
+    .extra-number {
+        font-size: 4.25rem;
+    }
+
+    .extra-copy h3 {
+        font-size: 2.1rem;
+    }
+
+    .extra-drawing {
+        width: 220px;
+        opacity: 0.9;
+    }
+}
+
 @media (max-width: 600px) {
-    .hero {
-        min-height: 92vh;
-        background-position: center left;
+    .extra-features--fallback {
+        padding: 56px 12px;
     }
 
-    .hero-container {
-        min-height: 92vh;
-        padding-top: 88px;
-        padding-bottom: 48px;
-        justify-content: center;
+    .extra-features--fallback .extra-heading {
+        margin-bottom: 24px;
     }
 
-    .hero-content {
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
-        transform: translateY(-35px);
+    .extra-features--fallback .extra-station {
+        min-height: 390px;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 8px;
     }
 
-    .hero-title {
-        font-size: 2.25rem;
-        line-height: 1.12;
-        letter-spacing: -0.03em;
+    .extra-number {
+        font-size: 3.35rem;
     }
 
-    .hero-buttons {
-        margin-top: 32px;
-        justify-content: center;
-        gap: 12px;
-    }
-}
-
-/* Extra adjustments for very small phones */
-@media (max-width: 380px) {
-    /* Prevents hero title from taking too much vertical space */
-    .hero-title {
-        font-size: 2rem;
+    .extra-copy h3 {
+        font-size: 1.75rem;
     }
 
-    /* Keeps logo compact on narrow screens */
-    .logo {
-        font-size: 0.95rem;
+    .extra-copy p {
+        font-size: 0.98rem;
+    }
+
+    .extra-drawing {
+        width: 190px;
+        right: 4px;
     }
 }
 </style>

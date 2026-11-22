@@ -14,11 +14,41 @@
         "heroLine1": "Track Every Rep.",
         "heroLine2": "Crush Every Goal.",
         "heroLine3": "Build Your Legacy.",
+        "startFree": "Start Free",
         "signUp": "Sign up",
         "signIn": "Sign in",
         "coreFeatures": "Core Features",
         "coreFeaturesSubtitle": "Everything you need to reach your fitness goals in one place.",
         "getStarted": "Get Started",
+        "extraFeatures": {
+            "eyebrow": "More ways to progress",
+            "title": "Extra tools for stronger training",
+            "oneRm": {
+                "title": "1RM Calculation",
+                "text": "Estimate your one-rep max and plan safe, effective working sets.",
+                "tag": "Max 100 kg"
+            },
+            "templates": {
+                "title": "Workout Patterns",
+                "text": "Reuse proven workout structures and keep training sessions consistent.",
+                "tag": "Push · Pull · Legs"
+            },
+            "exercises": {
+                "title": "Custom Exercises",
+                "text": "Build a personal exercise library tailored to your training style.",
+                "tag": "Your library"
+            },
+            "charts": {
+                "title": "Detailed Charts",
+                "text": "Visualize strength, volume, body data, and progress over time.",
+                "tag": "Strength + volume"
+            },
+            "trainer": {
+                "title": "Trainer Notes",
+                "text": "Keep coaching feedback and important session notes beside every plan.",
+                "tag": "Coach · Review"
+            }
+        },
         "features": {
             "workoutLogging": {
                 "title": "Workout Logging",

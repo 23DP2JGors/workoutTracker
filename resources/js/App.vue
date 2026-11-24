@@ -55,7 +55,7 @@
 
         <v-card min-width="220" rounded="lg">
           <v-list density="compact">
-            <v-list-item
+              <v-list-item
               prepend-icon="mdi-logout"
               :title="$t('app.logout')"
               @click="handleLogout"

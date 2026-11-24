@@ -301,7 +301,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import gsap from 'gsap'
 
@@ -322,6 +323,26 @@ let gsapContext = null
 let floatTween = null
 let removeCursorTracking = null
 const timers = []
+
+const cleanupAnimations = () => {
+    timers.forEach(clearTimeout)
+    timers.length = 0
+    removeCursorTracking?.()
+    removeCursorTracking = null
+    floatTween?.kill()
+    floatTween = null
+    gsapContext?.revert()
+    gsapContext = null
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill(true))
+
+    const appContainers = [
+        document.documentElement,
+        document.body,
+        document.querySelector('#app'),
+        document.querySelector('.v-main'),
+    ]
+    appContainers.forEach(element => element?.style.removeProperty('transform'))
+}
 
 onMounted(async () => {
     timers.push(setTimeout(async () => {
@@ -533,12 +554,8 @@ onMounted(async () => {
     }, 300))
 })
 
-onUnmounted(() => {
-    timers.forEach(clearTimeout)
-    removeCursorTracking?.()
-    floatTween?.kill()
-    gsapContext?.revert()
-})
+onBeforeRouteLeave(cleanupAnimations)
+onBeforeUnmount(cleanupAnimations)
 </script>
 
 <style scoped>

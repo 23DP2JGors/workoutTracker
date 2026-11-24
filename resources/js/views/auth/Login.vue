@@ -1,5 +1,5 @@
 <template>
-<v-container>
+<v-container class="auth-page">
     <v-row justify="center">
         <v-col cols="12" sm="10" md="8" lg="5">
             <v-sheet color="surface" rounded="lg">
@@ -12,7 +12,6 @@
                     v-model="form.email"
                     :rules="[rules.required, rules.email]"
                     :label="$t('login.email')"
-                    :placeholder="$t('login.emailPlaceholder')"
                 ></v-text-field>
 
                 <v-text-field class="mb-3"
@@ -98,6 +97,11 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
+.auth-page {
+    padding-top: 88px;
+    padding-bottom: 32px;
+}
+
 /* Shake animation when login fails repeatedly */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }

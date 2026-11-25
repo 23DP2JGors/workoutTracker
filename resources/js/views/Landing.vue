@@ -96,8 +96,8 @@
             <div class="core-visual is-active" data-core-visual="0">
               <div class="visual-glow"></div>
               <img
-                class="workout-mascot"
-                src="/images/mascot/workout_log.png"
+                class="core-mascot"
+                src="/images/mascot/workout_log_peng.png"
                 alt=""
                 draggable="false"
               />
@@ -105,39 +105,22 @@
 
             <div class="core-visual measurement-stage" data-core-visual="1">
               <div class="visual-glow"></div>
-              <v-card class="measurement-preview" variant="flat" rounded="xl">
-                <div class="preview-topline">
-                  <v-icon icon="mdi-scale-bathroom" size="36" color="primary" />
-                  <span class="preview-label text-body-small">Weight</span>
-                </div>
-                <div class="measurement-value text-display-small font-weight-bold">78.4 <small>kg</small></div>
-                <div class="mini-chart" aria-hidden="true">
-                  <span style="height: 38%"></span>
-                  <span style="height: 52%"></span>
-                  <span style="height: 46%"></span>
-                  <span style="height: 68%"></span>
-                  <span style="height: 61%"></span>
-                  <span style="height: 78%"></span>
-                </div>
-              </v-card>
+              <img
+                class="core-mascot"
+                src="/images/mascot/measurements_peng.png"
+                alt=""
+                draggable="false"
+              />
             </div>
 
             <div class="core-visual macro-stage" data-core-visual="2">
               <div class="visual-glow"></div>
-              <v-card class="macro-preview" variant="flat" rounded="xl">
-                <v-icon icon="mdi-calculator" size="42" color="primary" />
-                <div class="macro-ring">
-                  <div class="macro-ring-center">
-                    <strong>2,180</strong>
-                    <span>kcal</span>
-                  </div>
-                </div>
-                <div class="macro-bars">
-                  <div><span>Protein</span><i class="protein-bar"></i></div>
-                  <div><span>Carbs</span><i class="carbs-bar"></i></div>
-                  <div><span>Fats</span><i class="fats-bar"></i></div>
-                </div>
-              </v-card>
+              <img
+                class="core-mascot"
+                src="/images/mascot/calculation_peng.png"
+                alt=""
+                draggable="false"
+              />
             </div>
           </div>
         </v-container>
@@ -243,7 +226,7 @@
             <p class="final-eyebrow text-label-medium" data-final-reveal>
               {{ $t('landing.finalSection.eyebrow') }}
             </p>
-            <h2 class="final-title text-headline-large font-weight-black" data-final-reveal>
+            <h2 class="final-title text-headline-large font-weight-bold" data-final-reveal>
               {{ $t('landing.finalSection.title') }}
             </h2>
             <p class="final-description text-body-medium" data-final-reveal>
@@ -252,19 +235,18 @@
 
             <div class="record-highlights" data-final-reveal>
               <div class="record-highlight">
-                <strong>PR</strong>
-                <span>{{ $t('landing.finalSection.prs') }}</span>
+                <strong>{{ $t('landing.finalSection.prsValue') }}</strong>
+                <span>{{ $t('landing.finalSection.prsLabel') }}</span>
               </div>
               <div class="record-highlight">
-                <strong>+%</strong>
-                <span>{{ $t('landing.finalSection.progress') }}</span>
+                <strong>{{ $t('landing.finalSection.strengthValue') }}</strong>
+                <span>{{ $t('landing.finalSection.strengthLabel') }}</span>
               </div>
               <div class="record-highlight">
-                <strong>7d</strong>
-                <span>{{ $t('landing.finalSection.consistency') }}</span>
+                <strong>{{ $t('landing.finalSection.streakValue') }}</strong>
+                <span>{{ $t('landing.finalSection.streakLabel') }}</span>
               </div>
             </div>
-
             <router-link to="/register" class="text-decoration-none">
               <v-btn
                 class="final-cta"
@@ -277,22 +259,66 @@
                 {{ $t('landing.finalSection.cta') }}
               </v-btn>
             </router-link>
+            <p class="final-reassurance">
+              {{ $t('landing.finalSection.reassurance') }}
+            </p>
           </div>
 
-          <div class="record-visual" data-final-reveal aria-label="Personal progress preview">
-            <div class="record-visual-top">
-              <span>{{ $t('landing.finalSection.latestPr') }}</span>
-              <span class="record-status">NEW PR</span>
+          <div class="record-showcase">
+            <div
+              class="record-visual"
+              data-final-reveal
+              :aria-label="$t('landing.finalSection.latestPr')"
+            >
+              <div class="record-visual-top">
+                <span>{{ $t('landing.finalSection.latestPr') }}</span>
+                <span ref="recordBadgeRef" class="record-status">{{ $t('landing.finalSection.newPr') }}</span>
+              </div>
+              <div class="record-summary">
+                <div class="record-details">
+                  <p class="record-exercise">{{ $t('landing.finalSection.exercise') }}</p>
+                  <div class="record-score">
+                    <strong ref="recordCountRef">120</strong>
+                    <span>kg</span>
+                  </div>
+                  <p class="record-delta">{{ $t('landing.finalSection.progressDelta') }}</p>
+                  <p class="record-milestone">{{ $t('landing.finalSection.milestone') }}</p>
+                </div>
+                <img
+                  class="result-mascot"
+                  src="/images/mascot/result_peng.png"
+                  alt=""
+                  draggable="false"
+                />
+              </div>
+              <svg class="record-line" viewBox="0 0 480 220" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="record-area-gradient" x1="0" y1="30" x2="0" y2="190" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#7C86FF" stop-opacity="0.34" />
+                    <stop offset="1" stop-color="#7C86FF" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path class="record-grid" d="M28 42H460 M28 82H460 M28 122H460 M28 162H460 M28 190H460" />
+                <path class="record-axis-ticks" d="M28 190V198 M112 190V198 M196 190V198 M280 190V198 M364 190V198 M452 190V198" />
+                <path class="record-area" d="M28 166 C62 166 82 145 112 149 S166 126 196 137 S250 99 280 116 S334 76 364 87 S420 49 452 40 L452 190 L28 190 Z" />
+                <path class="record-progress-line" d="M28 166 C62 166 82 145 112 149 S166 126 196 137 S250 99 280 116 S334 76 364 87 S420 49 452 40" />
+                <circle class="record-data-point" cx="28" cy="166" r="4" />
+                <circle class="record-data-point" cx="112" cy="149" r="4" />
+                <circle class="record-data-point" cx="196" cy="137" r="4" />
+                <circle class="record-data-point" cx="280" cy="116" r="4" />
+                <circle class="record-data-point" cx="364" cy="87" r="4" />
+                <text class="record-month" x="28" y="215" text-anchor="start">{{ $t('landing.finalSection.monthJun') }}</text>
+                <text class="record-month" x="196" y="215" text-anchor="middle">{{ $t('landing.finalSection.monthAug') }}</text>
+                <text class="record-month" x="364" y="215" text-anchor="middle">{{ $t('landing.finalSection.monthOct') }}</text>
+                <text class="record-month" x="452" y="215" text-anchor="end">{{ $t('landing.finalSection.monthNov') }}</text>
+                <path class="record-callout-leader" d="M410 31L448 41" />
+                <g class="record-callout">
+                  <rect x="306" y="4" width="108" height="26" rx="8" />
+                  <text x="360" y="21" text-anchor="middle">{{ $t('landing.finalSection.peakLabel') }}</text>
+                </g>
+                <circle class="record-point" cx="452" cy="40" r="8" />
+              </svg>
             </div>
-            <div class="record-score">
-              <strong>120</strong>
-              <span>kg</span>
-            </div>
-            <svg class="record-line" viewBox="0 0 480 180" fill="none" aria-hidden="true">
-              <path class="record-grid" d="M20 150H460 M20 105H460 M20 60H460" />
-              <path class="record-progress-line" d="M25 138 C90 132 122 118 168 120 C220 122 250 92 302 96 C350 100 392 58 455 38" />
-              <circle class="record-point" cx="455" cy="38" r="9" />
-            </svg>
           </div>
         </v-container>
       </section>
@@ -318,6 +344,8 @@ const extraFeaturesRef = ref(null)
 const extraTrackRef = ref(null)
 const kineticTextRef = ref(null)
 const finalSectionRef = ref(null)
+const recordCountRef = ref(null)
+const recordBadgeRef = ref(null)
 
 let gsapContext = null
 let floatTween = null
@@ -505,30 +533,6 @@ onMounted(async () => {
                     .to(extraPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.03, ease: 'power1.inOut' }, 0.08)
                     .to('.extra-features .draw-dot', { scale: 1, stagger: 0.04, duration: 0.35 }, 0.25)
 
-                const finalReveal = gsap.utils.toArray('[data-final-reveal]')
-                gsap.set(finalReveal, { opacity: 0, y: 30 })
-
-                const recordLine = finalSectionRef.value.querySelector('.record-progress-line')
-                const recordPoint = finalSectionRef.value.querySelector('.record-point')
-                if (recordLine) {
-                    const lineLength = recordLine.getTotalLength()
-                    gsap.set(recordLine, { strokeDasharray: lineLength, strokeDashoffset: lineLength })
-                }
-                if (recordPoint) gsap.set(recordPoint, { scale: 0, transformOrigin: 'center' })
-
-                const finalTimeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: finalSectionRef.value,
-                        start: 'top 78%',
-                        once: true,
-                    },
-                })
-
-                finalTimeline
-                    .to(finalReveal, { opacity: 1, y: 0, duration: 0.75, stagger: 0.09, ease: 'power3.out' })
-                    .to(recordLine, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.out' }, 0.25)
-                    .to(recordPoint, { scale: 1, duration: 0.35, ease: 'back.out(2)' }, 0.9)
-
                 return () => {
                     const visualStage = coreFeaturesRef.value.querySelector('.core-visuals')
                     visualStage.style.removeProperty('overflow')
@@ -549,6 +553,55 @@ onMounted(async () => {
                     coreFeaturesRef.value?.classList.remove('core-features--fallback')
                     extraFeaturesRef.value?.classList.remove('extra-features--fallback')
                 }
+            })
+
+            media.add('(prefers-reduced-motion: no-preference)', () => {
+                const finalReveal = gsap.utils.toArray('[data-final-reveal]', finalSectionRef.value)
+                const recordLine = finalSectionRef.value.querySelector('.record-progress-line')
+                const recordArea = finalSectionRef.value.querySelector('.record-area')
+                const recordPoints = gsap.utils.toArray('.record-data-point, .record-point', finalSectionRef.value)
+                const recordCallout = finalSectionRef.value.querySelector('.record-callout')
+                const recordCalloutLeader = finalSectionRef.value.querySelector('.record-callout-leader')
+                const countProxy = { value: 0 }
+
+                gsap.set(finalReveal, { opacity: 0, y: 30 })
+                gsap.set(recordPoints, { scale: 0, transformOrigin: 'center' })
+                gsap.set([recordArea, recordCallout, recordCalloutLeader, recordBadgeRef.value], { opacity: 0 })
+                gsap.set(recordBadgeRef.value, { scale: 0.88, transformOrigin: 'center' })
+
+                if (recordLine) {
+                    const lineLength = recordLine.getTotalLength()
+                    gsap.set(recordLine, { strokeDasharray: lineLength, strokeDashoffset: lineLength })
+                }
+
+                const finalTimeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: finalSectionRef.value,
+                        start: 'top 78%',
+                        once: true,
+                    },
+                })
+
+                finalTimeline
+                    .to(finalReveal, { opacity: 1, y: 0, duration: 0.75, stagger: 0.09, ease: 'power3.out' })
+                    .to(countProxy, {
+                        value: 120,
+                        duration: 1.15,
+                        snap: { value: 1 },
+                        ease: 'power2.out',
+                        onUpdate: () => {
+                            if (recordCountRef.value) {
+                                recordCountRef.value.textContent = Math.round(countProxy.value).toString()
+                            }
+                        },
+                    }, 0.12)
+                    .to(recordLine, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.out' }, 0.2)
+                    .to(recordArea, { opacity: 1, duration: 1, ease: 'power1.out' }, 0.25)
+                    .to(recordBadgeRef.value, { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(1.7)' }, 0.35)
+                    .to([recordCallout, recordCalloutLeader], { opacity: 1, duration: 0.35 }, 0.65)
+                    .to(recordPoints, { opacity: 1, scale: 1, duration: 0.35, stagger: 0.08, ease: 'back.out(1.5)' }, 0.68)
+
+                return () => finalTimeline.kill()
             })
         })
     }, 300))
@@ -813,130 +866,15 @@ onBeforeUnmount(cleanupAnimations)
     filter: blur(12px);
 }
 
-.workout-mascot {
+.core-mascot {
     position: relative;
     z-index: 1;
     width: min(100%, 520px);
-    max-height: 540px;
+    height: auto;
+    max-height: min(540px, 66vh);
     object-fit: contain;
     filter: drop-shadow(0 28px 38px rgba(0, 0, 0, 0.38));
 }
-
-.measurement-preview,
-.macro-preview {
-    position: relative;
-    z-index: 1;
-    width: min(78%, 430px);
-    height: 400px;
-    min-height: 400px;
-    padding: 28px 30px;
-    border: 1px solid rgba(124, 134, 255, 0.22);
-    background: rgba(20, 24, 41, 0.92) !important;
-    box-shadow: 0 24px 70px rgba(4, 6, 18, 0.55), 0 0 42px rgba(124, 134, 255, 0.08);
-}
-
-.preview-topline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.preview-label {
-    color: #8E94B8;
-}
-
-.measurement-value {
-    margin-top: 28px;
-}
-
-.measurement-value small {
-    color: #8E94B8;
-    font-size: 0.55em;
-}
-
-.mini-chart {
-    height: 150px;
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-    margin-top: 22px;
-    padding: 18px 10px 0;
-    border-bottom: 1px solid rgba(233, 235, 250, 0.10);
-}
-
-.mini-chart span {
-    flex: 1;
-    min-width: 18px;
-    border-radius: 8px 8px 2px 2px;
-    background: linear-gradient(180deg, #7C86FF, rgba(124, 134, 255, 0.28));
-}
-
-.macro-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.macro-ring {
-    width: 190px;
-    height: 190px;
-    display: grid;
-    place-items: center;
-    margin: 14px 0 18px;
-    border-radius: 50%;
-    background:
-        conic-gradient(#7C86FF 0 56%, #FFD23F 56% 78%, rgba(233, 235, 250, 0.12) 78% 100%);
-    box-shadow: 0 0 38px rgba(124, 134, 255, 0.14);
-}
-
-.macro-ring::before {
-    content: '';
-    position: absolute;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: #141829;
-}
-
-.macro-ring-center {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.macro-ring-center strong {
-    font-size: 1.55rem;
-}
-
-.macro-ring-center span {
-    color: #8E94B8;
-}
-
-.macro-bars {
-    width: 100%;
-    display: grid;
-    gap: 10px;
-}
-
-.macro-bars div {
-    display: grid;
-    grid-template-columns: 64px 1fr;
-    align-items: center;
-    gap: 10px;
-    color: #8E94B8;
-    font-size: 0.8rem;
-}
-
-.macro-bars i {
-    height: 8px;
-    border-radius: 999px;
-}
-
-.protein-bar { width: 82%; background: #7C86FF; }
-.carbs-bar { width: 68%; background: #FFD23F; }
-.fats-bar { width: 46%; background: #8E94B8; }
 
 /* Page fade animation settings */
 .page-fade-enter-active {
@@ -954,34 +892,6 @@ onBeforeUnmount(cleanupAnimations)
 .page-fade-enter-to {
     opacity: 1;
     transform: translateY(0);
-}
-
-/* Keep preview scenes compact within the pinned viewport */
-.workout-mascot {
-    max-height: min(540px, 66vh);
-}
-
-.measurement-preview,
-.macro-preview {
-    height: 400px;
-    min-height: 400px;
-    padding: 28px 30px;
-}
-
-.mini-chart {
-    height: 150px;
-    margin-top: 22px;
-}
-
-.macro-ring {
-    width: 190px;
-    height: 190px;
-    margin: 14px 0 18px;
-}
-
-.macro-ring::before {
-    width: 140px;
-    height: 140px;
 }
 
 /* Mobile and reduced-motion fallback */
@@ -1295,7 +1205,6 @@ onBeforeUnmount(cleanupAnimations)
     overflow: hidden;
     background:
         radial-gradient(circle at 82% 48%, rgba(124, 134, 255, 0.16), transparent 30%),
-        radial-gradient(circle at 18% 78%, rgba(255, 210, 63, 0.07), transparent 24%),
         #0B0D17;
 }
 
@@ -1307,7 +1216,7 @@ onBeforeUnmount(cleanupAnimations)
     top: 50%;
     transform: translateY(-50%);
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 134, 255, 0.18), rgba(255, 210, 63, 0.05) 42%, transparent 72%);
+    background: radial-gradient(circle, rgba(124, 134, 255, 0.18), transparent 70%);
     filter: blur(18px);
 }
 
@@ -1316,29 +1225,33 @@ onBeforeUnmount(cleanupAnimations)
     z-index: 1;
     min-height: 100svh;
     display: grid;
-    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     align-items: center;
-    gap: clamp(36px, 6vw, 96px);
-    padding-top: 100px;
-    padding-bottom: 64px;
+    column-gap: clamp(20px, 2.4vw, 36px);
+    row-gap: 36px;
+    padding-block: clamp(56px, 8vh, 88px);
 }
 
 .final-copy {
+    grid-column: 1 / span 5;
     min-width: 0;
 }
 
 .final-eyebrow {
     margin: 0 0 14px;
-    color: #FFD23F;
+    color: #7C86FF;
     font-weight: 900;
     letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
 .final-title {
-    max-width: 680px;
+    width: calc(100% + clamp(24px, 3vw, 48px));
+    max-width: 720px;
     margin: 0;
-    line-height: 1.02;
+    font-size: clamp(2.4rem, 3.2vw, 3rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
 }
 
 .final-description {
@@ -1349,36 +1262,55 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 .record-highlights {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 22px);
     margin-bottom: 30px;
 }
 
 .record-highlight {
-    min-width: 112px;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 14px 16px;
-    border-left: 2px solid #7C86FF;
+    gap: 6px;
+    padding: 8px 0;
 }
 
 .record-highlight strong {
-    color: #FFD23F;
-    font-size: 1.35rem;
+    color: #E9EBFA;
+    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.record-highlight:nth-child(2) strong {
+    transform: scale(1.08);
+    transform-origin: left center;
+    font-weight: 900;
 }
 
 .record-highlight span {
     color: #BFC4E6;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+    line-height: 1.3;
+}
+
+.final-reassurance {
+    margin-top: 12px;
+    color: rgba(191, 196, 230, 0.84);
+    font-size: 0.84rem;
 }
 
 .final-cta {
     min-width: 190px;
     min-height: 54px;
     padding-inline: 34px;
+    color: #FFFFFF;
+    background-color: #5965D8;
+    border: 1px solid rgba(233, 235, 250, 0.24);
+    background-image: linear-gradient(135deg, rgba(233, 235, 250, 0.12), transparent 58%);
     font-weight: 900;
+    letter-spacing: 0.02em;
     box-shadow: 0 16px 38px rgba(124, 134, 255, 0.24);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -1388,95 +1320,254 @@ onBeforeUnmount(cleanupAnimations)
     box-shadow: 0 20px 48px rgba(124, 134, 255, 0.36);
 }
 
+.final-cta:focus-visible {
+    outline: 3px solid #E9EBFA;
+    outline-offset: 3px;
+}
+
+.record-showcase {
+    grid-column: 7 / -1;
+    min-width: 0;
+}
+
 .record-visual {
     position: relative;
-    min-height: 430px;
+    isolation: isolate;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 540px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 34px;
+    padding: clamp(24px, 2.8vw, 36px);
+    padding-bottom: 28px;
     border: 1px solid rgba(124, 134, 255, 0.22);
-    border-top: 4px solid #FFD23F;
+    border-top: 4px solid transparent;
     background:
         linear-gradient(145deg, rgba(29, 34, 56, 0.72), rgba(20, 24, 41, 0.92)),
         #141829;
     box-shadow: 0 26px 70px rgba(4, 6, 18, 0.48), 0 0 44px rgba(124, 134, 255, 0.08);
 }
 
+.record-visual::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: -90px;
+    right: -80px;
+    width: 360px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, rgba(124, 134, 255, 0.22), transparent 68%);
+    filter: blur(14px);
+    pointer-events: none;
+}
+
+.record-visual::after {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg, #7C86FF, #FFD23F);
+    pointer-events: none;
+}
+
 .record-visual-top {
-    display: flex;
-    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
     gap: 16px;
     color: #BFC4E6;
-    font-size: 0.82rem;
+    font-size: clamp(0.7rem, 0.82vw, 0.82rem);
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
+.record-visual-top > span:first-child {
+    min-width: 0;
+    line-height: 1.35;
+}
+
 .record-status {
+    justify-self: end;
+    white-space: nowrap;
     color: #0A0C2E;
     background: #FFD23F;
     border-radius: 999px;
-    padding: 7px 12px;
+    padding: 8px 14px;
+    line-height: 1;
+}
+
+.record-summary {
+    position: relative;
+    min-height: 220px;
+    padding-top: 20px;
+}
+
+.record-details {
+    position: relative;
+    z-index: 2;
+    width: 55%;
+}
+
+.record-exercise {
+    margin: 0 0 8px;
+    color: #E9EBFA;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
 }
 
 .record-score {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 10px;
     color: #E9EBFA;
 }
 
 .record-score strong {
     color: #FFD23F;
-    font-size: clamp(5rem, 9vw, 8.5rem);
-    line-height: 0.82;
+    font-size: clamp(4.5rem, 6.6vw, 6.75rem);
+    line-height: 0.88;
+    white-space: nowrap;
 }
 
 .record-score span {
     color: #8E94B8;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+}
+
+.record-delta {
+    margin: 10px 0 0;
+    color: #BFC4E6;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.record-milestone {
+    margin: 7px 0 0;
+    color: rgba(191, 196, 230, 0.72);
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.record-milestone::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 8px 1px 0;
+    border-radius: 50%;
+    background: #7C86FF;
+}
+
+.result-mascot {
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    right: 0;
+    display: block;
+    width: clamp(150px, 12vw, 190px);
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    filter:
+        drop-shadow(0 18px 30px rgba(124, 134, 255, 0.26));
 }
 
 .record-line {
+    position: relative;
+    z-index: 2;
+    display: block;
     width: 100%;
-    height: 180px;
+    height: 230px;
+    margin-top: auto;
+    overflow: visible;
 }
 
 .record-grid {
     stroke: rgba(233, 235, 250, 0.08);
-    stroke-width: 2;
+    stroke-width: 1.5;
+}
+
+.record-axis-ticks {
+    stroke: rgba(233, 235, 250, 0.2);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+.record-area {
+    fill: url(#record-area-gradient);
 }
 
 .record-progress-line {
     stroke: #7C86FF;
-    stroke-width: 8;
+    stroke-width: 5;
     stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.record-data-point {
+    fill: #7C86FF;
+    stroke: #141829;
+    stroke-width: 2;
+}
+
+.record-callout-leader {
+    stroke: rgba(124, 134, 255, 0.72);
+    stroke-width: 1.5;
 }
 
 .record-point {
     fill: #FFD23F;
-    stroke: #0B0D17;
-    stroke-width: 5;
+    stroke: #141829;
+    stroke-width: 4;
 }
 
-@media (max-width: 959px) {
+.record-callout rect {
+    fill: #242943;
+    stroke: rgba(124, 134, 255, 0.55);
+    stroke-width: 1;
+}
+
+.record-callout text {
+    fill: #FFD23F;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.record-month {
+    fill: rgba(191, 196, 230, 0.72);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 1199px) {
     .final-progress-section,
     .final-progress-container {
         min-height: auto;
     }
 
     .final-progress-container {
-        grid-template-columns: 1fr;
-        gap: 42px;
-        padding-top: 88px;
-        padding-bottom: 72px;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: clamp(12px, 2vw, 24px);
+        row-gap: 42px;
+        padding-block: clamp(56px, 8vh, 88px);
     }
 
     .final-copy {
+        grid-column: 2 / span 10;
+        width: 100%;
         text-align: center;
-        margin-inline: auto;
     }
 
     .final-title,
@@ -1485,36 +1576,39 @@ onBeforeUnmount(cleanupAnimations)
     }
 
     .record-highlights {
-        justify-content: center;
+        width: 100%;
+        max-width: 680px;
+        margin-inline: auto;
     }
 
     .record-highlight {
         text-align: left;
     }
 
-    .record-visual {
-        width: min(100%, 620px);
-        min-height: 390px;
-        margin-inline: auto;
+    .record-showcase {
+        grid-column: 2 / span 10;
     }
 }
 
 @media (max-width: 600px) {
     .final-progress-container {
         padding-inline: 16px;
-        padding-top: 72px;
-        padding-bottom: 56px;
+        padding-block: clamp(48px, 8vh, 64px);
     }
 
-    .record-highlights {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 6px;
+    .final-copy,
+    .record-showcase {
+        grid-column: 1 / -1;
+    }
+
+    .final-title {
+        width: 100%;
+        font-size: clamp(2rem, 8vw, 2.2rem);
+        line-height: 1.05;
     }
 
     .record-highlight {
-        min-width: 0;
-        padding: 12px 8px;
+        padding: 8px 0;
     }
 
     .record-highlight span {
@@ -1522,12 +1616,58 @@ onBeforeUnmount(cleanupAnimations)
     }
 
     .record-visual {
-        min-height: 330px;
+        min-height: 500px;
         padding: 22px;
+        padding-bottom: 22px;
+    }
+
+    .result-mascot {
+        top: 28px;
+        right: 0;
+        width: 36%;
+    }
+
+    .record-summary {
+        min-height: 205px;
+    }
+
+    .record-details {
+        width: 56%;
+    }
+
+    .record-visual-top {
+        gap: 10px;
     }
 
     .record-score strong {
-        font-size: 5rem;
+        font-size: 4.5rem;
+    }
+
+    .record-score span {
+        font-size: 1.25rem;
+    }
+
+    .record-delta {
+        font-size: 0.82rem;
+    }
+
+    .record-milestone {
+        font-size: 0.66rem;
+        letter-spacing: 0.03em;
+    }
+
+    .record-line {
+        height: 200px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .final-cta {
+        transition: none;
+    }
+
+    .final-cta:hover {
+        transform: none;
     }
 }
 </style>

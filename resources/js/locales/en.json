@@ -71,11 +71,24 @@
             "eyebrow": "Progress worth keeping",
             "title": "Turn effort into personal records.",
             "description": "Stay consistent, celebrate every breakthrough, and watch steady training become measurable progress.",
-            "prs": "Personal records",
-            "progress": "Visible progress",
-            "consistency": "Training streak",
+            "prsValue": "12 PRs",
+            "prsLabel": "This year",
+            "strengthValue": "+18%",
+            "strengthLabel": "Strength gain",
+            "streakValue": "7-day",
+            "streakLabel": "Active streak",
             "latestPr": "Latest personal record",
-            "cta": "Build My Progress"
+            "newPr": "NEW PR",
+            "exercise": "Back Squat",
+            "progressDelta": "+5 kg vs last month",
+            "milestone": "November 2026 milestone",
+            "monthJun": "Jun",
+            "monthAug": "Aug",
+            "monthOct": "Oct",
+            "monthNov": "Nov",
+            "peakLabel": "PR · Nov 21",
+            "cta": "Build My Progress",
+            "reassurance": "Free to start · No card required"
         }
     },
     "register": {

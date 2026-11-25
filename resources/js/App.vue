@@ -12,8 +12,10 @@
         <v-btn
             v-if="route.name !== 'Login'"
             to="/login"
-            variant="text"
-            class="mr-1"
+            variant="tonal"
+            color="primary"
+            rounded="lg"
+            class="app-bar-sign-in"
         >
             {{ $t('landing.signIn') }}
         </v-btn>
@@ -120,8 +122,10 @@
         <v-btn
             v-if="route.name !== 'Login'"
             to="/login"
-            variant="text"
-            class="mr-1"
+            variant="tonal"
+            color="primary"
+            rounded="lg"
+            class="app-bar-sign-in"
         >
             {{ $t('landing.signIn') }}
         </v-btn>
@@ -212,6 +216,11 @@ const handleDeleteAccount = async () => {
     border-bottom: 1px solid rgba(233, 235, 250, 0.06);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+}
+
+.app-bar-sign-in {
+    margin-inline-end: 12px;
+    border: 1px solid rgba(124, 134, 255, 0.3);
 }
 
 .app-bar--auth {

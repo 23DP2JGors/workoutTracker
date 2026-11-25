@@ -68,13 +68,26 @@
         },
         "finalSection": {
             "eyebrow": "Progresam, ko vērtēt",
-            "title": "Pārvērš pūles personīgajos rekordos.",
+            "title": "Pūles pārvēršas rekordos.",
             "description": "Saglabā regularitāti, svini katru izrāvienu un vēro, kā apmērāmās spēka izmaiņas kļūst par reālu progresu.",
-            "prs": "Personīgie rekordi",
-            "progress": "Redzams progress",
-            "consistency": "Treniņu sērija",
+            "prsValue": "12 rekordi",
+            "prsLabel": "Šogad",
+            "strengthValue": "+18%",
+            "strengthLabel": "Spēka pieaugums",
+            "streakValue": "7 dienas",
+            "streakLabel": "Aktīva sērija",
             "latestPr": "Pēdējais personīgais rekords",
-            "cta": "Veidot savu progresu"
+            "newPr": "JAUNS REKORDS",
+            "exercise": "Pietupiens ar stieni",
+            "progressDelta": "+5 kg pret iepriekšējo mēnesi",
+            "milestone": "2026. gada novembra rekords",
+            "monthJun": "Jūn",
+            "monthAug": "Aug",
+            "monthOct": "Okt",
+            "monthNov": "Nov",
+            "peakLabel": "PR · 21. nov.",
+            "cta": "Veidot savu progresu",
+            "reassurance": "Sāc bez maksas · Bankas karte nav vajadzīga"
         }
     },
     "register": {

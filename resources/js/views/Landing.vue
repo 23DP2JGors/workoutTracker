@@ -4,25 +4,33 @@
       <div class="hero" ref="heroRef">
         <v-container class="hero-container">
             <div class="hero-content">
-                <div class="hero-title font-weight-black">
-                    <div data-hero-line>{{ $t('landing.heroLine1') }}</div>
-                    <div data-hero-line>{{ $t('landing.heroLine2') }}</div>
-                    <div data-hero-line>{{ $t('landing.heroLine3') }}</div>
-                </div>
+                <p class="hero-eyebrow" data-hero-line>
+                    {{ $t('landing.heroEyebrow') }}
+                </p>
+                <h1 class="hero-title font-weight-black">
+                    <span class="hero-title-line" data-hero-line>{{ $t('landing.heroLine1') }}</span>
+                    <span class="hero-title-line hero-title-accent" data-hero-line>{{ $t('landing.heroLine2') }}</span>
+                </h1>
+                <p class="hero-subcopy" data-hero-line>
+                    {{ $t('landing.heroSubcopy') }}
+                </p>
 
                 <div class="hero-actions">
                     <router-link to="/register" class="text-decoration-none">
                         <v-btn
                             ref="heroCtaRef"
-                            class="hero-cta"
+                            class="hero-cta primary-cta"
                             color="primary"
                             size="large"
                             rounded="lg"
                             elevation="0"
                         >
-                            {{ $t('landing.startFree') }}
+                            {{ $t('landing.startTracking') }}
                         </v-btn>
                     </router-link>
+                    <p class="hero-reassurance">
+                        {{ $t('landing.heroReassurance') }}
+                    </p>
                 </div>
             </div>
 
@@ -249,7 +257,7 @@
             </div>
             <router-link to="/register" class="text-decoration-none">
               <v-btn
-                class="final-cta"
+                class="final-cta primary-cta"
                 color="primary"
                 size="large"
                 rounded="lg"
@@ -381,7 +389,7 @@ onMounted(async () => {
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
             if (reducedMotion) {
-                gsap.set(['[data-hero-line]', '.hero-cta', '.mascot-stage'], {
+                gsap.set(['[data-hero-line]', '.hero-cta', '.hero-reassurance', '.mascot-stage'], {
                     opacity: 1,
                     y: 0,
                     x: 0,
@@ -391,7 +399,7 @@ onMounted(async () => {
                 const entrance = gsap.timeline({ defaults: { ease: 'power3.out' } })
                 entrance
                     .from('[data-hero-line]', { y: 28, opacity: 0, stagger: 0.12, duration: 0.75 })
-                    .from('.hero-cta', { y: 18, opacity: 0, duration: 0.55 }, '-=0.35')
+                    .from('.hero-cta, .hero-reassurance', { y: -18, opacity: 0, duration: 0.55 }, '-=0.35')
                     .from('.mascot-stage', { x: 36, opacity: 0, scale: 0.96, duration: 0.9 }, '-=0.65')
 
                 floatTween = gsap.to(mascotImageRef.value, {
@@ -638,47 +646,100 @@ onBeforeUnmount(cleanupAnimations)
 .hero-container {
     position: relative;
     z-index: 1;
-    min-height: 100vh;
+    box-sizing: border-box;
+    max-width: 1280px;
+    min-height: 100svh;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 500px);
+    grid-template-columns: minmax(0, 1fr) minmax(280px, min(38vw, 460px));
     align-items: center;
-    gap: clamp(24px, 5vw, 72px);
-    padding-top: 96px;
-    padding-bottom: 56px;
+    gap: clamp(24px, 4vw, 56px);
+    padding: 96px clamp(20px, 4vw, 36px) 32px;
 }
 
 .hero-content {
     min-width: 0;
+    max-width: 740px;
     text-align: left;
 }
 
-/* Responsive hero headline size */
+.hero-eyebrow {
+    margin: 0 0 14px;
+    color: #7C86FF;
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
 .hero-title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4.5vw, 3.1rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+}
+
+.hero-title-line {
+    display: block;
+}
+
+.hero-title-accent {
+    color: #FFD23F;
+}
+
+.hero-subcopy {
     max-width: 680px;
-    font-size: clamp(2.4rem, 6vw, 4.1rem);
-    line-height: 1.08;
-    letter-spacing: -0.04em;
+    margin: 18px 0 0;
+    color: #BFC4E6;
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    line-height: 1.5;
 }
 
-/* Hero actions margin */
-.hero-actions {
-    margin-top: 28px;
+.hero-content > .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 52px;
 }
 
-/* Prominent primary Hero CTA */
-.hero-cta {
-    min-width: 178px;
+.hero-content > .hero-actions > a {
+    display: inline-flex;
+}
+
+.primary-cta {
+    min-width: 190px;
+    width: auto;
+    height: 54px;
     min-height: 54px;
     padding-inline: 34px;
+    border: 1px solid rgba(233, 235, 250, 0.24);
+    border-radius: 12px;
+    color: #FFFFFF;
+    background-color: #5965D8;
+    background-image: linear-gradient(135deg, rgba(233, 235, 250, 0.12), transparent 58%);
     font-size: 1.125rem;
-    font-weight: 800;
-    box-shadow: 0 14px 34px rgba(124, 134, 255, 0.28);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(124, 134, 255, 0.18);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.hero-cta:hover {
+.primary-cta:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 42px rgba(124, 134, 255, 0.38);
+    box-shadow: 0 16px 36px rgba(124, 134, 255, 0.28);
+}
+
+.primary-cta:focus-visible {
+    outline: 3px solid #E9EBFA;
+    outline-offset: 3px;
+}
+
+.hero-reassurance {
+    display: block;
+    margin: -10px 0 0;
+    color: rgba(191, 196, 230, 0.76);
+    font-size: 0.84rem;
+    line-height: 1.15;
 }
 
 /* Mascot stage and ambient glow */
@@ -696,13 +757,13 @@ onBeforeUnmount(cleanupAnimations)
 .mascot-stage::before {
     content: '';
     position: absolute;
-    width: 88%;
+    width: 92%;
     aspect-ratio: 1;
     border-radius: 50%;
     background:
-        radial-gradient(circle at 58% 48%, rgba(124, 134, 255, 0.24) 0%, rgba(124, 134, 255, 0.11) 38%, transparent 68%),
-        radial-gradient(circle at 38% 72%, rgba(255, 210, 63, 0.10) 0%, transparent 42%);
-    filter: blur(14px);
+        radial-gradient(circle at 58% 48%, rgba(124, 134, 255, 0.26) 0%, rgba(124, 134, 255, 0.13) 38%, transparent 68%),
+        radial-gradient(circle at 38% 72%, rgba(255, 210, 63, 0.12) 0%, transparent 42%);
+    filter: blur(16px);
     z-index: 0;
 }
 
@@ -710,12 +771,88 @@ onBeforeUnmount(cleanupAnimations)
     position: relative;
     z-index: 1;
     display: block;
-    width: 100%;
-    max-height: min(72vh, 680px);
+    width: 90%;
+    max-height: min(66vh, 620px);
     object-fit: contain;
     object-position: center;
     user-select: none;
     filter: drop-shadow(0 26px 34px rgba(0, 0, 0, 0.34));
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+    .hero-container {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 30vw);
+        gap: clamp(24px, 3vw, 36px);
+        padding-inline: 24px;
+    }
+}
+
+@media (max-width: 959px) {
+    .hero {
+        min-height: 100svh;
+    }
+
+    .hero-container {
+        min-height: 100svh;
+        grid-template-columns: minmax(0, 1fr);
+        gap: clamp(28px, 5vh, 44px);
+        padding: 88px 16px 24px;
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 680px;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .hero-title {
+        font-size: clamp(1.6rem, 6.6vw, 2.6rem);
+        line-height: 1.06;
+    }
+
+    .hero-subcopy {
+        margin: 16px auto 0;
+    }
+
+    .hero-content > .hero-actions {
+        align-items: center;
+        margin-top: 48px;
+    }
+
+    .mascot-stage {
+        width: min(100%, 380px);
+        max-width: 380px;
+        justify-self: center;
+    }
+
+    .mascot-image {
+        max-height: min(40svh, 340px);
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-container {
+        gap: clamp(24px, 4vh, 36px);
+        padding: 80px 16px 16px;
+    }
+
+    .hero-title {
+        font-size: clamp(1.25rem, 6.25vw, 2.2rem);
+    }
+
+    .hero-subcopy {
+        max-width: 360px;
+        font-size: 0.96rem;
+    }
+
+    .mascot-stage {
+        width: min(100%, 340px);
+    }
+
+    .mascot-image {
+        max-height: min(36svh, 280px);
+    }
 }
 
 /* Core Features section styles */
@@ -1301,30 +1438,6 @@ onBeforeUnmount(cleanupAnimations)
     font-size: 0.84rem;
 }
 
-.final-cta {
-    min-width: 190px;
-    min-height: 54px;
-    padding-inline: 34px;
-    color: #FFFFFF;
-    background-color: #5965D8;
-    border: 1px solid rgba(233, 235, 250, 0.24);
-    background-image: linear-gradient(135deg, rgba(233, 235, 250, 0.12), transparent 58%);
-    font-weight: 900;
-    letter-spacing: 0.02em;
-    box-shadow: 0 16px 38px rgba(124, 134, 255, 0.24);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.final-cta:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 48px rgba(124, 134, 255, 0.36);
-}
-
-.final-cta:focus-visible {
-    outline: 3px solid #E9EBFA;
-    outline-offset: 3px;
-}
-
 .record-showcase {
     grid-column: 7 / -1;
     min-width: 0;
@@ -1662,11 +1775,11 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .final-cta {
+    .primary-cta {
         transition: none;
     }
 
-    .final-cta:hover {
+    .primary-cta:hover {
         transform: none;
     }
 }

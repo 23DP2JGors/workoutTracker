@@ -11,10 +11,12 @@
 
     "landing": {
         "logo": "WorkoutTracker",
-        "heroLine1": "Track Every Rep.",
-        "heroLine2": "Crush Every Goal.",
-        "heroLine3": "Build Your Legacy.",
-        "startFree": "Start Free",
+        "heroEyebrow": "YOUR TRAINING, TRACKED",
+        "heroLine1": "Track every rep.",
+        "heroLine2": "Build your legacy.",
+        "heroSubcopy": "Log workouts, measure progress, and celebrate every PR.",
+        "heroReassurance": "Free to start · No card required",
+        "startTracking": "Start Tracking",
         "signUp": "Sign up",
         "signIn": "Sign in",
         "coreFeatures": "Core Features",

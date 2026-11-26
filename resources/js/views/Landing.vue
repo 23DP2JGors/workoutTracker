@@ -125,10 +125,6 @@
           </h2>
         </div>
 
-        <svg class="extra-connect-path" viewBox="0 0 1800 300" preserveAspectRatio="none" fill="none" aria-hidden="true">
-          <path class="draw-path" d="M20 210 C220 80 330 260 520 145 C720 25 840 245 1030 125 C1230 5 1360 230 1780 95" />
-        </svg>
-
         <div ref="extraTrackRef" class="extra-track">
           <article class="extra-station" data-extra-station="0">
             <span class="extra-number">01</span>
@@ -282,33 +278,32 @@
                 />
               </div>
               <!-- SVG chart elements are drawn and revealed as this section enters view. -->
-              <svg class="record-line" viewBox="0 0 480 220" preserveAspectRatio="none" fill="none" aria-hidden="true">
-                <defs>
-                  <linearGradient id="record-area-gradient" x1="0" y1="30" x2="0" y2="190" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#7C86FF" stop-opacity="0.34" />
-                    <stop offset="1" stop-color="#7C86FF" stop-opacity="0" />
-                  </linearGradient>
-                </defs>
-                <path class="record-grid" d="M28 42H460 M28 82H460 M28 122H460 M28 162H460 M28 190H460" />
-                <path class="record-axis-ticks" d="M28 190V198 M112 190V198 M196 190V198 M280 190V198 M364 190V198 M452 190V198" />
-                <path class="record-area" d="M28 166 C62 166 82 145 112 149 S166 126 196 137 S250 99 280 116 S334 76 364 87 S420 49 452 40 L452 190 L28 190 Z" />
-                <path class="record-progress-line" d="M28 166 C62 166 82 145 112 149 S166 126 196 137 S250 99 280 116 S334 76 364 87 S420 49 452 40" />
-                <circle class="record-data-point" cx="28" cy="166" r="4" />
-                <circle class="record-data-point" cx="112" cy="149" r="4" />
-                <circle class="record-data-point" cx="196" cy="137" r="4" />
-                <circle class="record-data-point" cx="280" cy="116" r="4" />
-                <circle class="record-data-point" cx="364" cy="87" r="4" />
-                <text class="record-month" x="28" y="215" text-anchor="start">{{ $t('landing.finalSection.monthJun') }}</text>
-                <text class="record-month" x="196" y="215" text-anchor="middle">{{ $t('landing.finalSection.monthAug') }}</text>
-                <text class="record-month" x="364" y="215" text-anchor="middle">{{ $t('landing.finalSection.monthOct') }}</text>
-                <text class="record-month" x="452" y="215" text-anchor="end">{{ $t('landing.finalSection.monthNov') }}</text>
-                <path class="record-callout-leader" d="M410 31L448 41" />
-                <g class="record-callout">
-                  <rect x="306" y="4" width="108" height="26" rx="8" />
-                  <text x="360" y="21" text-anchor="middle">{{ $t('landing.finalSection.peakLabel') }}</text>
-                </g>
-                <circle class="record-point" cx="452" cy="40" r="8" />
-              </svg>
+              <div class="record-chart">
+                <svg class="record-line" viewBox="0 0 480 220" preserveAspectRatio="xMidYMid meet" fill="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="record-area-gradient" x1="0" y1="30" x2="0" y2="190" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#7C86FF" stop-opacity="0.34" />
+                      <stop offset="1" stop-color="#7C86FF" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path class="record-grid" d="M28 42H460 M28 82H460 M28 122H460 M28 162H460 M28 190H460" />
+                  <path class="record-axis-ticks" d="M28 190V198 M112 190V198 M196 190V198 M280 190V198 M364 190V198 M452 190V198" />
+                  <path class="record-area" d="M28 166 C62 166 82 145 112 149 S166 126 196 137 S250 99 280 116 S334 76 364 87 S420 49 452 40 L452 190 L28 190 Z" />
+                  <path class="record-progress-line" d="M28 166 C62 166 82 145 112 149 S166 126 196 137 S250 99 280 116 S334 76 364 87 S420 49 452 40" />
+                  <circle class="record-data-point" cx="28" cy="166" r="4" />
+                  <circle class="record-data-point" cx="112" cy="149" r="4" />
+                  <circle class="record-data-point" cx="196" cy="137" r="4" />
+                  <circle class="record-data-point" cx="280" cy="116" r="4" />
+                  <circle class="record-data-point" cx="364" cy="87" r="4" />
+                  <text class="record-month" x="28" y="215" text-anchor="start">{{ $t('landing.finalSection.monthJun') }}</text>
+                  <text class="record-month" x="196" y="215" text-anchor="middle">{{ $t('landing.finalSection.monthAug') }}</text>
+                  <text class="record-month" x="364" y="215" text-anchor="middle">{{ $t('landing.finalSection.monthOct') }}</text>
+                  <text class="record-month" x="452" y="215" text-anchor="end">{{ $t('landing.finalSection.monthNov') }}</text>
+                  <path class="record-callout-leader" d="M410 31L448 41" />
+                  <circle class="record-point" cx="452" cy="40" r="8" />
+                </svg>
+                <span class="record-callout-badge">{{ $t('landing.finalSection.peakLabel') }}</span>
+              </div>
             </div>
           </div>
         </v-container>
@@ -368,6 +363,7 @@ let floatTween = null
 let removeCursorTracking = null
 let removeViewportRefresh = null
 let resizeRefreshFrame = null
+const extraTrackEndPadding = 96
 const timers = []
 
 const syncExtraHeadingHeight = () => {
@@ -379,11 +375,6 @@ const syncExtraHeadingHeight = () => {
         `${heading.getBoundingClientRect().height}px`,
     )
 
-    if (window.matchMedia('(min-width: 960px)').matches) {
-        const track = extraTrackRef.value
-        const connector = extraFeaturesRef.value.querySelector('.extra-connect-path')
-        if (track && connector) connector.style.width = `${track.scrollWidth}px`
-    }
 }
 
 const refreshOnViewportChange = () => {
@@ -429,6 +420,28 @@ const animateExtraStationDrawing = (station, triggerOptions) => {
             stagger: 0.04,
             ease: 'power2.out',
         }, 0)
+}
+
+const animateExtraStationText = (station, triggerOptions) => {
+    const textElements = station.querySelectorAll(
+        '.extra-number, .extra-copy h3, .extra-copy p, .extra-tag',
+    )
+    gsap.set(textElements, { opacity: 0, y: 16 })
+
+    const reveal = gsap.timeline({
+        scrollTrigger: {
+            trigger: station,
+            ...triggerOptions,
+        },
+    })
+
+    reveal.to(textElements, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.08,
+        ease: 'power2.out',
+    })
 }
 
 // Release listeners, timelines, triggers, and transforms when leaving the page.
@@ -635,13 +648,10 @@ onMounted(async () => {
             // Keep the horizontal Extra Features track on desktop and reveal each station as it arrives.
             media.add('(min-width: 960px)', () => {
                 extraFeaturesRef.value.classList.remove('extra-features--fallback')
-                const connectorSvg = extraFeaturesRef.value.querySelector('.extra-connect-path')
-                const connectorPath = connectorSvg.querySelector('.draw-path')
-                connectorSvg.style.width = `${extraTrackRef.value.scrollWidth}px`
                 const travel = () => {
                     const sectionWidth = extraFeaturesRef.value.clientWidth
                     const trackWidth = extraTrackRef.value.scrollWidth
-                    return Math.max(0, trackWidth - sectionWidth + 96)
+                    return Math.max(0, trackWidth - sectionWidth + extraTrackEndPadding)
                 }
                 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
                 const stations = gsap.utils.toArray('.extra-station', extraTrackRef.value)
@@ -651,12 +661,6 @@ onMounted(async () => {
                         clearProps: 'strokeDasharray,strokeDashoffset',
                     })
                     gsap.set('.extra-features .draw-dot', { scale: 1, clearProps: 'transform' })
-                } else {
-                    const connectorLength = connectorPath.getTotalLength()
-                    gsap.set(connectorPath, {
-                        strokeDasharray: connectorLength,
-                        strokeDashoffset: connectorLength,
-                    })
                 }
 
                 const kineticStart = () => {
@@ -684,22 +688,27 @@ onMounted(async () => {
                 // Scroll horizontally through the feature track; each SVG draws independently.
                 extraTimeline
                     .to(extraTrackRef.value, { x: () => -travel(), ease: 'none' }, 0)
-                    .to(connectorSvg, { x: () => -travel(), ease: 'none' }, 0)
                 if (!reducedMotion) {
                     extraTimeline.to(kineticTextRef.value, { x: kineticEnd, ease: 'none' }, 0)
-                    extraTimeline.to(connectorPath, { strokeDashoffset: 0, ease: 'none' }, 0)
-                    stations.forEach((station, index) => animateExtraStationDrawing(station, {
-                        containerAnimation: extraTimeline,
-                        start: 'left 75%',
-                        end: index === stations.length - 1 ? 'right 92%' : 'right 25%',
-                        scrub: 0.45,
-                    }))
+                    stations.forEach((station, index) => {
+                        animateExtraStationText(station, {
+                            containerAnimation: extraTimeline,
+                            start: 'left 90%',
+                            end: 'left 65%',
+                            scrub: 0.45,
+                        })
+                        animateExtraStationDrawing(station, {
+                            containerAnimation: extraTimeline,
+                            start: 'left 75%',
+                            end: index === stations.length - 1 ? 'right 92%' : 'right 25%',
+                            scrub: 0.45,
+                        })
+                    })
                 }
 
                 return () => {
                     extraTimeline.scrollTrigger?.kill()
                     extraTimeline.kill()
-                    connectorSvg.style.removeProperty('width')
                 }
             })
 
@@ -736,7 +745,7 @@ onMounted(async () => {
                 const recordLine = finalSectionRef.value.querySelector('.record-progress-line')
                 const recordArea = finalSectionRef.value.querySelector('.record-area')
                 const recordPoints = gsap.utils.toArray('.record-data-point, .record-point', finalSectionRef.value)
-                const recordCallout = finalSectionRef.value.querySelector('.record-callout')
+                const recordCallout = finalSectionRef.value.querySelector('.record-callout-badge')
                 const recordCalloutLeader = finalSectionRef.value.querySelector('.record-callout-leader')
                 const countProxy = { value: 0 }
 
@@ -1350,17 +1359,6 @@ onBeforeUnmount(cleanupAnimations)
     pointer-events: none;
 }
 
-.extra-connect-path {
-    position: absolute;
-    left: 0;
-    top: calc(100% - var(--kinetic-h) - 108px);
-    z-index: 1;
-    width: 1800px;
-    height: 140px;
-    opacity: 0.22;
-    pointer-events: none;
-}
-
 .extra-track {
     position: relative;
     z-index: 2;
@@ -1368,7 +1366,7 @@ onBeforeUnmount(cleanupAnimations)
     height: 100%;
     width: max-content;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: clamp(70px, 7vw, 130px);
     padding:
         calc(112px + var(--extra-heading-height, 80px) + 80px)
@@ -1382,13 +1380,17 @@ onBeforeUnmount(cleanupAnimations)
     position: relative;
     flex: 0 0 clamp(520px, 44vw, 660px);
     min-height: min(28svh, 460px);
-    display: flex;
+    display: grid;
+    grid-template-columns: clamp(110px, 9vw, 150px) minmax(0, 1fr);
+    grid-template-rows: auto auto;
     align-items: flex-start;
-    gap: clamp(28px, 3vw, 46px);
+    column-gap: clamp(28px, 3vw, 46px);
+    row-gap: 0;
 }
 
 .extra-number {
-    flex: 0 0 clamp(110px, 9vw, 150px);
+    grid-column: 1;
+    grid-row: 1;
     color: #FFD23F;
     font-size: clamp(4.5rem, 7vw, 7.5rem);
     line-height: 0.78;
@@ -1397,8 +1399,10 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 .extra-copy {
+    grid-column: 2;
+    grid-row: 1;
     min-width: 0;
-    max-width: 420px;
+    max-width: min(100%, 420px);
     padding-top: 8px;
 }
 
@@ -1430,17 +1434,35 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 .extra-drawing {
-    position: absolute;
-    right: 0;
-    bottom: -50px;
-    width: min(42%, 280px, 28svh);
+    position: relative;
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    width: auto;
+    max-width: min(100%, clamp(110px, 10vw, 148px));
     height: auto;
+    max-height: clamp(110px, 13vh, 150px);
+    margin-top: clamp(16px, 2.4svh, 28px);
     overflow: visible;
     filter: drop-shadow(0 12px 24px rgba(124, 134, 255, 0.10));
 }
 
-.extra-drawing .draw-path,
-.extra-connect-path .draw-path {
+@media (min-width: 960px) {
+    .extra-station {
+        padding-bottom: clamp(24px, 3svh, 36px);
+    }
+
+    .extra-copy h3 {
+        font-size: clamp(1.75rem, 2.35vw, 2.75rem);
+        white-space: nowrap;
+    }
+
+    .extra-drawing {
+        margin-top: clamp(18px, 1.25vw, 24px);
+    }
+}
+
+.extra-drawing .draw-path {
     stroke: #7C86FF;
     stroke-width: 5;
     stroke-linecap: round;
@@ -1497,10 +1519,6 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 .extra-features--fallback .kinetic-text {
-    display: none;
-}
-
-.extra-features--fallback .extra-connect-path {
     display: none;
 }
 
@@ -1568,8 +1586,9 @@ onBeforeUnmount(cleanupAnimations)
         grid-row: 2;
         justify-self: center;
         width: min(100%, 270px);
-        max-width: 280px;
+        max-width: min(100%, clamp(110px, 10vw, 148px));
         height: auto;
+        max-height: clamp(110px, 13vh, 150px);
         margin-top: 26px;
         opacity: 0.9;
     }
@@ -1865,13 +1884,19 @@ onBeforeUnmount(cleanupAnimations)
         drop-shadow(0 18px 30px rgba(124, 134, 255, 0.26));
 }
 
-.record-line {
+.record-chart {
     position: relative;
-    z-index: 2;
+    width: 100%;
+    aspect-ratio: 480 / 220;
+    margin-top: auto;
+}
+
+.record-line {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: 230px;
-    margin-top: auto;
+    height: 100%;
     overflow: visible;
 }
 
@@ -1914,17 +1939,21 @@ onBeforeUnmount(cleanupAnimations)
     stroke-width: 4;
 }
 
-.record-callout rect {
-    fill: #242943;
-    stroke: rgba(124, 134, 255, 0.55);
-    stroke-width: 1;
-}
-
-.record-callout text {
-    fill: #FFD23F;
-    font-family: inherit;
-    font-size: 12px;
+.record-callout-badge {
+    position: absolute;
+    z-index: 1;
+    top: 4px;
+    right: 14%;
+    padding: 6px 9px;
+    border: 1px solid rgba(124, 134, 255, 0.55);
+    border-radius: 8px;
+    background: #242943;
+    color: #FFD23F;
+    font-size: clamp(11px, 0.75vw, 13px);
     font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
 }
 
 .record-month {
@@ -1972,6 +2001,21 @@ onBeforeUnmount(cleanupAnimations)
 
     .record-showcase {
         grid-column: 2 / span 10;
+    }
+}
+
+@media (max-width: 959px) {
+    .record-highlights {
+        justify-items: center;
+    }
+
+    .record-highlight {
+        align-items: center;
+        text-align: center;
+    }
+
+    .record-highlight:nth-child(2) strong {
+        transform-origin: center;
     }
 }
 
@@ -2041,9 +2085,6 @@ onBeforeUnmount(cleanupAnimations)
         letter-spacing: 0.03em;
     }
 
-    .record-line {
-        height: 200px;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

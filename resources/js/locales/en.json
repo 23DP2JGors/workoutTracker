@@ -20,7 +20,9 @@
         "signUp": "Sign up",
         "signIn": "Sign in",
         "coreFeatures": "Core Features",
-        "coreFeaturesSubtitle": "Everything you need to reach your fitness goals in one place.",
+        "coreFeaturesSubtitlePrefix": "Everything you need to reach your fitness ",
+        "coreFeaturesSubtitleAccent": "goals",
+        "coreFeaturesSubtitleSuffix": " in one place.",
         "getStarted": "Get Started",
         "extraFeatures": {
             "eyebrow": "More ways to progress",

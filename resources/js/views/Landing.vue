@@ -54,7 +54,7 @@
             <div class="core-heading">
               <p class="core-eyebrow text-label-medium">{{ $t('landing.coreFeatures') }}</p>
               <h2 class="text-headline-small font-weight-bold">
-                {{ $t('landing.coreFeaturesSubtitle') }}
+                {{ $t('landing.coreFeaturesSubtitlePrefix') }}<span class="core-heading-accent">{{ $t('landing.coreFeaturesSubtitleAccent') }}</span>{{ $t('landing.coreFeaturesSubtitleSuffix') }}
               </h2>
             </div>
 
@@ -125,7 +125,7 @@
           </h2>
         </div>
 
-        <svg class="extra-connect-path" viewBox="0 0 1800 300" fill="none" aria-hidden="true">
+        <svg class="extra-connect-path" viewBox="0 0 1800 300" preserveAspectRatio="none" fill="none" aria-hidden="true">
           <path class="draw-path" d="M20 210 C220 80 330 260 520 145 C720 25 840 245 1030 125 C1230 5 1360 230 1780 95" />
         </svg>
 
@@ -138,10 +138,12 @@
               <span class="extra-tag">{{ $t('landing.extraFeatures.oneRm.tag') }}</span>
             </div>
             <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
-              <path class="draw-path" d="M25 190 A125 125 0 0 1 275 190" />
-              <path class="draw-path indigo" d="M150 190 L150 78" />
-              <circle class="draw-dot" cx="150" cy="78" r="12" />
-              <path class="draw-path gold" d="M118 54 H182 M150 54 V36 M130 36 H170" />
+              <path class="draw-path indigo" d="M55 178 A95 95 0 0 1 245 178 M55 178 H245" />
+              <path class="draw-path indigo" d="M73 178 L61 178 M79 130 L68 124 M113 96 L107 85 M150 83 V69 M187 96 L193 85 M221 130 L232 124 M227 178 H239" />
+              <path class="draw-path gold" d="M150 178 L207 108" />
+              <circle class="draw-dot indigo" cx="150" cy="178" r="8" />
+              <circle class="draw-dot gold" cx="207" cy="108" r="10" />
+              <text class="gauge-label" x="150" y="157">1RM</text>
             </svg>
           </article>
 
@@ -167,9 +169,11 @@
               <span class="extra-tag">{{ $t('landing.extraFeatures.exercises.tag') }}</span>
             </div>
             <svg class="extra-drawing" viewBox="0 0 300 220" fill="none" aria-hidden="true">
-              <path class="draw-path gold" d="M55 110 H245 M75 82 V138 M225 82 V138 M55 110 L35 110 M245 110 H265" />
-              <circle class="draw-dot indigo" cx="150" cy="110" r="42" />
-              <path class="draw-path indigo" d="M150 68 V152 M108 110 H192" />
+              <path class="draw-path indigo" d="M72 22 H183 L228 67 V198 H72 Z M183 22 V67 H228" />
+              <path class="draw-path gold" d="M98 54 H158" />
+              <path class="draw-path" d="M99 88 H116 V105 H99 Z M99 130 H116 V147 H99 Z M99 172 H116 V189 H99 Z" />
+              <path class="draw-path gold" d="M102 96 L107 101 L114 91 M102 138 L107 143 L114 133 M102 180 L107 185 L114 175" />
+              <path class="draw-path indigo" d="M133 96 H200 M133 138 H200 M133 180 H200" />
             </svg>
           </article>
 
@@ -374,6 +378,12 @@ const syncExtraHeadingHeight = () => {
         '--extra-heading-height',
         `${heading.getBoundingClientRect().height}px`,
     )
+
+    if (window.matchMedia('(min-width: 960px)').matches) {
+        const track = extraTrackRef.value
+        const connector = extraFeaturesRef.value.querySelector('.extra-connect-path')
+        if (track && connector) connector.style.width = `${track.scrollWidth}px`
+    }
 }
 
 const refreshOnViewportChange = () => {
@@ -386,6 +396,39 @@ const refreshOnViewportChange = () => {
         syncExtraHeadingHeight()
         ScrollTrigger.refresh()
     })
+}
+
+const animateExtraStationDrawing = (station, triggerOptions) => {
+    const drawing = station.querySelector('.extra-drawing')
+    const paths = drawing.querySelectorAll('.draw-path, .draw-bar')
+    const dots = drawing.querySelectorAll('.draw-dot')
+
+    paths.forEach(path => {
+        const length = path.getTotalLength()
+        gsap.set(path, { strokeDasharray: length, strokeDashoffset: length })
+    })
+    gsap.set(dots, { scale: 0.65, transformOrigin: 'center' })
+
+    const reveal = gsap.timeline({
+        scrollTrigger: {
+            trigger: station,
+            ...triggerOptions,
+        },
+    })
+
+    reveal
+        .to(paths, {
+            strokeDashoffset: 0,
+            duration: 0.85,
+            stagger: 0.03,
+            ease: 'power2.out',
+        })
+        .to(dots, {
+            scale: 1,
+            duration: 0.35,
+            stagger: 0.04,
+            ease: 'power2.out',
+        }, 0)
 }
 
 // Release listeners, timelines, triggers, and transforms when leaving the page.
@@ -589,22 +632,32 @@ onMounted(async () => {
                 })
             })
 
-            // Animate the horizontal Extra Features track only on desktop without reduced motion.
-            media.add('(min-width: 960px) and (prefers-reduced-motion: no-preference)', () => {
+            // Keep the horizontal Extra Features track on desktop and reveal each station as it arrives.
+            media.add('(min-width: 960px)', () => {
                 extraFeaturesRef.value.classList.remove('extra-features--fallback')
+                const connectorSvg = extraFeaturesRef.value.querySelector('.extra-connect-path')
+                const connectorPath = connectorSvg.querySelector('.draw-path')
+                connectorSvg.style.width = `${extraTrackRef.value.scrollWidth}px`
                 const travel = () => {
                     const sectionWidth = extraFeaturesRef.value.clientWidth
                     const trackWidth = extraTrackRef.value.scrollWidth
                     return Math.max(0, trackWidth - sectionWidth + 96)
                 }
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                const stations = gsap.utils.toArray('.extra-station', extraTrackRef.value)
 
-                const extraPaths = gsap.utils.toArray('.extra-features .draw-path')
-                extraPaths.forEach(path => {
-                    const length = path.getTotalLength()
-                    gsap.set(path, { strokeDasharray: length, strokeDashoffset: length })
-                })
-
-                gsap.set('.extra-features .draw-dot', { scale: 0.65, transformOrigin: 'center' })
+                if (reducedMotion) {
+                    gsap.set('.extra-features .draw-path, .extra-features .draw-bar', {
+                        clearProps: 'strokeDasharray,strokeDashoffset',
+                    })
+                    gsap.set('.extra-features .draw-dot', { scale: 1, clearProps: 'transform' })
+                } else {
+                    const connectorLength = connectorPath.getTotalLength()
+                    gsap.set(connectorPath, {
+                        strokeDasharray: connectorLength,
+                        strokeDashoffset: connectorLength,
+                    })
+                }
 
                 const kineticStart = () => {
                     const sectionWidth = extraFeaturesRef.value.clientWidth
@@ -628,26 +681,49 @@ onMounted(async () => {
                     },
                 })
 
-                // Scroll horizontally through the feature track while drawing its SVG accents.
+                // Scroll horizontally through the feature track; each SVG draws independently.
                 extraTimeline
                     .to(extraTrackRef.value, { x: () => -travel(), ease: 'none' }, 0)
-                    .to(kineticTextRef.value, { x: kineticEnd, ease: 'none' }, 0)
-                    .to(extraPaths, { strokeDashoffset: 0, duration: 0.9, stagger: 0.03, ease: 'power1.inOut' }, 0.08)
-                    .to('.extra-features .draw-dot', { scale: 1, stagger: 0.04, duration: 0.35 }, 0.25)
+                    .to(connectorSvg, { x: () => -travel(), ease: 'none' }, 0)
+                if (!reducedMotion) {
+                    extraTimeline.to(kineticTextRef.value, { x: kineticEnd, ease: 'none' }, 0)
+                    extraTimeline.to(connectorPath, { strokeDashoffset: 0, ease: 'none' }, 0)
+                    stations.forEach((station, index) => animateExtraStationDrawing(station, {
+                        containerAnimation: extraTimeline,
+                        start: 'left 75%',
+                        end: index === stations.length - 1 ? 'right 92%' : 'right 25%',
+                        scrub: 0.45,
+                    }))
+                }
 
                 return () => {
                     extraTimeline.scrollTrigger?.kill()
                     extraTimeline.kill()
+                    connectorSvg.style.removeProperty('width')
                 }
             })
 
-            // Use static, stacked content on small screens or when motion is reduced.
-            media.add('(max-width: 959px), (prefers-reduced-motion: reduce)', () => {
+            // Stack Extra Features on mobile and draw each station as it enters view.
+            media.add('(max-width: 959px)', () => {
                 extraFeaturesRef.value.classList.add('extra-features--fallback')
                 gsap.set(extraTrackRef.value, { x: 0, clearProps: 'position' })
                 gsap.set(kineticTextRef.value, { x: 0 })
-                gsap.set('.extra-features .draw-path', { clearProps: 'strokeDasharray,strokeDashoffset' })
-                gsap.set('.extra-features .draw-dot', { scale: 1, clearProps: 'transform' })
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                const stations = gsap.utils.toArray('.extra-station', extraTrackRef.value)
+
+                if (reducedMotion) {
+                    gsap.set('.extra-features .draw-path, .extra-features .draw-bar', {
+                        clearProps: 'strokeDasharray,strokeDashoffset',
+                    })
+                    gsap.set('.extra-features .draw-dot', { scale: 1, clearProps: 'transform' })
+                } else {
+                    stations.forEach(station => {
+                        animateExtraStationDrawing(station, {
+                            start: 'top 78%',
+                            once: true,
+                        })
+                    })
+                }
 
                 return () => {
                     extraFeaturesRef.value?.classList.remove('extra-features--fallback')
@@ -983,6 +1059,10 @@ onBeforeUnmount(cleanupAnimations)
     line-height: 1.18;
 }
 
+.core-heading-accent {
+    color: #FFD23F;
+}
+
 .core-eyebrow {
     margin: 0 0 12px;
     color: #7C86FF;
@@ -1273,13 +1353,10 @@ onBeforeUnmount(cleanupAnimations)
 .extra-connect-path {
     position: absolute;
     left: 0;
-    top: calc(
-        (100svh + 112px + var(--extra-heading-height, 80px) - var(--kinetic-h) + min(48svh, 620px)) / 2
-        + 16px
-    );
+    top: calc(100% - var(--kinetic-h) - 108px);
     z-index: 1;
     width: 1800px;
-    height: 300px;
+    height: 140px;
     opacity: 0.22;
     pointer-events: none;
 }
@@ -1294,9 +1371,9 @@ onBeforeUnmount(cleanupAnimations)
     align-items: center;
     gap: clamp(70px, 7vw, 130px);
     padding:
-        calc(112px + var(--extra-heading-height, 80px) + 24px)
+        calc(112px + var(--extra-heading-height, 80px) + 80px)
         7vw
-        calc(var(--kinetic-h) + 24px);
+        calc(var(--kinetic-h) + 180px);
     will-change: transform;
 }
 
@@ -1304,7 +1381,7 @@ onBeforeUnmount(cleanupAnimations)
 .extra-station {
     position: relative;
     flex: 0 0 clamp(520px, 44vw, 660px);
-    min-height: min(48svh, 620px);
+    min-height: min(28svh, 460px);
     display: flex;
     align-items: flex-start;
     gap: clamp(28px, 3vw, 46px);
@@ -1355,7 +1432,7 @@ onBeforeUnmount(cleanupAnimations)
 .extra-drawing {
     position: absolute;
     right: 0;
-    bottom: 0;
+    bottom: -50px;
     width: min(42%, 280px, 28svh);
     height: auto;
     overflow: visible;
@@ -1388,6 +1465,14 @@ onBeforeUnmount(cleanupAnimations)
 
 .extra-drawing .draw-dot.indigo {
     fill: #7C86FF;
+}
+
+.extra-drawing .gauge-label {
+    fill: #E9EBFA;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-anchor: middle;
 }
 
 .extra-drawing .draw-bar {
@@ -1445,23 +1530,32 @@ onBeforeUnmount(cleanupAnimations)
 @media (max-width: 959px) {
     .extra-features--fallback {
         overflow: hidden;
-        padding: 64px 16px;
+        padding: 64px 20px;
     }
 
     .extra-features--fallback .extra-track {
         grid-template-columns: 1fr;
-        gap: 28px;
+        gap: 68px;
         max-width: 680px;
         margin-inline: auto;
     }
 
     .extra-features--fallback .extra-station {
-        min-height: 350px;
-        grid-template-columns: 58px minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        align-items: start;
+        column-gap: 12px;
+        row-gap: 0;
+        min-height: 0;
     }
 
     .extra-number {
         font-size: 4.25rem;
+    }
+
+    .extra-copy {
+        padding-top: 0;
     }
 
     .extra-copy h3 {
@@ -1469,13 +1563,21 @@ onBeforeUnmount(cleanupAnimations)
     }
 
     .extra-drawing {
+        position: static;
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: center;
+        width: min(100%, 270px);
+        max-width: 280px;
+        height: auto;
+        margin-top: 26px;
         opacity: 0.9;
     }
 }
 
 @media (max-width: 600px) {
     .extra-features--fallback {
-        padding: 56px 12px;
+        padding: 56px 20px;
     }
 
     .extra-features--fallback .extra-heading {
@@ -1483,9 +1585,7 @@ onBeforeUnmount(cleanupAnimations)
     }
 
     .extra-features--fallback .extra-station {
-        min-height: 390px;
-        grid-template-columns: 48px minmax(0, 1fr);
-        gap: 8px;
+        column-gap: 8px;
     }
 
     .extra-number {
@@ -1500,9 +1600,6 @@ onBeforeUnmount(cleanupAnimations)
         font-size: 0.98rem;
     }
 
-    .extra-drawing {
-        right: 4px;
-    }
 }
 
 /* Final 12-column layout balances the signup copy and PR chart card. */

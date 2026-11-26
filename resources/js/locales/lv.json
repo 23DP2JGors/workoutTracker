@@ -19,7 +19,9 @@
         "signUp": "Reģistrēties",
         "signIn": "Pieslēgties",
         "coreFeatures": "Galvenās funkcijas",
-        "coreFeaturesSubtitle": "Viss nepieciešamais, lai sekotu līdzi saviem fitnesa mērķiem vienuviet.",
+        "coreFeaturesSubtitlePrefix": "Viss nepieciešamais, lai sekotu līdzi saviem fitnesa ",
+        "coreFeaturesSubtitleAccent": "mērķiem",
+        "coreFeaturesSubtitleSuffix": " vienuviet.",
         "getStarted": "Sākt",
         "extraFeatures": {
             "eyebrow": "Vairāk veidu progresam",

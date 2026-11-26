@@ -63,70 +63,47 @@
             </div>
 
             <div class="core-steps">
-              <article class="core-step is-active" data-core-step="0">
-                <span class="core-step-number">01</span>
-                <div>
+              <article
+                v-for="(feature, index) in coreFeatures"
+                :key="feature.key"
+                class="core-step"
+                :class="{ 'is-active': index === 0 }"
+                :data-core-step="index"
+              >
+                <span class="core-step-number">{{ feature.number }}</span>
+                <div class="core-step-copy">
                   <h3 class="text-title-medium font-weight-bold">
-                    {{ $t('landing.features.workoutLogging.title') }}
+                    {{ $t(feature.title) }}
                   </h3>
                   <p class="text-body-medium text-medium-emphasis">
-                    {{ $t('landing.features.workoutLogging.text') }}
+                    {{ $t(feature.text) }}
                   </p>
                 </div>
-              </article>
-
-              <article class="core-step" data-core-step="1">
-                <span class="core-step-number">02</span>
-                <div>
-                  <h3 class="text-title-medium font-weight-bold">
-                    {{ $t('landing.features.bodyMeasurements.title') }}
-                  </h3>
-                  <p class="text-body-medium text-medium-emphasis">
-                    {{ $t('landing.features.bodyMeasurements.text') }}
-                  </p>
-                </div>
-              </article>
-
-              <article class="core-step" data-core-step="2">
-                <span class="core-step-number">03</span>
-                <div>
-                  <h3 class="text-title-medium font-weight-bold">
-                    {{ $t('landing.features.macroCalculator.title') }}
-                  </h3>
-                  <p class="text-body-medium text-medium-emphasis">
-                    {{ $t('landing.features.macroCalculator.text') }}
-                  </p>
+                <div class="core-inline-visual" aria-hidden="true">
+                  <div class="visual-glow"></div>
+                  <img
+                    class="core-mascot"
+                    :src="feature.image"
+                    alt=""
+                    draggable="false"
+                  />
                 </div>
               </article>
             </div>
           </div>
 
-          <div class="core-visuals" aria-live="polite">
-            <div class="core-visual is-active" data-core-visual="0">
+          <div class="core-visuals features-stage" aria-live="polite">
+            <div
+              v-for="(feature, index) in coreFeatures"
+              :key="feature.key"
+              class="core-visual"
+              :class="{ 'is-active': index === 0 }"
+              :data-core-visual="index"
+            >
               <div class="visual-glow"></div>
               <img
                 class="core-mascot"
-                src="/images/mascot/workout_log_peng.png"
-                alt=""
-                draggable="false"
-              />
-            </div>
-
-            <div class="core-visual measurement-stage" data-core-visual="1">
-              <div class="visual-glow"></div>
-              <img
-                class="core-mascot"
-                src="/images/mascot/measurements_peng.png"
-                alt=""
-                draggable="false"
-              />
-            </div>
-
-            <div class="core-visual macro-stage" data-core-visual="2">
-              <div class="visual-glow"></div>
-              <img
-                class="core-mascot"
-                src="/images/mascot/calculation_peng.png"
+                :src="feature.image"
                 alt=""
                 draggable="false"
               />
@@ -345,6 +322,29 @@ import gsap from 'gsap'
 gsap.registerPlugin(ScrollTrigger)
 
 const showPage = ref(false)
+const coreFeatures = [
+    {
+        key: 'workoutLogging',
+        number: '01',
+        title: 'landing.features.workoutLogging.title',
+        text: 'landing.features.workoutLogging.text',
+        image: '/images/mascot/workout_log_peng.png',
+    },
+    {
+        key: 'bodyMeasurements',
+        number: '02',
+        title: 'landing.features.bodyMeasurements.title',
+        text: 'landing.features.bodyMeasurements.text',
+        image: '/images/mascot/measurements_peng.png',
+    },
+    {
+        key: 'macroCalculator',
+        number: '03',
+        title: 'landing.features.macroCalculator.title',
+        text: 'landing.features.macroCalculator.text',
+        image: '/images/mascot/calculation_peng.png',
+    },
+]
 
 // Keep DOM refs for the animated sections and their chart elements.
 const heroRef = ref(null)
@@ -422,15 +422,15 @@ onMounted(async () => {
         showPage.value = true
         await nextTick()
 
-        syncExtraHeadingHeight()
-        window.addEventListener('resize', refreshOnViewportChange)
-        window.addEventListener('orientationchange', refreshOnViewportChange)
-        removeViewportRefresh = () => {
-            window.removeEventListener('resize', refreshOnViewportChange)
-            window.removeEventListener('orientationchange', refreshOnViewportChange)
-        }
-
         gsapContext = gsap.context(() => {
+            syncExtraHeadingHeight()
+            window.addEventListener('resize', refreshOnViewportChange)
+            window.addEventListener('orientationchange', refreshOnViewportChange)
+            removeViewportRefresh = () => {
+                window.removeEventListener('resize', refreshOnViewportChange)
+                window.removeEventListener('orientationchange', refreshOnViewportChange)
+            }
+
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
             // Keep the Hero visible without motion when the visitor requests it.
@@ -492,19 +492,14 @@ onMounted(async () => {
 
             const media = gsap.matchMedia()
 
-            // Pin and animate the feature scenes only on desktop without reduced motion.
+            // Pin and animate the Core Features stage only on desktop.
             media.add('(min-width: 960px) and (prefers-reduced-motion: no-preference)', () => {
-                coreFeaturesRef.value.classList.remove('core-features--fallback')
-                extraFeaturesRef.value.classList.remove('extra-features--fallback')
-
-                // Keep the desktop visual stage cleanly clipped during horizontal scene swipes.
-                const visualStage = coreFeaturesRef.value.querySelector('.core-visuals')
-                visualStage.style.overflow = 'hidden'
-
-                const steps = gsap.utils.toArray('[data-core-step]')
-                const visuals = gsap.utils.toArray('[data-core-visual]')
+                const visualStage = coreFeaturesRef.value.querySelector('.features-stage')
+                const steps = gsap.utils.toArray('[data-core-step]', coreFeaturesRef.value)
+                const visuals = gsap.utils.toArray('[data-core-visual]', coreFeaturesRef.value)
                 const progress = '.core-progress-fill'
 
+                visualStage.style.overflow = 'hidden'
                 gsap.set(visuals.slice(1), { autoAlpha: 0, xPercent: 60, y: 0, scale: 1 })
                 gsap.set(visuals[0], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 })
                 gsap.set(progress, { scaleX: 0 })
@@ -514,6 +509,8 @@ onMounted(async () => {
                         step.classList.toggle('is-active', stepIndex === index)
                     })
                 }
+
+                setActiveStep(0)
 
                 const timeline = gsap.timeline({
                     scrollTrigger: {
@@ -538,7 +535,6 @@ onMounted(async () => {
                     },
                 })
 
-                // Match scene transitions to the step activation thresholds.
                 timeline
                     .set(visuals[0], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 })
                     .set(visuals.slice(1), { autoAlpha: 0, xPercent: 60, y: 0, scale: 1 })
@@ -548,6 +544,54 @@ onMounted(async () => {
                     .to(visuals[2], { autoAlpha: 1, xPercent: 0, ease: 'power2.inOut', duration: 0.12 }, 2 / 3)
                     .set(visuals[2], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 }, 1)
 
+                return () => {
+                    visualStage.style.removeProperty('overflow')
+                    timeline.scrollTrigger?.kill()
+                    timeline.kill()
+                }
+            })
+
+            // Leave the desktop stage visible but static when motion is reduced.
+            media.add('(min-width: 960px) and (prefers-reduced-motion: reduce)', () => {
+                const steps = gsap.utils.toArray('[data-core-step]', coreFeaturesRef.value)
+                const progress = '.core-progress-fill'
+                steps.forEach((step, index) => step.classList.toggle('is-active', index === 0))
+                gsap.set(progress, { scaleX: 0 })
+            })
+
+            // Fade each mobile card in once, with a separate subtle image entrance.
+            media.add('(max-width: 959px) and (prefers-reduced-motion: no-preference)', () => {
+                const steps = gsap.utils.toArray('[data-core-step]', coreFeaturesRef.value)
+
+                steps.forEach(step => {
+                    const image = step.querySelector('.core-inline-visual')
+                    const entrance = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: step,
+                            start: 'top 88%',
+                            once: true,
+                        },
+                    })
+
+                    entrance
+                        .from(step, {
+                            opacity: 0,
+                            y: 24,
+                            duration: 0.65,
+                            ease: 'power2.out',
+                        })
+                        .from(image, {
+                            opacity: 0,
+                            scale: 0.94,
+                            duration: 0.7,
+                            ease: 'power2.out',
+                        }, 0)
+                })
+            })
+
+            // Animate the horizontal Extra Features track only on desktop without reduced motion.
+            media.add('(min-width: 960px) and (prefers-reduced-motion: no-preference)', () => {
+                extraFeaturesRef.value.classList.remove('extra-features--fallback')
                 const travel = () => {
                     const sectionWidth = extraFeaturesRef.value.clientWidth
                     const trackWidth = extraTrackRef.value.scrollWidth
@@ -592,16 +636,13 @@ onMounted(async () => {
                     .to('.extra-features .draw-dot', { scale: 1, stagger: 0.04, duration: 0.35 }, 0.25)
 
                 return () => {
-                    const visualStage = coreFeaturesRef.value.querySelector('.core-visuals')
-                    visualStage.style.removeProperty('overflow')
-                    timeline.scrollTrigger?.kill()
-                    timeline.kill()
+                    extraTimeline.scrollTrigger?.kill()
+                    extraTimeline.kill()
                 }
             })
 
             // Use static, stacked content on small screens or when motion is reduced.
             media.add('(max-width: 959px), (prefers-reduced-motion: reduce)', () => {
-                coreFeaturesRef.value.classList.add('core-features--fallback')
                 extraFeaturesRef.value.classList.add('extra-features--fallback')
                 gsap.set(extraTrackRef.value, { x: 0, clearProps: 'position' })
                 gsap.set(kineticTextRef.value, { x: 0 })
@@ -609,7 +650,6 @@ onMounted(async () => {
                 gsap.set('.extra-features .draw-dot', { scale: 1, clearProps: 'transform' })
 
                 return () => {
-                    coreFeaturesRef.value?.classList.remove('core-features--fallback')
                     extraFeaturesRef.value?.classList.remove('extra-features--fallback')
                 }
             })
@@ -1086,32 +1126,101 @@ onBeforeUnmount(cleanupAnimations)
     transform: translateY(0);
 }
 
-/* Static stacked scenes replace the pinned interaction on mobile and reduced motion. */
-.core-features--fallback,
-.core-features--fallback .core-showcase {
-    height: auto;
-    min-height: 0;
+/* Inline illustrations belong to mobile cards; the shared stage is for desktop. */
+.core-inline-visual {
+    display: none;
 }
 
-.core-features--fallback .core-showcase {
-    grid-template-columns: 1fr;
-    padding-top: 72px;
-    padding-bottom: 72px;
-}
+@media (max-width: 959px) {
+    .core-features {
+        min-height: 0;
+        padding-block: 72px;
+    }
 
-.core-features--fallback .core-visuals {
-    height: auto;
-    min-height: 0;
-    display: grid;
-    gap: 20px;
-}
+    .core-showcase {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        display: block;
+        padding: 0 20px;
+    }
 
-.core-features--fallback .core-visual {
-    position: relative;
-    inset: auto;
-    min-height: 420px;
-    opacity: 1 !important;
-    visibility: visible !important;
+    .core-copy {
+        width: 100%;
+    }
+
+    .core-heading {
+        margin-bottom: 36px;
+    }
+
+    .core-progress {
+        display: none;
+    }
+
+    .core-steps {
+        gap: 72px;
+    }
+
+    .core-step,
+    .core-step.is-active {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        opacity: 1;
+        transform: none;
+        color: #E9EBFA;
+        background: none;
+        box-shadow: none;
+        transition: none;
+    }
+
+    .core-step-number,
+    .core-step.is-active .core-step-number {
+        margin-bottom: 12px;
+        color: #FFD23F;
+        font-size: 0.9rem;
+    }
+
+    .core-step h3 {
+        font-size: clamp(1.35rem, 4vw, 1.65rem);
+        line-height: 1.2;
+    }
+
+    .core-step p {
+        max-width: 42rem;
+        margin: 8px 0 0;
+        color: #BFC4E6;
+    }
+
+    .core-inline-visual {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 100%;
+        min-height: 0;
+        margin-top: 24px;
+        overflow: hidden;
+    }
+
+    .core-inline-visual .visual-glow {
+        width: min(78%, 360px);
+        background:
+            radial-gradient(circle, rgba(124, 134, 255, 0.28) 0%, rgba(124, 134, 255, 0.10) 46%, transparent 72%);
+    }
+
+    .core-inline-visual .core-mascot {
+        width: 75%;
+        max-height: 40svh;
+    }
+
+    .features-stage {
+        display: none;
+    }
 }
 
 /* Cardless kinetic Extra Features showcase */

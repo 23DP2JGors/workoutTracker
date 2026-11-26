@@ -1,6 +1,7 @@
 ﻿<template>
   <transition name="page-fade">
     <div v-if="showPage">
+      <!-- Hero introduces the tracker and leads visitors to sign up. -->
       <div class="hero" ref="heroRef">
         <v-container class="hero-container">
             <div class="hero-content">
@@ -46,7 +47,7 @@
         </v-container>
       </div>
 
-      <!-- Core Features showcase -->
+      <!-- Core Features pairs each product benefit with a matching mascot scene. -->
       <section ref="coreFeaturesRef" class="core-features">
         <v-container class="core-showcase">
           <div class="core-copy">
@@ -134,7 +135,7 @@
         </v-container>
       </section>
 
-      <!-- Extra Features kinetic section -->
+      <!-- Extra Features presents five benefits along a horizontal scroll track. -->
       <section ref="extraFeaturesRef" class="extra-features">
         <div ref="kineticTextRef" class="kinetic-text" aria-hidden="true">
           STRENGTH · PATTERNS · CUSTOM · CHARTS · COACHING
@@ -225,7 +226,7 @@
         </div>
       </section>
 
-      <!-- Final personal-records showcase -->
+      <!-- Final section pairs progress proof with one last signup prompt. -->
       <section ref="finalSectionRef" class="final-progress-section">
         <div class="final-progress-glow" aria-hidden="true"></div>
 
@@ -299,6 +300,7 @@
                   draggable="false"
                 />
               </div>
+              <!-- SVG chart elements are drawn and revealed as this section enters view. -->
               <svg class="record-line" viewBox="0 0 480 220" preserveAspectRatio="none" fill="none" aria-hidden="true">
                 <defs>
                   <linearGradient id="record-area-gradient" x1="0" y1="30" x2="0" y2="190" gradientUnits="userSpaceOnUse">
@@ -343,6 +345,8 @@ import gsap from 'gsap'
 gsap.registerPlugin(ScrollTrigger)
 
 const showPage = ref(false)
+
+// Keep DOM refs for the animated sections and their chart elements.
 const heroRef = ref(null)
 const heroCtaRef = ref(null)
 const mascotRef = ref(null)
@@ -358,17 +362,49 @@ const recordBadgeRef = ref(null)
 let gsapContext = null
 let floatTween = null
 let removeCursorTracking = null
+let removeViewportRefresh = null
+let resizeRefreshFrame = null
 const timers = []
 
+const syncExtraHeadingHeight = () => {
+    const heading = extraFeaturesRef.value?.querySelector('.extra-heading')
+    if (!heading) return
+
+    extraFeaturesRef.value.style.setProperty(
+        '--extra-heading-height',
+        `${heading.getBoundingClientRect().height}px`,
+    )
+}
+
+const refreshOnViewportChange = () => {
+    if (resizeRefreshFrame !== null) {
+        cancelAnimationFrame(resizeRefreshFrame)
+    }
+
+    resizeRefreshFrame = requestAnimationFrame(() => {
+        resizeRefreshFrame = null
+        syncExtraHeadingHeight()
+        ScrollTrigger.refresh()
+    })
+}
+
+// Release listeners, timelines, triggers, and transforms when leaving the page.
 const cleanupAnimations = () => {
     timers.forEach(clearTimeout)
     timers.length = 0
     removeCursorTracking?.()
     removeCursorTracking = null
+    removeViewportRefresh?.()
+    removeViewportRefresh = null
+    if (resizeRefreshFrame !== null) {
+        cancelAnimationFrame(resizeRefreshFrame)
+        resizeRefreshFrame = null
+    }
     floatTween?.kill()
     floatTween = null
     gsapContext?.revert()
     gsapContext = null
+    // Remove pinned layout effects that could otherwise carry into the next route.
     ScrollTrigger.getAll().forEach(trigger => trigger.kill(true))
 
     const appContainers = [
@@ -381,13 +417,23 @@ const cleanupAnimations = () => {
 }
 
 onMounted(async () => {
+    // Wait for the delayed page content to render before selecting animation targets.
     timers.push(setTimeout(async () => {
         showPage.value = true
         await nextTick()
 
+        syncExtraHeadingHeight()
+        window.addEventListener('resize', refreshOnViewportChange)
+        window.addEventListener('orientationchange', refreshOnViewportChange)
+        removeViewportRefresh = () => {
+            window.removeEventListener('resize', refreshOnViewportChange)
+            window.removeEventListener('orientationchange', refreshOnViewportChange)
+        }
+
         gsapContext = gsap.context(() => {
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+            // Keep the Hero visible without motion when the visitor requests it.
             if (reducedMotion) {
                 gsap.set(['[data-hero-line]', '.hero-cta', '.hero-reassurance', '.mascot-stage'], {
                     opacity: 1,
@@ -396,6 +442,7 @@ onMounted(async () => {
                     rotate: 0,
                 })
             } else {
+                // Bring in the Hero copy, CTA, and mascot, then add subtle mascot motion.
                 const entrance = gsap.timeline({ defaults: { ease: 'power3.out' } })
                 entrance
                     .from('[data-hero-line]', { y: 28, opacity: 0, stagger: 0.12, duration: 0.75 })
@@ -413,6 +460,7 @@ onMounted(async () => {
                 const canTrackCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches
                     && window.innerWidth > 900
 
+                // Limit pointer-driven mascot tilt to precise desktop pointers.
                 if (canTrackCursor) {
                     const moveX = gsap.quickTo(mascotRef.value, 'x', { duration: 0.55, ease: 'power3.out' })
                     const moveY = gsap.quickTo(mascotRef.value, 'y', { duration: 0.55, ease: 'power3.out' })
@@ -444,6 +492,7 @@ onMounted(async () => {
 
             const media = gsap.matchMedia()
 
+            // Pin and animate the feature scenes only on desktop without reduced motion.
             media.add('(min-width: 960px) and (prefers-reduced-motion: no-preference)', () => {
                 coreFeaturesRef.value.classList.remove('core-features--fallback')
                 extraFeaturesRef.value.classList.remove('extra-features--fallback')
@@ -489,7 +538,7 @@ onMounted(async () => {
                     },
                 })
 
-                // Scene 1 -> 2 and 2 -> 3 hand off at the same boundaries as the steps.
+                // Match scene transitions to the step activation thresholds.
                 timeline
                     .set(visuals[0], { autoAlpha: 1, xPercent: 0, y: 0, scale: 1 })
                     .set(visuals.slice(1), { autoAlpha: 0, xPercent: 60, y: 0, scale: 1 })
@@ -535,6 +584,7 @@ onMounted(async () => {
                     },
                 })
 
+                // Scroll horizontally through the feature track while drawing its SVG accents.
                 extraTimeline
                     .to(extraTrackRef.value, { x: () => -travel(), ease: 'none' }, 0)
                     .to(kineticTextRef.value, { x: kineticEnd, ease: 'none' }, 0)
@@ -549,6 +599,7 @@ onMounted(async () => {
                 }
             })
 
+            // Use static, stacked content on small screens or when motion is reduced.
             media.add('(max-width: 959px), (prefers-reduced-motion: reduce)', () => {
                 coreFeaturesRef.value.classList.add('core-features--fallback')
                 extraFeaturesRef.value.classList.add('extra-features--fallback')
@@ -563,6 +614,7 @@ onMounted(async () => {
                 }
             })
 
+            // Reveal the final section and animate its record count and chart on scroll.
             media.add('(prefers-reduced-motion: no-preference)', () => {
                 const finalReveal = gsap.utils.toArray('[data-final-reveal]', finalSectionRef.value)
                 const recordLine = finalSectionRef.value.querySelector('.record-progress-line')
@@ -642,7 +694,7 @@ onBeforeUnmount(cleanupAnimations)
     background: linear-gradient(to bottom, transparent 0%, rgba(11, 13, 23, 0.88) 72%, #0B0D17 100%);
 }
 
-/* Balanced desktop layout */
+/* Desktop Hero grid: copy on the left, mascot on the right. */
 .hero-container {
     position: relative;
     z-index: 1;
@@ -706,6 +758,7 @@ onBeforeUnmount(cleanupAnimations)
     display: inline-flex;
 }
 
+/* Shared button treatment keeps the Hero and final calls to action consistent. */
 .primary-cta {
     min-width: 190px;
     width: auto;
@@ -788,6 +841,7 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 @media (max-width: 959px) {
+    /* Stack Hero content and center it above the mascot. */
     .hero {
         min-height: 100svh;
     }
@@ -920,6 +974,7 @@ onBeforeUnmount(cleanupAnimations)
     gap: 8px;
 }
 
+/* Active copy follows the same scroll progress as the matching visual scene. */
 .core-step {
     position: relative;
     display: grid;
@@ -1031,7 +1086,7 @@ onBeforeUnmount(cleanupAnimations)
     transform: translateY(0);
 }
 
-/* Mobile and reduced-motion fallback */
+/* Static stacked scenes replace the pinned interaction on mobile and reduced motion. */
 .core-features--fallback,
 .core-features--fallback .core-showcase {
     height: auto;
@@ -1061,6 +1116,7 @@ onBeforeUnmount(cleanupAnimations)
 
 /* Cardless kinetic Extra Features showcase */
 .extra-features {
+    --kinetic-h: calc(clamp(4.1rem, min(10.66vw, 19.68svh), 10.66rem) + 4svh);
     position: relative;
     height: 100svh;
     min-height: 680px;
@@ -1094,9 +1150,9 @@ onBeforeUnmount(cleanupAnimations)
     position: absolute;
     z-index: 0;
     left: 0;
-    bottom: 4vh;
+    bottom: 4svh;
     white-space: nowrap;
-    font-size: clamp(6rem, 13vw, 13rem);
+    font-size: clamp(5rem, min(13vw, 24svh), 13rem);
     line-height: 0.82;
     font-weight: 900;
     letter-spacing: -0.06em;
@@ -1108,7 +1164,10 @@ onBeforeUnmount(cleanupAnimations)
 .extra-connect-path {
     position: absolute;
     left: 0;
-    bottom: 8%;
+    top: calc(
+        (100svh + 112px + var(--extra-heading-height, 80px) - var(--kinetic-h) + min(48svh, 620px)) / 2
+        + 16px
+    );
     z-index: 1;
     width: 1800px;
     height: 300px;
@@ -1119,19 +1178,24 @@ onBeforeUnmount(cleanupAnimations)
 .extra-track {
     position: relative;
     z-index: 2;
+    box-sizing: border-box;
     height: 100%;
     width: max-content;
     display: flex;
     align-items: center;
     gap: clamp(70px, 7vw, 130px);
-    padding: 120px 7vw 30px;
+    padding:
+        calc(112px + var(--extra-heading-height, 80px) + 24px)
+        7vw
+        calc(var(--kinetic-h) + 24px);
     will-change: transform;
 }
 
+/* Each station combines a benefit description with a simple animated drawing. */
 .extra-station {
     position: relative;
     flex: 0 0 clamp(520px, 44vw, 660px);
-    min-height: 470px;
+    min-height: min(48svh, 620px);
     display: flex;
     align-items: flex-start;
     gap: clamp(28px, 3vw, 46px);
@@ -1182,8 +1246,8 @@ onBeforeUnmount(cleanupAnimations)
 .extra-drawing {
     position: absolute;
     right: 0;
-    bottom: -32px;
-    width: min(42%, 280px);
+    bottom: 0;
+    width: min(42%, 280px, 28svh);
     height: auto;
     overflow: visible;
     filter: drop-shadow(0 12px 24px rgba(124, 134, 255, 0.10));
@@ -1222,6 +1286,7 @@ onBeforeUnmount(cleanupAnimations)
     stroke-linecap: round;
 }
 
+/* Restore a readable grid when horizontal scrolling is disabled. */
 .extra-features--fallback {
     height: auto;
     min-height: 0;
@@ -1295,7 +1360,6 @@ onBeforeUnmount(cleanupAnimations)
     }
 
     .extra-drawing {
-        width: 220px;
         opacity: 0.9;
     }
 }
@@ -1328,12 +1392,11 @@ onBeforeUnmount(cleanupAnimations)
     }
 
     .extra-drawing {
-        width: 190px;
         right: 4px;
     }
 }
 
-/* Final progress and personal records showcase */
+/* Final 12-column layout balances the signup copy and PR chart card. */
 .final-progress-section {
     position: relative;
     min-height: 100svh;
@@ -1398,6 +1461,7 @@ onBeforeUnmount(cleanupAnimations)
     line-height: 1.65;
 }
 
+/* Keep the three proof points aligned as one compact row. */
 .record-highlights {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1443,6 +1507,7 @@ onBeforeUnmount(cleanupAnimations)
     min-width: 0;
 }
 
+/* The card combines the milestone details, mascot, and progress chart. */
 .record-visual {
     position: relative;
     isolation: isolate;
@@ -1665,6 +1730,7 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 @media (max-width: 1199px) {
+    /* Stack copy above the chart as the desktop grid runs out of room. */
     .final-progress-section,
     .final-progress-container {
         min-height: auto;

@@ -213,7 +213,7 @@
               {{ $t('landing.finalSection.eyebrow') }}
             </p>
             <h2 class="final-title text-headline-large font-weight-bold" data-final-reveal>
-              {{ $t('landing.finalSection.title') }}
+              {{ $t('landing.finalSection.titlePrefix') }}<span class="final-title-accent">{{ $t('landing.finalSection.titleAccent') }}</span>{{ $t('landing.finalSection.titleSuffix') }}
             </h2>
             <p class="final-description text-body-medium" data-final-reveal>
               {{ $t('landing.finalSection.description') }}
@@ -1677,6 +1677,10 @@ onBeforeUnmount(cleanupAnimations)
     font-size: clamp(2.4rem, 3.2vw, 3rem);
     line-height: 0.98;
     letter-spacing: -0.02em;
+}
+
+.final-title-accent {
+    color: #FFD23F;
 }
 
 .final-description {

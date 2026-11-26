@@ -73,7 +73,9 @@
         },
         "finalSection": {
             "eyebrow": "Progress worth keeping",
-            "title": "Turn effort into personal records.",
+            "titlePrefix": "Turn effort into personal ",
+            "titleAccent": "records",
+            "titleSuffix": ".",
             "description": "Stay consistent, celebrate every breakthrough, and watch steady training become measurable progress.",
             "prsValue": "12 PRs",
             "prsLabel": "This year",

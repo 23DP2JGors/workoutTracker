@@ -72,7 +72,9 @@
         },
         "finalSection": {
             "eyebrow": "Progresam, ko vērtēt",
-            "title": "Pūles pārvēršas rekordos.",
+            "titlePrefix": "Pūles pārvēršas ",
+            "titleAccent": "rekordos",
+            "titleSuffix": ".",
             "description": "Saglabā regularitāti, svini katru izrāvienu un vēro, kā apmērāmās spēka izmaiņas kļūst par reālu progresu.",
             "prsValue": "12 rekordi",
             "prsLabel": "Šogad",

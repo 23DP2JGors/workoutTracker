@@ -16,3 +16,14 @@ export const rules = {
 
 };
 
+export const createAuthRules = t => ({
+    required: value => !!value || t('validation.required'),
+    email: value => /.+@.+\..+/.test(value) || t('validation.email'),
+    minLength: value => value.length >= 8 || t('validation.minLength'),
+    hasUpper: value => /[A-Z]/.test(value) || t('validation.hasUpper'),
+    hasLower: value => /[a-z]/.test(value) || t('validation.hasLower'),
+    hasSymbol: value => /[^a-zA-Z0-9]/.test(value) || t('validation.hasSymbol'),
+    hasNumber: value => /\d/.test(value) || t('validation.hasNumber'),
+    agree: value => !!value || t('validation.agree'),
+})
+

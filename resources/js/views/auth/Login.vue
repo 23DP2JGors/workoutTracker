@@ -1,117 +1,274 @@
 <template>
-<v-container class="auth-page">
-    <v-row justify="center">
-        <v-col cols="12" sm="10" md="8" lg="5">
-            <v-sheet color="surface" rounded="lg">
-                <p class="title-h1 px-6 pt-5 text-center">
-                    {{ $t('login.title') }}
-                </p>
-                <v-form fast-fail @submit.prevent="handleLogin" class="pa-6">
+  <AuthLayout variant="login">
+    <section class="login-card" :aria-labelledby="formTitleId">
+      <p class="login-eyebrow">{{ $t('login.eyebrow') }}</p>
+      <h1 :id="formTitleId">{{ $t('login.title') }}</h1>
+      <p class="login-subtitle">{{ $t('login.subtitle') }}</p>
 
-                <v-text-field class="mb-3"
-                    v-model="form.email"
-                    :rules="[rules.required, rules.email]"
-                    :label="$t('login.email')"
-                ></v-text-field>
+      <v-form
+        ref="formRef"
+        class="login-form"
+        fast-fail
+        @submit.prevent="handleLogin"
+      >
+        <v-alert
+          v-if="errorMessage"
+          class="auth-error"
+          type="error"
+          variant="tonal"
+          density="compact"
+          rounded="lg"
+          :class="{ shake }"
+        >
+          {{ errorMessage }}
+        </v-alert>
 
-                <v-text-field class="mb-3"
-                    :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                    :type="visible ? 'text' : 'password'"   
-                    v-model="form.password"
-                    :rules="[rules.required]"
-                    :label="$t('login.password')"
-                    @click:append-inner="visible = !visible"
-                ></v-text-field>
+        <v-text-field
+          v-model="form.email"
+          class="auth-field"
+          type="email"
+          autocomplete="username"
+          :rules="[validationRules.required, validationRules.email]"
+          :label="$t('login.email')"
+          hide-details="auto"
+        />
 
-                <v-alert 
-                    v-if="errorMessage" 
-                    type="error"
-                    variant="tonal"
-                    density="compact"
-                    rounded="lg"
-                    class="mb-3"
-                    :class="{ shake: shake }"
-                >
-                    {{ $t('login.invalidCredentials') }}
-                </v-alert>
+        <v-text-field
+          v-model="form.password"
+          class="auth-field"
+          autocomplete="current-password"
+          :type="visible ? 'text' : 'password'"
+          :rules="[validationRules.required]"
+          :label="$t('login.password')"
+          hide-details="auto"
+        >
+          <template #append-inner>
+            <button
+              class="password-visibility"
+              type="button"
+              :aria-label="$t(visible ? 'auth.hidePassword' : 'auth.showPassword')"
+              @click.stop="visible = !visible"
+            >
+              <v-icon :icon="visible ? 'mdi-eye-off' : 'mdi-eye'" />
+            </button>
+          </template>
+        </v-text-field>
 
-                <v-btn class="mt-2" type="submit" block>{{ $t('login.submit') }}</v-btn>
+        <v-btn
+          class="login-submit"
+          type="submit"
+          color="primary"
+          size="large"
+          block
+          :loading="loading"
+          :disabled="loading"
+          :class="{ shake }"
+        >
+          {{ $t('login.submit') }}
+        </v-btn>
+      </v-form>
 
-                <div class="text-center mt-4">
-                    {{ $t('login.noAccount') }}
-                    <router-link to="/register">{{ $t('login.register') }}</router-link>
-                </div>
-                </v-form>
-            </v-sheet>
-        </v-col>
-    </v-row>
-  </v-container>
+      <p class="auth-switch">
+        {{ $t('login.noAccount') }}
+        <router-link to="/register">{{ $t('login.register') }}</router-link>
+      </p>
+    </section>
+  </AuthLayout>
 </template>
 
 <script setup>
+import { onBeforeUnmount, ref, watch } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import AuthLayout from '@/components/auth/AuthLayout.vue'
+import { createAuthRules } from '@/utils/rules.js'
 
-import { ref } from 'vue';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { rules } from '@/utils/rules.js';
-import { useI18n } from 'vue-i18n';
+const router = useRouter()
+const { t, locale } = useI18n()
+const validationRules = createAuthRules(t)
+const formTitleId = 'login-form-title'
+const formRef = ref(null)
+const visible = ref(false)
+const shake = ref(false)
+const errorMessage = ref('')
+const loading = ref(false)
+let shakeTimer
 
-// Initialize router for navigation
-const router = useRouter();
-
-// Provides translated login messages
-const { t } = useI18n()
-
-// Reactive data for the registration form; .value is sent to the API as payload
 const form = ref({
   email: '',
   password: '',
-});
+})
 
-// Reactive state for password visibility toggle
-const visible = ref(false);
-const shake = ref(false)
-const errorMessage = ref(null);
+const triggerShake = () => {
+  shake.value = false
+  clearTimeout(shakeTimer)
+  requestAnimationFrame(() => {
+    shake.value = true
+    shakeTimer = setTimeout(() => {
+      shake.value = false
+    }, 500)
+  })
+}
+
+watch(locale, () => {
+  formRef.value?.resetValidation()
+})
+
+onBeforeUnmount(() => clearTimeout(shakeTimer))
 
 const handleLogin = async () => {
+  errorMessage.value = ''
+  const { valid } = await formRef.value.validate()
+  if (!valid) {
+    triggerShake()
+    return
+  }
+
+  loading.value = true
   try {
-
-  // 1. Ensure frontend has valid CSRF token cookie for the session
-    await axios.get('/sanctum/csrf-cookie');
-
-    // 2. Send the login request to Laravel endpoint
-    const response = await axios.post('/login', form.value);
-
-    // Debug: show server replies (e.g. user object, tokens)
-    console.log('User registered:', response.data);
-
-    // 3. On success, navigate to application home/dashboard
-    await router.push('/home');
+    await axios.get('/sanctum/csrf-cookie')
+    const response = await axios.post('/login', form.value)
+    console.log('User registered:', response.data)
+    await router.push('/home')
   } catch (error) {
     errorMessage.value = error.response?.data?.message || t('login.tryAgain')
-    // Trigger shake animation
-    shake.value = true
-    setTimeout(() => shake.value = false, 500)
-}
+    triggerShake()
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <style scoped>
-.auth-page {
-    padding-top: 88px;
-    padding-bottom: 32px;
+.login-card {
+    box-sizing: border-box;
+    width: min(100%, 420px);
+    padding: 32px;
+    border: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 12%, transparent);
+    border-radius: 16px;
+    background: rgb(var(--v-theme-surface));
+    box-shadow: 0 24px 64px color-mix(in srgb, rgb(var(--v-theme-primary)) 14%, transparent);
 }
 
-/* Shake animation when login fails repeatedly */
+.login-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.login-eyebrow::before {
+    width: 16px;
+    height: 4px;
+    background: rgb(var(--v-theme-secondary));
+    content: '';
+    transform: skewX(-24deg);
+}
+
+.login-card h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.login-subtitle {
+    margin: 6px 0 18px;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.9375rem;
+    line-height: 1.4;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-error {
+    margin: 0;
+}
+
+.password-visibility {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    color: rgb(var(--v-theme-subheading));
+    background: transparent;
+    cursor: pointer;
+}
+
+.password-visibility:focus-visible {
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 2px;
+}
+
+.login-submit {
+    margin-top: 2px;
+    text-transform: none;
+    font-weight: 800;
+}
+
+.auth-switch {
+    margin: 16px 0 0;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.8125rem;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: rgb(var(--v-theme-primary));
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-switch a:focus-visible {
+    border-radius: 2px;
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 3px;
+}
+
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-10px); }
-    40% { transform: translateX(10px); }
-    60% { transform: translateX(-10px); }
-    80% { transform: translateX(10px); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
 }
 
 .shake {
     animation: shake 0.5s ease;
+}
+
+@media (max-width: 600px) {
+    .login-card {
+        padding: 24px;
+    }
+}
+
+@media (max-height: 720px) {
+    .login-card {
+        padding: 20px;
+    }
+
+    .login-subtitle {
+        margin-bottom: 12px;
+    }
+
+    .login-form {
+        gap: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shake {
+        animation: none;
+    }
 }
 </style>

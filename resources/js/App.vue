@@ -112,22 +112,26 @@
     </v-app-bar>
 
     <!-- Top for auth pages -->
-    <v-app-bar v-if="route.meta.layout === 'auth'" class="app-bar app-bar--auth" fixed elevation="0">
+    <v-app-bar v-if="route.meta.layout === 'auth'" class="app-bar app-bar--auth" fixed height="64" elevation="0">
         <v-app-bar-title class="text-title-large font-weight-bold app-title">
-            <span class="d-none d-sm-inline">Workout Tracker</span>
-            <span class="d-inline d-sm-none">WT</span>
+            <router-link
+                to="/"
+                class="auth-brand"
+                :aria-label="$t('landing.logo')"
+            >
+                {{ $t('landing.logo') }}
+            </router-link>
         </v-app-bar-title>
         <v-spacer></v-spacer>
 
         <v-btn
-            v-if="route.name !== 'Login'"
-            to="/login"
+            :to="route.name === 'Login' ? '/register' : '/login'"
             variant="tonal"
             color="primary"
             rounded="lg"
             class="app-bar-sign-in"
         >
-            {{ $t('landing.signIn') }}
+            {{ route.name === 'Login' ? $t('login.register') : $t('register.login') }}
         </v-btn>
 
         <LanguageSwitcher />
@@ -220,12 +224,27 @@ const handleDeleteAccount = async () => {
 
 .app-bar-sign-in {
     margin-inline-end: 12px;
-    border: 1px solid rgba(124, 134, 255, 0.3);
+    border: 1px solid color-mix(in srgb, rgb(var(--v-theme-primary)) 30%, transparent);
 }
 
 .app-bar--auth {
-    background: rgba(11, 13, 23, 0.82) !important;
+    background: color-mix(in srgb, rgb(var(--v-theme-background)) 82%, transparent) !important;
+    border-bottom: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 8%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+}
+
+.auth-brand {
+    color: rgb(var(--v-theme-on-surface));
+    text-decoration: none;
+}
+
+.auth-brand:focus-visible {
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 4px;
+}
+
+.app-bar--auth :deep(.v-toolbar__content) {
+    min-height: 64px;
 }
 </style>

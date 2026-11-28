@@ -1,182 +1,539 @@
 <template>
-  <v-container class="auth-page">
-    <v-row justify="center">
-        <v-col cols="12" sm="10" md="8" lg="5">
-            <v-sheet color="surface" rounded="lg">
-                <p class="title-h1 px-6 pt-5 text-center">
-                    {{ $t('register.title') }}
-                </p>
-                <p class="text-center font-weight-thin" color="subheading">
-                    {{ $t('register.subtitle') }}
-                </p>
-                <v-form ref="formRef" fast-fail @submit.prevent="handleRegister" class="pa-6">
-                <v-text-field class="mb-3"
-                    v-model="form.username"
-                    type="text"
-                    maxlength="50"
-                    :rules="[rules.required]"
-                    :label="$t('register.username')"
-                ></v-text-field>
+  <AuthLayout variant="register">
+    <section class="signup-card" :aria-label="$t('register.title')">
+      <aside class="signup-promo">
+        <div class="signup-promo-copy">
+          <p class="auth-eyebrow">{{ $t('register.promoEyebrow') }}</p>
+          <h1 class="signup-promo-title">{{ $t('register.promoTitle') }}</h1>
+          <p class="signup-promo-description">{{ $t('register.promoDescription') }}</p>
+        </div>
 
-                <v-text-field class="mb-3"
-                    v-model="form.email"
-                    :rules="[rules.required, rules.email]"
-                    :label="$t('register.email')"
-                ></v-text-field>
+        <div
+          class="signup-chart"
+          role="img"
+          :aria-label="$t('register.chartLabel')"
+        >
+          <div class="signup-chart-meta">
+            <span>{{ $t('register.weeklyVolume') }}</span>
+            <span>{{ $t('register.sampleData') }}</span>
+          </div>
+          <div class="signup-chart-columns">
+            <div v-for="day in chartDays" :key="day.label" class="signup-chart-column">
+              <div class="signup-chart-bar-track">
+                <span
+                  class="signup-chart-bar"
+                  :class="{ 'signup-chart-bar--best': day.best }"
+                  :style="{ '--bar-height': `${day.height}%` }"
+                  aria-hidden="true"
+                />
+              </div>
+              <span class="signup-chart-day">{{ $t(day.label) }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
 
-                <v-text-field class="mb-3"
-                    :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                    :type="visible ? 'text' : 'password'"   
-                    v-model="form.password"
-                    :rules="[rules.required, rules.minLength,rules.hasLower, rules.hasSymbol, rules.hasUpper, rules.hasNumber]"
-                    :label="$t('register.password')"
-                    @click:append-inner="visible = !visible"
-                ></v-text-field>
+      <section class="signup-form-panel" :aria-labelledby="formTitleId">
+        <header class="signup-form-heading">
+          <h2 :id="formTitleId">{{ $t('register.subtitle') }}</h2>
+          <p>{{ $t('register.title') }}</p>
+        </header>
 
-                <v-text-field
-                    v-model="form.password_confirmation"
-                    :type="visible ? 'text' : 'password'"
-                    :rules="[rules.required, confirmPassword]"
-                    :label="$t('register.passwordRepeat')"
-                ></v-text-field>
+        <v-form
+          ref="formRef"
+          class="signup-form"
+          fast-fail
+          @submit.prevent="handleRegister"
+        >
+          <v-alert
+            v-if="errorMessage"
+            class="auth-error"
+            type="error"
+            variant="tonal"
+            density="compact"
+            rounded="lg"
+            :class="{ shake }"
+          >
+            {{ errorMessage }}
+          </v-alert>
 
-                <v-checkbox
-                    v-model="checkbox"
-                    :rules="[rules.agree]"                    
-                    indent-details
+          <v-text-field
+            v-model="form.username"
+            class="auth-field"
+            type="text"
+            maxlength="50"
+            autocomplete="username"
+            :rules="[validationRules.required]"
+            :label="$t('register.username')"
+            hide-details="auto"
+          />
+
+          <v-text-field
+            v-model="form.email"
+            class="auth-field"
+            type="email"
+            autocomplete="email"
+            :rules="[validationRules.required, validationRules.email]"
+            :label="$t('register.email')"
+            hide-details="auto"
+          />
+
+          <div class="signup-passwords">
+            <v-text-field
+              v-model="form.password"
+              class="auth-field"
+              autocomplete="new-password"
+              :type="visible ? 'text' : 'password'"
+              :rules="[
+                validationRules.required,
+                validationRules.minLength,
+                validationRules.hasLower,
+                validationRules.hasSymbol,
+                validationRules.hasUpper,
+                validationRules.hasNumber,
+              ]"
+              :label="$t('register.password')"
+              hide-details="auto"
+            >
+              <template #append-inner>
+                <button
+                  class="password-visibility"
+                  type="button"
+                  :aria-label="$t(visible ? 'auth.hidePassword' : 'auth.showPassword')"
+                  @click.stop="visible = !visible"
                 >
-                    <template #label>
-                        <div>
-                            {{ $t('register.agreeText') }}
-                            <a href="#" @click.prevent.stop class="text-decoration-none">
-                                {{ $t('register.terms') }}
-                            </a>
-                            {{ $t('register.and') }}
-                            <a href="#" @click.prevent.stop class="text-decoration-none">
-                                {{ $t('register.privacy') }}
-                            </a>
-                        </div>
-                    </template>
-                </v-checkbox>
-            <v-alert 
-                    v-if="errorMessage" 
-                    type="error"
-                    variant="tonal"
-                    density="compact"
-                    rounded="lg"
-                    class="mb-3"
-                    :class="{ 'shake': shake }"
-                >
-                    {{ $t('register.registrationFailed') }}
-                </v-alert>
-                <v-btn class="mt-2" type="submit" block>
-                    {{ $t('register.submit') }}
-                </v-btn>
+                  <v-icon :icon="visible ? 'mdi-eye-off' : 'mdi-eye'" />
+                </button>
+              </template>
+            </v-text-field>
 
-                <div class="text-center mt-4">
-                    {{ $t('register.alreadyHaveAccount') }}
-                    <router-link to="/login">{{ $t('register.login') }}</router-link>
-                </div>
-                </v-form>
-            </v-sheet>
-        </v-col>
-    </v-row>
-  </v-container>
+            <v-text-field
+              v-model="form.password_confirmation"
+              class="auth-field"
+              autocomplete="new-password"
+              :type="visible ? 'text' : 'password'"
+              :rules="[validationRules.required, confirmPassword]"
+              :label="$t('register.passwordRepeat')"
+              hide-details="auto"
+            />
+          </div>
+
+          <v-checkbox
+            v-model="checkbox"
+            class="signup-terms"
+            density="compact"
+            hide-details="auto"
+            :rules="[validationRules.agree]"
+          >
+            <template #label>
+              <i18n-t keypath="register.termsStatement" scope="global" tag="span">
+                <template #terms>
+                  <a href="#" @click.prevent.stop>{{ $t('register.terms') }}</a>
+                </template>
+                <template #privacy>
+                  <a href="#" @click.prevent.stop>{{ $t('register.privacy') }}</a>
+                </template>
+              </i18n-t>
+            </template>
+          </v-checkbox>
+
+          <v-btn
+            class="signup-submit"
+            type="submit"
+            color="primary"
+            size="large"
+            block
+            :loading="loading"
+            :disabled="loading"
+            :class="{ shake }"
+          >
+            {{ $t('register.submit') }}
+          </v-btn>
+
+          <p class="auth-switch">
+            {{ $t('register.alreadyHaveAccount') }}
+            <router-link to="/login">{{ $t('register.login') }}</router-link>
+          </p>
+        </v-form>
+      </section>
+    </section>
+  </AuthLayout>
 </template>
 
 <script setup>
+import { onBeforeUnmount, ref, watch } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import AuthLayout from '@/components/auth/AuthLayout.vue'
+import { createAuthRules } from '@/utils/rules.js'
 
-// Import necessary Vue composables and libraries
-import { ref } from 'vue';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { rules } from '@/utils/rules.js';
-import { useI18n } from 'vue-i18n';
-
-
-// Initialize router for navigation
-const router = useRouter();
-const shake = ref(false);
-const errorMessage = ref('');
+const router = useRouter()
+const { t, locale } = useI18n()
+const validationRules = createAuthRules(t)
+const formTitleId = 'signup-form-title'
 const formRef = ref(null)
+const shake = ref(false)
+const errorMessage = ref('')
+const loading = ref(false)
+const visible = ref(false)
+const checkbox = ref(false)
+let shakeTimer
 
-// Provides translated validation and error messages
-const { t } = useI18n()
-
-// Reactive data for the registration form; .value is sent to the API as payload
 const form = ref({
   username: '',
   email: '',
   password: '',
   password_confirmation: '',
-});
+})
 
-// checkbox
-const checkbox = ref(false);
+const chartDays = [
+  { label: 'register.chartDays.mon', height: 58 },
+  { label: 'register.chartDays.tue', height: 43 },
+  { label: 'register.chartDays.wed', height: 72 },
+  { label: 'register.chartDays.thu', height: 50 },
+  { label: 'register.chartDays.fri', height: 100, best: true },
+  { label: 'register.chartDays.sat', height: 62 },
+  { label: 'register.chartDays.sun', height: 38 },
+]
 
-// Checks that repeated password matches the original password
-const confirmPassword = v => v === form.value.password || t('register.passwordsDoNotMatch')
+const confirmPassword = value =>
+  value === form.value.password || t('register.passwordsDoNotMatch')
 
-// Reactive state for password visibility toggle
-const visible = ref(false);
+const triggerShake = () => {
+  shake.value = false
+  clearTimeout(shakeTimer)
+  requestAnimationFrame(() => {
+    shake.value = true
+    shakeTimer = setTimeout(() => {
+      shake.value = false
+    }, 500)
+  })
+}
 
+watch(locale, () => {
+  formRef.value?.resetValidation()
+})
 
-/**
- * Handle form submission and send data to Laravel Breeze via API.
- * Steps:
- *   1) CSRF protection
- *   2) POST /register
- *   3) Redirect on success
- */
+onBeforeUnmount(() => clearTimeout(shakeTimer))
+
 const handleRegister = async () => {
-    // Validate form before sending
-    const { valid } = await formRef.value.validate()
-    if (!valid) {
-        errorMessage.value = t('register.fixFormErrors')
-        shake.value = true;
-        setTimeout(() => shake.value = false, 500);
-        return;
+  errorMessage.value = ''
+  const { valid } = await formRef.value.validate()
+  if (!valid) {
+    triggerShake()
+    return
+  }
+
+  loading.value = true
+  try {
+    await axios.get('/sanctum/csrf-cookie')
+    const response = await axios.post('/register', form.value)
+    console.log('User registered:', response.data)
+
+    if (response.status === 204 || response.status === 201) {
+      await router.push('/home')
     }
-
-    try {
-        // 1. Ensure frontend has valid CSRF token cookie for the session
-        await axios.get('/sanctum/csrf-cookie');
-
-        // 2. Send the registration request to Laravel endpoint
-        const response = await axios.post('/register', form.value);
-
-        // Debug: show server replies (e.g. user object, tokens)
-        console.log('User registered:', response.data);
-
-        // 3. On success, navigate to application home/dashboard
-        if (response.status === 204 || response.status === 201) {
-        await router.push('/home');
-    }
-    } catch (error) {
-        errorMessage.value = error.response?.data?.message || t('register.tryAgain')
-        // Trigger shake animation
-        shake.value = true
-        setTimeout(() => shake.value = false, 500)
-    }
+  } catch (error) {
+    errorMessage.value = error.response?.data?.message || t('register.tryAgain')
+    triggerShake()
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <style scoped>
-.auth-page {
-    padding-top: 88px;
-    padding-bottom: 32px;
+.signup-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: min(100%, 960px);
+    border: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 12%, transparent);
+    border-radius: 16px;
+    background: rgb(var(--v-theme-surface));
+    box-shadow: 0 24px 64px color-mix(in srgb, rgb(var(--v-theme-primary)) 14%, transparent);
 }
 
-/* Shake animation when login fails repeatedly */
+.signup-promo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+    min-width: 0;
+    padding: 32px 28px;
+    border-right: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 12%, transparent);
+    border-radius: 15px 0 0 15px;
+    background: rgb(var(--v-theme-surface-bright));
+}
+
+.auth-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.auth-eyebrow::before {
+    width: 16px;
+    height: 4px;
+    background: rgb(var(--v-theme-secondary));
+    content: '';
+    transform: skewX(-24deg);
+}
+
+.signup-promo-title {
+    max-width: 380px;
+    margin: 0;
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.signup-promo-description {
+    margin: 8px 0 0;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.9375rem;
+    line-height: 1.45;
+}
+
+.signup-chart {
+    box-sizing: border-box;
+    height: 112px;
+    padding: 12px;
+    border: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 10%, transparent);
+    border-radius: 12px;
+    background: rgb(var(--v-theme-surface));
+}
+
+.signup-chart-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.625rem;
+    line-height: 1;
+}
+
+.signup-chart-columns {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    height: calc(100% - 18px);
+    padding-top: 8px;
+}
+
+.signup-chart-column {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 4px;
+    min-width: 0;
+}
+
+.signup-chart-bar-track {
+    display: flex;
+    align-items: flex-end;
+    min-height: 0;
+}
+
+.signup-chart-bar {
+    display: block;
+    width: 100%;
+    height: var(--bar-height);
+    border-radius: 4px 4px 2px 2px;
+    background: color-mix(in srgb, rgb(var(--v-theme-primary)) 65%, transparent);
+}
+
+.signup-chart-bar--best {
+    border: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 35%, transparent);
+    background: rgb(var(--v-theme-secondary));
+}
+
+.signup-chart-day {
+    overflow: hidden;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.5625rem;
+    line-height: 1;
+    text-align: center;
+    text-overflow: ellipsis;
+}
+
+.signup-form-panel {
+    min-width: 0;
+    padding: 28px;
+}
+
+.signup-form-heading {
+    margin-bottom: 16px;
+}
+
+.signup-form-heading h2 {
+    margin: 0;
+    font-size: 1.625rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.signup-form-heading p {
+    margin: 4px 0 0;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.9375rem;
+    line-height: 1.35;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-error {
+    margin: 0;
+}
+
+.auth-field {
+    min-width: 0;
+}
+
+.signup-passwords {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.password-visibility {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    color: rgb(var(--v-theme-subheading));
+    background: transparent;
+    cursor: pointer;
+}
+
+.password-visibility:focus-visible {
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 2px;
+}
+
+.signup-terms {
+    margin: 0;
+}
+
+.signup-terms :deep(.v-label) {
+    opacity: 1;
+    font-size: 0.8rem;
+}
+
+.signup-terms a,
+.auth-switch a {
+    color: rgb(var(--v-theme-primary));
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.signup-terms a:focus-visible,
+.auth-switch a:focus-visible {
+    border-radius: 2px;
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 3px;
+}
+
+.signup-submit {
+    margin-top: 2px;
+    text-transform: none;
+    font-weight: 800;
+}
+
+.auth-switch {
+    margin: 0;
+    color: rgb(var(--v-theme-subheading));
+    font-size: 0.8125rem;
+    text-align: center;
+}
+
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-10px); }
-    40% { transform: translateX(10px); }
-    60% { transform: translateX(-10px); }
-    80% { transform: translateX(10px); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
 }
 
 .shake {
     animation: shake 0.5s ease;
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+    .signup-card {
+        width: min(100%, 920px);
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+
+    .signup-promo,
+    .signup-form-panel {
+        padding: 24px;
+    }
+
+    .signup-form {
+        gap: 8px;
+    }
+
+    .signup-promo-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 959px) {
+    .signup-card {
+        grid-template-columns: minmax(0, 1fr);
+        width: min(100%, 460px);
+    }
+
+    .signup-promo {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .signup-form-panel {
+        padding: 24px 20px;
+    }
+
+    .signup-passwords {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-height: 720px) {
+    .signup-promo,
+    .signup-form-panel {
+        padding: 20px;
+    }
+
+    .signup-promo {
+        gap: 16px;
+    }
+
+    .signup-form-heading {
+        margin-bottom: 10px;
+    }
+
+    .signup-form {
+        gap: 8px;
+    }
+
+    .signup-chart {
+        height: 80px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .shake {
+        animation: none;
+    }
 }
 </style>

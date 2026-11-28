@@ -2,6 +2,7 @@
     <v-btn
         variant="text"
         color="default"
+        :aria-label="$t('app.switchLanguage')"
         @click="toggleLocale"
     >
         {{ locale.toUpperCase() }}

@@ -6,11 +6,26 @@
         "deleteAccountTitle": "Delete account?",
         "deleteAccountText": "This action will permanently delete your account and all related data, including workouts, measurements and progress history.",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "switchLanguage": "Switch language"
+    },
+    "auth": {
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
+    },
+    "validation": {
+        "required": "This field is required.",
+        "email": "Enter a valid email address.",
+        "minLength": "Use at least 8 characters.",
+        "hasUpper": "Include an uppercase letter.",
+        "hasLower": "Include a lowercase letter.",
+        "hasSymbol": "Include a special character.",
+        "hasNumber": "Include at least one number.",
+        "agree": "You must agree to continue."
     },
 
     "landing": {
-        "logo": "WorkoutTracker",
+        "logo": "Workout Tracker",
         "heroEyebrow": "YOUR TRAINING, TRACKED",
         "heroLine1": "Track every rep.",
         "heroLine2": "Build your legacy.",
@@ -100,17 +115,33 @@
     "register": {
         "title": "Welcome to Workout Tracker!",
         "subtitle": "Create your account",
+        "promoEyebrow": "Start your log",
+        "promoTitle": "Every rep counts. Count every rep.",
+        "promoDescription": "Log your workouts and watch your progress build week by week.",
+        "chartLabel": "Sample weekly workout volume chart",
+        "weeklyVolume": "Weekly volume",
+        "sampleData": "Sample data",
+        "chartDays": {
+            "mon": "Mon",
+            "tue": "Tue",
+            "wed": "Wed",
+            "thu": "Thu",
+            "fri": "Fri",
+            "sat": "Sat",
+            "sun": "Sun"
+        },
         "username": "Username",
         "email": "E-mail",
         "emailPlaceholder": "{'email@example.com'}",
         "password": "Password",
         "passwordRepeat": "Password repeat",
         "agreeText": "I agree to the",
+        "termsStatement": "I agree to the {terms} and {privacy}",
         "terms": "Terms & Conditions",
         "and": "and",
         "privacy": "Privacy Policy",
         "registrationFailed": "Registration failed. Please try again.",
-        "submit": "Submit",
+        "submit": "Create account",
         "alreadyHaveAccount": "Already have an account?",
         "login": "Log in",
         "fixFormErrors": "Please correct the errors in the form.",
@@ -118,13 +149,15 @@
         "passwordsDoNotMatch": "Passwords do not match"
     },
     "login": {
+        "eyebrow": "Next session",
         "title": "Welcome back!",
+        "subtitle": "Log in and pick up where you left off.",
         "email": "E-mail",
         "emailPlaceholder": "{'email@example.com'}",
         "password": "Password",
         "invalidCredentials": "Invalid email or password. Please try again.",
-        "submit": "Login",
-        "noAccount": "Don't have an account?",
+        "submit": "Log in",
+        "noAccount": "New here?",
         "register": "Sign up",
         "tryAgain": "Login failed. Try again."
     },

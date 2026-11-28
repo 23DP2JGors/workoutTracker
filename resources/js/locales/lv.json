@@ -6,10 +6,25 @@
         "deleteAccountTitle": "Dzēst kontu?",
         "deleteAccountText": "Šī darbība neatgriezeniski dzēsīs tavu kontu un visus saistītos datus, tostarp treniņus, mērījumus un progresa vēsturi.",
         "cancel": "Atcelt",
-        "delete": "Dzēst"
+        "delete": "Dzēst",
+        "switchLanguage": "Mainīt valodu"
+    },
+    "auth": {
+        "showPassword": "Rādīt paroli",
+        "hidePassword": "Paslēpt paroli"
+    },
+    "validation": {
+        "required": "Šis lauks ir obligāts.",
+        "email": "Ievadi derīgu e-pasta adresi.",
+        "minLength": "Izmanto vismaz 8 rakstzīmes.",
+        "hasUpper": "Iekļauj lielo burtu.",
+        "hasLower": "Iekļauj mazo burtu.",
+        "hasSymbol": "Iekļauj speciālo rakstzīmi.",
+        "hasNumber": "Iekļauj vismaz vienu ciparu.",
+        "agree": "Lai turpinātu, jāpiekrīt noteikumiem."
     },
     "landing": {
-        "logo": "WorkoutTracker",
+        "logo": "Workout Tracker",
         "heroEyebrow": "TAVI TRENIŅI. TAVS PROGRESS.",
         "heroLine1": "Seko katram atkārtojumam.",
         "heroLine2": "Veido savu progresu.",
@@ -99,17 +114,33 @@
     "register": {
         "title": "Laipni lūdzam Workout Tracker!",
         "subtitle": "Izveido savu kontu",
+        "promoEyebrow": "Sāc savu uzskaiti",
+        "promoTitle": "Katrs atkārtojums ir svarīgs.",
+        "promoDescription": "Pieraksti treniņus un vēro, kā tavs progress veidojas nedēļu no nedēļas.",
+        "chartLabel": "Parauga nedēļas treniņu apjoma diagramma",
+        "weeklyVolume": "Nedēļas apjoms",
+        "sampleData": "Parauga dati",
+        "chartDays": {
+            "mon": "Pr",
+            "tue": "Ot",
+            "wed": "Tr",
+            "thu": "Ce",
+            "fri": "Pk",
+            "sat": "Se",
+            "sun": "Sv"
+        },
         "username": "Lietotājvārds",
         "email": "E-pasts",
         "emailPlaceholder": "{'email@example.com'}",
         "password": "Parole",
         "passwordRepeat": "Atkārtot paroli",
         "agreeText": "Es piekrītu",
+        "termsStatement": "Es piekrītu {terms} un {privacy}",
         "terms": "Noteikumiem",
         "and": "un",
         "privacy": "Privātuma politikai",
         "registrationFailed": "Reģistrācija neizdevās. Lūdzu, mēģini vēlreiz.",
-        "submit": "Iesniegt",
+        "submit": "Izveidot kontu",
         "alreadyHaveAccount": "Tev jau ir konts?",
         "login": "Pieslēgties",
         "fixFormErrors": "Lūdzu, izlabo kļūdas formā.",
@@ -117,13 +148,15 @@
         "passwordsDoNotMatch": "Paroles nesakrīt"
     },
     "login": {
+        "eyebrow": "Nākamais treniņš",
         "title": "Laipni atpakaļ!",
+        "subtitle": "Pieslēdzies un turpini no vietas, kur apstājies.",
         "email": "E-pasts",
         "emailPlaceholder": "{'email@example.com'}",
         "password": "Parole",
         "invalidCredentials": "Nepareizs e-pasts vai parole. Lūdzu, mēģini vēlreiz.",
         "submit": "Pieslēgties",
-        "noAccount": "Tev vēl nav konta?",
+        "noAccount": "Esi šeit pirmo reizi?",
         "register": "Reģistrēties",
         "tryAgain": "Pieslēgšanās neizdevās. Mēģini vēlreiz."
     },

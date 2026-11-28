@@ -25,13 +25,13 @@
 
     <!-- Top Application Bar - unchanged -->
     <v-app-bar v-if="route.meta.layout !== 'none' && route.meta.layout !== 'auth'" class="app-bar" fixed elevation="2">
-        <v-btn 
+        <v-btn
             v-if="route.name !== 'Home'"
-            color="default"
             icon="mdi-arrow-left"
+            class="app-bar-back"
+            :aria-label="$t('app.goBack')"
             @click="router.back()"
-            >
-        </v-btn>
+        />
           <v-app-bar-title class="font-weight-bold app-title">
               <span class="d-none d-sm-inline">WorkoutTracker</span>
               <span class="d-inline d-sm-none">WT</span>
@@ -113,6 +113,12 @@
 
     <!-- Top for auth pages -->
     <v-app-bar v-if="route.meta.layout === 'auth'" class="app-bar app-bar--auth" fixed height="64" elevation="0">
+        <v-btn
+            to="/"
+            icon="mdi-arrow-left"
+            class="app-bar-back"
+            :aria-label="$t('app.backToLanding')"
+        />
         <v-app-bar-title class="text-title-large font-weight-bold app-title">
             <router-link
                 to="/"
@@ -216,8 +222,8 @@ const handleDeleteAccount = async () => {
 }
 
 .app-bar--landing {
-    background: rgba(11, 13, 23, 0.72) !important;
-    border-bottom: 1px solid rgba(233, 235, 250, 0.06);
+    background: color-mix(in srgb, rgb(var(--v-theme-background)) 72%, transparent) !important;
+    border-bottom: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 6%, transparent);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 }
@@ -225,6 +231,38 @@ const handleDeleteAccount = async () => {
 .app-bar-sign-in {
     margin-inline-end: 12px;
     border: 1px solid color-mix(in srgb, rgb(var(--v-theme-primary)) 30%, transparent);
+}
+
+.app-bar-back {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid color-mix(in srgb, rgb(var(--v-theme-on-surface)) 14%, transparent);
+    border-radius: 999px;
+    color: rgb(var(--v-theme-on-surface));
+    background: rgb(var(--v-theme-surface));
+    transition:
+        color 160ms ease,
+        background-color 160ms ease,
+        border-color 160ms ease,
+        transform 120ms ease;
+}
+
+.app-bar-back:hover {
+    border-color: color-mix(in srgb, rgb(var(--v-theme-primary)) 45%, transparent);
+    color: rgb(var(--v-theme-primary));
+    background: rgb(var(--v-theme-surface-bright));
+}
+
+.app-bar-back:active {
+    transform: scale(0.96);
+    color: rgb(var(--v-theme-on-primary));
+    background: rgb(var(--v-theme-primary));
+}
+
+.app-bar-back:focus-visible {
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 2px;
 }
 
 .app-bar--auth {

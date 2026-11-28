@@ -7,6 +7,8 @@
         "deleteAccountText": "Šī darbība neatgriezeniski dzēsīs tavu kontu un visus saistītos datus, tostarp treniņus, mērījumus un progresa vēsturi.",
         "cancel": "Atcelt",
         "delete": "Dzēst",
+        "goBack": "Atgriezties",
+        "backToLanding": "Atgriezties sākumlapā",
         "switchLanguage": "Mainīt valodu"
     },
     "auth": {

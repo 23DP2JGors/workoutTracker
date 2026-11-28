@@ -1448,6 +1448,12 @@ onBeforeUnmount(cleanupAnimations)
 }
 
 @media (min-width: 960px) {
+    .extra-track {
+        align-items: center;
+        padding-top: calc(112px + var(--extra-heading-height, 80px) + clamp(40px, 6vh, 72px));
+        padding-bottom: calc(var(--kinetic-h) + clamp(32px, 5vh, 56px));
+    }
+
     .extra-station {
         padding-bottom: clamp(24px, 3svh, 36px);
     }
